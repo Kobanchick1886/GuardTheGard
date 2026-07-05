@@ -32,6 +32,10 @@ public class PowerUpManagement : MonoBehaviour
 
     [SerializeField]
     private GameObject LawnMower;
+
+    [SerializeField]
+    private GameObject scissorsVisualObject;
+
     // --- DATA STRUCTURE FOR POWER-UPS ---
     // This creates an object that holds a Name and an Executable Function
     private class PowerUp
@@ -86,6 +90,10 @@ public class PowerUpManagement : MonoBehaviour
                 {
                     scissors.gameObject.SetActive(true);
                     scissors.canSnip = true;
+                }
+
+                if (scissorsVisualObject != null) {
+                    scissorsVisualObject.gameObject.SetActive(true);
                 }
             }),
 

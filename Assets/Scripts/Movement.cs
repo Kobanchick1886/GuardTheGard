@@ -12,6 +12,9 @@ public class Movement : MonoBehaviour
     [SerializeField]
     private SpriteRenderer spriteRenderer;
 
+    [SerializeField]
+    private SpriteRenderer scissorsRenderer;
+
     public void UpgradeSpeed(float mult)
     {
         moveSpeed *= mult;
@@ -38,16 +41,15 @@ public class Movement : MonoBehaviour
         animator.SetFloat("MoveY", moveInput.y);
         animator.SetFloat("Speed", moveInput.magnitude);
 
+        if (moveInput.x != 0 || moveInput.y != 0)
+        {
+            animator.SetFloat("LookX", moveInput.x);
+            animator.SetFloat("LookY", moveInput.y);
+        }
+
         rb.AddForce(moveInput * moveSpeed);
 
-        if (moveInput.x < 0)
-        {
-            transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f);
-        }
-        else if (moveInput.x > 0)
-        {
-            transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-        }
+        transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
     }
 }
