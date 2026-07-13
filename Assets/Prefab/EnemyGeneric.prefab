@@ -665,6 +665,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyGeneric
   moveSpeed: 3
   detectionRange: 5
+  Marker: 1
 --- !u!50 &8770508816843261644
 Rigidbody2D:
   serializedVersion: 5

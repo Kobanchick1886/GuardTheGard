@@ -16,7 +16,12 @@ public class objective : MonoBehaviour
     private float bound_y;
     private float y;
     float safeDistance = 20f;
+    private int enemyIndex;
     public float EnemiesLeft;
+
+    public GameObject blueEnemy;
+    public GameObject redEnemy;
+    public GameObject yellowEnemy;
 
     private Dictionary<int, string> state = new Dictionary<int, string>()
     {
@@ -46,13 +51,15 @@ public class objective : MonoBehaviour
         { "TOTAL", 0 }
     };
 
+    public int[] missedColors = { 0, 0, 0, 0 };
+
     private bool isDataSaved = false;
 
     private void DamageSystem()
     {
         if (canRestart) return;
         if (branch >= branches.Length) return;
-
+        missedColors[enemyIndex]++;
         targetKey = branch + state[branches[branch]];
         if (visualCache.ContainsKey(targetKey))
         {
@@ -145,7 +152,6 @@ public class objective : MonoBehaviour
             wasChanged = false;
         }
 
-        // DEFEAT LOGIC LOGGING
         if (canRestart && !isDataSaved)
         {
             isDataSaved = true;
@@ -158,7 +164,7 @@ public class objective : MonoBehaviour
                 csvManager = gameObject.AddComponent<DataToCSV>();
             }
 
-            csvManager.LogDefeatData(missedStats);
+            csvManager.LogDefeatData(missedStats, missedColors);
         }
 
         if (Keyboard.current.rKey.wasPressedThisFrame && canRestart)
@@ -170,8 +176,12 @@ public class objective : MonoBehaviour
 
     IEnumerator Spawner()
     {
+        GameObject[] enemies = { lightEnemy, blueEnemy, redEnemy, yellowEnemy };
         int spawnedCount = 0;
         int targetCount = enemiesToSpawn;
+
+
+        int step = Mathf.Max(1, targetCount / enemies.Length);
 
         while (spawnedCount < targetCount)
         {
@@ -181,7 +191,11 @@ public class objective : MonoBehaviour
 
             if (Vector3.Distance(spawnPos, transform.position) > safeDistance)
             {
-                Instantiate(lightEnemy, spawnPos, Quaternion.identity);
+
+                enemyIndex = (spawnedCount / step) % enemies.Length;
+
+                Instantiate(enemies[enemyIndex], spawnPos, Quaternion.identity);
+
                 spawnedCount++;
                 yield return new WaitForSecondsRealtime(2.5f);
             }
@@ -196,7 +210,7 @@ public class objective : MonoBehaviour
     {
         while (true)
         {
-            enemiesToSpawn = (int)(10 * multiplier);
+            enemiesToSpawn = (int)(8 * multiplier);
             enemiesRemainingInWave = enemiesToSpawn;
             yield return StartCoroutine(Spawner());
             yield return new WaitUntil(() => enemiesRemainingInWave <= 0);
@@ -217,7 +231,6 @@ public class objective : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // SHIELD: Ignore all enemy collisions if the game is already over
         if (canRestart) return;
 
         if (collision != null && collision.CompareTag("Enemy"))

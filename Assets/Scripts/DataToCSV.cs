@@ -4,10 +4,13 @@ using System.IO;
 
 public class DataToCSV : MonoBehaviour
 {
-    public void LogDefeatData(Dictionary<string, int> stats)
+    // Добавили второй аргумент: int[] missedColors
+    public void LogDefeatData(Dictionary<string, int> stats, int[] missedColors)
     {
-        // This targets %userprofile%\AppData\LocalLow\[CompanyName]\[ProjectName]\DefeatAnalytics.csv
         string path = Path.Combine(Application.persistentDataPath, "DefeatAnalytics.csv");
+
+        // Читаем имя игрока
+        string playerName = PlayerPrefs.GetString("CurrentPlayerName", "Unknown");
 
         int mowerKills = 0;
         MowerItself mower = Object.FindFirstObjectByType<MowerItself>(FindObjectsInactive.Include);
@@ -17,17 +20,19 @@ public class DataToCSV : MonoBehaviour
         ScissorsCombo scissors = Object.FindFirstObjectByType<ScissorsCombo>(FindObjectsInactive.Include);
         if (scissors != null) scissorsKills = scissors.cuttedEnemies;
 
+        // Если файла нет — создаем его с заголовками (добавили 4 колонки под цвета в конец)
         if (!File.Exists(path))
         {
-            File.WriteAllText(path, "Timestamp,Top,Right,Bottom,Left,TotalMissed,MowerKills,ScissorsKills\n");
+            File.WriteAllText(path, "Timestamp,PlayerName,Top,Right,Bottom,Left,TotalMissed,MowerKills,ScissorsKills,LightMissed,BlueMissed,RedMissed,YellowMissed\n");
         }
 
-        string row = $"{System.DateTime.Now},{stats["TOP"]},{stats["RIGHT"]},{stats["BOTTOM"]},{stats["LEFT"]},{stats["TOTAL"]},{mowerKills},{scissorsKills}\n";
+        // Записываем данные. Индексы массива строго совпадают с твоей задумкой:
+        // missedColors[0] = Light, missedColors[1] = Blue, missedColors[2] = Red, missedColors[3] = Yellow
+        string row = $"{System.DateTime.Now},{playerName},{stats["TOP"]},{stats["RIGHT"]},{stats["BOTTOM"]},{stats["LEFT"]},{stats["TOTAL"]},{mowerKills},{scissorsKills},{missedColors[0]},{missedColors[1]},{missedColors[2]},{missedColors[3]}\n";
 
         File.AppendAllText(path, row);
 
-        // Print the EXACT clickable path in the console so you can find it easily
-        Debug.Log($"<color=cyan>Telemetry Saved! Mower Kills: {mowerKills} | Scissors Kills: {scissorsKills}</color>");
+        Debug.Log($"<color=cyan>Telemetry Saved for {playerName}! Mower: {mowerKills} | Scissors: {scissorsKills}</color>");
         Debug.Log($"<color=yellow>FILE PATH: {path}</color>");
     }
 }

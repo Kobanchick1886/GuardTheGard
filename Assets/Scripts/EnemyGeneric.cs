@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class EnemyGeneric : MonoBehaviour
@@ -18,13 +18,18 @@ public class EnemyGeneric : MonoBehaviour
     private Rigidbody2D rb;
     private bool isMoving = true;
     private BoxCollider2D[] root;
+
+    [SerializeField]
+    private bool Marker;
+
     void Awake()
-    {   
+    {
         root = GetComponentsInChildren<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
         objective = GameObject.FindWithTag("Objective");
         player = GameObject.FindWithTag("Player");
         counter = Object.FindAnyObjectByType<objective>();
+
         foreach (BoxCollider2D box in root)
         {
             if (box != null) box.GetComponent<SpriteRenderer>().enabled = false;
@@ -34,14 +39,14 @@ public class EnemyGeneric : MonoBehaviour
 
     void Update()
     {
-       if (transform.childCount == 0)
+        if (transform.childCount == 0)
         {
             Die();
         }
     }
 
     void Die()
-    {   
+    {
         counter.CountEnemyDeath();
         Destroy(gameObject);
     }
@@ -52,34 +57,58 @@ public class EnemyGeneric : MonoBehaviour
         distance = Vector2.Distance(transform.position, objective.transform.position);
         distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
         direction = (objective.transform.position - transform.position).normalized;
-        if (isMoving) { 
-            if (distanceToPlayer < detectionRange) {
+
+        if (isMoving)
+        {
+            if (distanceToPlayer < detectionRange)
+            {
                 directionFromPlayer = (transform.position - player.transform.position).normalized;
             }
-            if (distanceToPlayer > 10f) { directionFromPlayer = Vector3.zero; }
-                finalDirection = direction + (directionFromPlayer * avoidanceWeight);
-                rb.linearVelocity = (finalDirection * moveSpeed);
+            if (distanceToPlayer > 10f)
+            {
+                directionFromPlayer = Vector3.zero;
+            }
+            finalDirection = direction + (directionFromPlayer * avoidanceWeight);
+            rb.linearVelocity = (finalDirection * moveSpeed);
         }
     }
 
     public IEnumerator Stun()
     {
+        // Если маркер выключен — сразу умираем и прерываем корутину
+        if (!Marker)
+        {
+            Die();
+            yield break;
+        }
+
+        // Если маркер включен — стандартный стан с корнями
         isMoving = false;
-        foreach (BoxCollider2D box in root) {
+        foreach (BoxCollider2D box in root)
+        {
             if (box != null)
             {
                 box.GetComponent<SpriteRenderer>().enabled = true;
                 box.enabled = true;
             }
         }
-        rb.bodyType = RigidbodyType2D.Kinematic; 
+
+        rb.bodyType = RigidbodyType2D.Kinematic;
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0;
+
         yield return new WaitForSeconds(5);
+
         rb.bodyType = RigidbodyType2D.Dynamic;
-        foreach (BoxCollider2D box in root) {
+
+        foreach (BoxCollider2D box in root)
+        {
+            // Обязательная проверка на null, если игрок успел уничтожить этот корень в OnTriggerEnter2D
+            if (box != null)
+            {
                 box.GetComponent<SpriteRenderer>().enabled = false;
                 box.enabled = false;
+            }
         }
         isMoving = true;
     }
