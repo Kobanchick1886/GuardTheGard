@@ -19,6 +19,9 @@ public class EnemyGeneric : MonoBehaviour
     private bool isMoving = true;
     private BoxCollider2D[] root;
 
+    // Флаг для предотвращения множественных смертей
+    private bool isDead = false;
+
     [SerializeField]
     private bool Marker;
 
@@ -39,6 +42,7 @@ public class EnemyGeneric : MonoBehaviour
 
     void Update()
     {
+        // Если все корни уничтожены — умираем
         if (transform.childCount == 0)
         {
             Die();
@@ -47,12 +51,19 @@ public class EnemyGeneric : MonoBehaviour
 
     void Die()
     {
+        // Если враг уже начал процесс смерти — игнорируем новые вызовы
+        if (isDead) return;
+
+        isDead = true; // Сразу ставим флаг
         counter.CountEnemyDeath();
         Destroy(gameObject);
     }
 
     void FixedUpdate()
     {
+        // Останавливаем логику движения, если враг уже мертв
+        if (isDead) return;
+
         playerPos = player.transform.position;
         distance = Vector2.Distance(transform.position, objective.transform.position);
         distanceToPlayer = Vector2.Distance(transform.position, player.transform.position);
@@ -75,14 +86,12 @@ public class EnemyGeneric : MonoBehaviour
 
     public IEnumerator Stun()
     {
-        // Если маркер выключен — сразу умираем и прерываем корутину
         if (!Marker)
         {
             Die();
             yield break;
         }
 
-        // Если маркер включен — стандартный стан с корнями
         isMoving = false;
         foreach (BoxCollider2D box in root)
         {
@@ -99,11 +108,13 @@ public class EnemyGeneric : MonoBehaviour
 
         yield return new WaitForSeconds(5);
 
+        // Если врага убили за время стана, прерываем корутину, чтобы не было ошибок
+        if (isDead) yield break;
+
         rb.bodyType = RigidbodyType2D.Dynamic;
 
         foreach (BoxCollider2D box in root)
         {
-            // Обязательная проверка на null, если игрок успел уничтожить этот корень в OnTriggerEnter2D
             if (box != null)
             {
                 box.GetComponent<SpriteRenderer>().enabled = false;
@@ -115,6 +126,8 @@ public class EnemyGeneric : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (isDead) return;
+
         if (other.CompareTag("Player") && !isMoving)
         {
             foreach (BoxCollider2D box in root)

@@ -65,17 +65,15 @@ public class objective : MonoBehaviour
         {
             visualCache[targetKey].SetActive(false);
         }
-        if (branches[branch] == 1)
+        branches[branch]--;
+        if (branches[branch] <= 1)
         {
             branch++;
         }
-        branches[branch]--;
-        if (branches.All(i => i == 1) || branches.Skip(1).All(i => i == 4))
+        if (branch >= branches.Length)
         {
             canRestart = true;
-
         }
-
     }
 
     private void Awake()

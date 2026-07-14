@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: YellowEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: -8653719598885068355, guid: f2a90c138285f064fb935b7457489ce4, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: -7552582706839291426, guid: f2a90c138285f064fb935b7457489ce4, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -109,8 +113,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79b3c2512e535064f8a8f4e09ed5d3c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyGeneric
-  moveSpeed: 8
-  detectionRange: 10
+  moveSpeed: 3
+  detectionRange: 5
   Marker: 0
 --- !u!50 &-7093303315492380750
 Rigidbody2D:
