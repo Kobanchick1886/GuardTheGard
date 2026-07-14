@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: e957b817294849b438e16729e3ad1e8b
+guid: 67a0efc0311b7d040a21ec46324d53be
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4390490298794550515
-    second: "\u0426\u0432\u0435\u0442\u043E\u043A\u0416\u0435\u043B\u0442\u044B\u0439\u0421\u0422\u0435\u043D\u044C\u044E_0"
+      213: -6710776777617409555
+    second: final-0002_0
+  - first:
+      213: -7101151530178334331
+    second: final-0002_1
+  - first:
+      213: 1538661334454169678
+    second: final-0002_2
+  - first:
+      213: 5556453628896780516
+    second: final-0002_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +55,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 1
-  alignment: 0
-  spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 60
+  spriteMeshType: 0
+  alignment: 9
+  spritePivot: {x: 0.5802076, y: 0.3183741}
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -100,13 +109,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u0426\u0432\u0435\u0442\u043E\u043A\u0416\u0435\u043B\u0442\u044B\u0439\u0421\u0422\u0435\u043D\u044C\u044E_0"
+      name: final-0002_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 529
-        height: 609
+        x: 1013
+        y: 490
+        width: 7
+        height: 8
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +124,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d0b5d86c558d113c0800000000000000
-      internalID: -4390490298794550515
+      spriteID: de97c2373188ed2a0800000000000000
+      internalID: -6710776777617409555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: final-0002_1
+      rect:
+        serializedVersion: 2
+        x: 1024
+        y: 482
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 581bf7b8e44a37d90800000000000000
+      internalID: -7101151530178334331
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: final-0002_2
+      rect:
+        serializedVersion: 2
+        x: 1032
+        y: 475
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e40f4cdd45c6a5510800000000000000
+      internalID: 1538661334454169678
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: final-0002_3
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 79
+        width: 732
+        height: 382
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e0a259d22d7c1d40800000000000000
+      internalID: 5556453628896780516
       vertices: []
       indices: 
       edges: []
@@ -125,7 +200,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +210,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u0426\u0432\u0435\u0442\u043E\u043A\u0416\u0435\u043B\u0442\u044B\u0439\u0421\u0422\u0435\u043D\u044C\u044E_0": -4390490298794550515
+      final-0002_0: -6710776777617409555
+      final-0002_1: -7101151530178334331
+      final-0002_2: 1538661334454169678
+      final-0002_3: 5556453628896780516
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

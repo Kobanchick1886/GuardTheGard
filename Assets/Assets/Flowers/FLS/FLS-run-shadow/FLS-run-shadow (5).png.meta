@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e957b817294849b438e16729e3ad1e8b
+guid: d43830482eb5d0045bac361974e0ff50
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4390490298794550515
-    second: "\u0426\u0432\u0435\u0442\u043E\u043A\u0416\u0435\u043B\u0442\u044B\u0439\u0421\u0422\u0435\u043D\u044C\u044E_0"
+      213: -8215177867127658450
+    second: FLS-run-shadow (5)_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +46,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 60
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u0426\u0432\u0435\u0442\u043E\u043A\u0416\u0435\u043B\u0442\u044B\u0439\u0421\u0422\u0435\u043D\u044C\u044E_0"
+      name: FLS-run-shadow (5)_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 529
-        height: 609
+        x: 86
+        y: 237
+        width: 1029
+        height: 313
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d0b5d86c558d113c0800000000000000
-      internalID: -4390490298794550515
+      spriteID: e2864377143ddfd80800000000000000
+      internalID: -8215177867127658450
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u0426\u0432\u0435\u0442\u043E\u043A\u0416\u0435\u043B\u0442\u044B\u0439\u0421\u0422\u0435\u043D\u044C\u044E_0": -4390490298794550515
+      FLS-run-shadow (5)_0: -8215177867127658450
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
