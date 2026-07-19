@@ -27,8 +27,8 @@ Transform:
   m_GameObject: {fileID: 6908926251285652}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -1.18, y: 0.33, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -2, y: 0, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9144225376897035161}
@@ -136,7 +136,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.88, y: 4}
+  m_Size: {x: 2, y: 4}
   m_EdgeRadius: 0
 --- !u!1 &4426635488775630799
 GameObject:
@@ -165,8 +165,8 @@ Transform:
   m_GameObject: {fileID: 4426635488775630799}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
-  m_LocalPosition: {x: -0.5, y: -1.7, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.6, y: -2.8, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9144225376897035161}
@@ -274,7 +274,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.88, y: 4}
+  m_Size: {x: 2, y: 4}
   m_EdgeRadius: 0
 --- !u!1 &6398255542148418162
 GameObject:
@@ -303,8 +303,8 @@ Transform:
   m_GameObject: {fileID: 6398255542148418162}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0, z: 0.5, w: -0.8660254}
-  m_LocalPosition: {x: 1.59, y: -1.03, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 2.6, y: -1.3, z: 0}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 9144225376897035161}
@@ -412,7 +412,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.88, y: 4}
+  m_Size: {x: 2, y: 4}
   m_EdgeRadius: 0
 --- !u!1 &7176811377770377890
 GameObject:
@@ -527,6 +527,7 @@ MonoBehaviour:
   moveSpeed: 3
   detectionRange: 5
   Marker: 1
+  legsTransform: {fileID: 0}
 --- !u!50 &8770508816843261644
 Rigidbody2D:
   serializedVersion: 5
