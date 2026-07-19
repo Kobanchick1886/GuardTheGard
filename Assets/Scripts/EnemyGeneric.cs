@@ -23,7 +23,7 @@ public class EnemyGeneric : MonoBehaviour
     private bool isDead = false;
 
     [SerializeField]
-    private bool Marker;
+    public bool Marker;
 
     void Awake()
     {
@@ -49,12 +49,10 @@ public class EnemyGeneric : MonoBehaviour
         }
     }
 
-    void Die()
+    public void Die()
     {
-        // Если враг уже начал процесс смерти — игнорируем новые вызовы
         if (isDead) return;
-
-        isDead = true; // Сразу ставим флаг
+        isDead = true;
         counter.CountEnemyDeath();
         Destroy(gameObject);
     }

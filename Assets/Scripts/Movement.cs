@@ -49,7 +49,5 @@ public class Movement : MonoBehaviour
 
         rb.AddForce(moveInput * moveSpeed);
 
-        transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
-
     }
 }

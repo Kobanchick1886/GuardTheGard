@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,11 +24,9 @@ public class PowerUpManagement : MonoBehaviour
     // Analytics tracking for your CSV
     [HideInInspector] public List<string> selectedHistory = new List<string>();
 
-    // Variables to hold the dynamically chosen functions and names
-    private Action leftExecutor;
-    private Action rightExecutor;
-    private string leftName;
-    private string rightName;
+    // Сохраняем сами объекты улучшений, чтобы знать, что удалять
+    private PowerUp leftPowerUp;
+    private PowerUp rightPowerUp;
 
     [SerializeField]
     private GameObject LawnMower;
@@ -37,20 +35,21 @@ public class PowerUpManagement : MonoBehaviour
     private GameObject scissorsVisualObject;
 
     // --- DATA STRUCTURE FOR POWER-UPS ---
-    // This creates an object that holds a Name and an Executable Function
     private class PowerUp
     {
         public string Name;
         public Action Execute;
+        public bool IsOneTime; // Новый флаг для одноразовых апгрейдов
 
-        public PowerUp(string name, Action execute)
+        // По умолчанию IsOneTime = false, если не указано иное
+        public PowerUp(string name, Action execute, bool isOneTime = false)
         {
             Name = name;
             Execute = execute;
+            IsOneTime = isOneTime;
         }
     }
 
-    // The array/list of available power-ups
     private List<PowerUp> powerUpPool;
 
     void Awake()
@@ -66,15 +65,9 @@ public class PowerUpManagement : MonoBehaviour
     {
         powerUpPool = new List<PowerUp>
         {
-            new PowerUp("Speed x1.5", () =>
-            {
-                Movement playerMove = FindFirstObjectByType<Movement>();
-                if (playerMove != null) playerMove.UpgradeSpeed(1.2f);
-            }),
-
+            // Многоразовое
             new PowerUp("Lawn Mower", () =>
             {
-                // Instantiates the Mower prefab directly at the Player's position
                 GameObject player = GameObject.FindWithTag("Player");
                 if (LawnMower != null && player != null)
                 {
@@ -83,6 +76,7 @@ public class PowerUpManagement : MonoBehaviour
                 }
             }),
 
+            // ОДНОРАЗОВОЕ (добавили true в конце)
             new PowerUp("Scissors", () =>
             {
                 ScissorsCombo scissors = FindFirstObjectByType<ScissorsCombo>(FindObjectsInactive.Include);
@@ -95,9 +89,9 @@ public class PowerUpManagement : MonoBehaviour
                 if (scissorsVisualObject != null) {
                     scissorsVisualObject.gameObject.SetActive(true);
                 }
-            }),
+            }, true),
 
-            // REPLACED SCISSORS RANGE WITH MAIN ATTACK RANGE
+            // Многоразовое
             new PowerUp("Attack Range x1.5", () =>
             {
                 Magnet mainAttack = FindFirstObjectByType<Magnet>();
@@ -145,26 +139,28 @@ public class PowerUpManagement : MonoBehaviour
 
     public void OpenUpgradeMenu()
     {
-        // Randomly choose 2 distinct indices from the pool
-        int index1 = UnityEngine.Random.Range(0, powerUpPool.Count);
-        int index2 = UnityEngine.Random.Range(0, powerUpPool.Count);
-
-        // Ensure they are not the same power-up
-        while (index1 == index2)
+        if (powerUpPool.Count == 0)
         {
-            index2 = UnityEngine.Random.Range(0, powerUpPool.Count);
+            Debug.LogWarning("No more power-ups in the pool!");
+            return;
         }
 
-        // Map the selected functions to the UI buttons
-        leftName = powerUpPool[index1].Name;
-        leftExecutor = powerUpPool[index1].Execute;
+        int index1 = UnityEngine.Random.Range(0, powerUpPool.Count);
+        int index2 = index1;
 
-        rightName = powerUpPool[index2].Name;
-        rightExecutor = powerUpPool[index2].Execute;
+        if (powerUpPool.Count > 1)
+        {
+            while (index1 == index2)
+            {
+                index2 = UnityEngine.Random.Range(0, powerUpPool.Count);
+            }
+        }
 
-        // Update the UI Text
-        if (textLeft != null) textLeft.text = leftName;
-        if (textRight != null) textRight.text = rightName;
+        leftPowerUp = powerUpPool[index1];
+        rightPowerUp = powerUpPool[index2];
+
+        if (textLeft != null) textLeft.text = leftPowerUp.Name;
+        if (textRight != null) textRight.text = rightPowerUp.Name;
 
         isMenuActive = true;
         menuPanel.SetActive(true);
@@ -175,18 +171,19 @@ public class PowerUpManagement : MonoBehaviour
 
     private void ExecuteSelection()
     {
-        // EXECUTING THE FUNCTION BEFORE CLOSING THE MENU
-        if (isLeftSelected && leftExecutor != null)
+        PowerUp selectedPowerUp = isLeftSelected ? leftPowerUp : rightPowerUp;
+
+        if (selectedPowerUp != null && selectedPowerUp.Execute != null)
         {
-            leftExecutor.Invoke();
-            selectedHistory.Add(leftName);
-            Debug.Log("<color=green>Executed PowerUp: " + leftName + "</color>");
-        }
-        else if (!isLeftSelected && rightExecutor != null)
-        {
-            rightExecutor.Invoke();
-            selectedHistory.Add(rightName);
-            Debug.Log("<color=green>Executed PowerUp: " + rightName + "</color>");
+            selectedPowerUp.Execute.Invoke();
+            selectedHistory.Add(selectedPowerUp.Name);
+            Debug.Log("<color=green>Executed PowerUp: " + selectedPowerUp.Name + "</color>");
+
+            if (selectedPowerUp.IsOneTime)
+            {
+                powerUpPool.Remove(selectedPowerUp);
+                Debug.Log($"<color=orange>{selectedPowerUp.Name} was removed from the pool.</color>");
+            }
         }
 
         // Closing the menu and resuming the game
