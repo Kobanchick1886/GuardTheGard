@@ -47,7 +47,7 @@ public class Movement : MonoBehaviour
             animator.SetFloat("LookY", moveInput.y);
         }
 
-        rb.AddForce(moveInput * moveSpeed);
+        rb.AddForce(moveInput * moveSpeed); 
 
     }
 }
