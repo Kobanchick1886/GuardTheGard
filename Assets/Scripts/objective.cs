@@ -60,12 +60,9 @@ public class objective : MonoBehaviour
         if (canRestart) return;
         if (branch >= branches.Length) return;
         missedColors[enemyIndex]++;
-        targetKey = branch + state[branches[branch]];
-        if (visualCache.ContainsKey(targetKey))
-        {
-            visualCache[targetKey].SetActive(false);
-        }
+
         branches[branch]--;
+
         if (branches[branch] <= 1)
         {
             branch++;
@@ -74,6 +71,9 @@ public class objective : MonoBehaviour
         {
             canRestart = true;
         }
+
+        // Оновлюємо візуал на основі нових розрахунків масиву
+        ApplyVisualsFromBushes();
     }
 
     private void Awake()
@@ -83,15 +83,9 @@ public class objective : MonoBehaviour
         foreach (Transform child in transform)
         {
             visualCache.Add(child.name, child.gameObject);
-            if (child.gameObject.name.Contains("WCharge") || child.gameObject.name.Contains("NoCharge"))
-            {
-                child.gameObject.SetActive(false);
-            }
-            else
-            {
-                child.gameObject.SetActive(true);
-            }
         }
+
+        ApplyVisualsFromBushes();
     }
 
     void Start()
@@ -112,56 +106,35 @@ public class objective : MonoBehaviour
                     break;
                 case 3:
                     branches[branch]++;
-                    targetKey = branch + state[branches[branch]];
-                    if (visualCache.ContainsKey(targetKey))
-                    {
-                        visualCache[targetKey].SetActive(true);
-                    }
                     branch++;
                     break;
                 case 2:
                     branches[branch]++;
-                    targetKey = branch + state[branches[branch]];
-                    if (visualCache.ContainsKey(targetKey))
-                    {
-                        visualCache[targetKey].SetActive(true);
-                    }
                     break;
-                
             }
 
             if (branches.Any(i => i == 4) && branches.Skip(1).Any(i => i == 1))
             {
                 int index = System.Array.FindIndex(branches, i => i == 4);
-                targetKey = index + state[branches[index]];
-                if (visualCache.ContainsKey(targetKey))
-                {
-                    visualCache[targetKey].SetActive(false);
-                }
                 branches[index]--;
+
                 index = System.Array.FindIndex(branches, 1, i => i == 1);
                 branches[index]++;
-                targetKey = index + state[branches[index]];
-                if (visualCache.ContainsKey(targetKey))
-                {
-                    visualCache[targetKey].SetActive(true);
-                }
             }
+
+            ApplyVisualsFromBushes();
             wasChanged = false;
         }
 
         if (canRestart && !isDataSaved)
         {
             isDataSaved = true;
-
             missedStats["TOTAL"] = missedStats["RIGHT"] + missedStats["LEFT"] + missedStats["TOP"] + missedStats["BOTTOM"];
-
             DataToCSV csvManager = Object.FindFirstObjectByType<DataToCSV>();
             if (csvManager == null)
             {
                 csvManager = gameObject.AddComponent<DataToCSV>();
             }
-
             csvManager.LogDefeatData(missedStats, missedColors);
         }
 
@@ -172,13 +145,42 @@ public class objective : MonoBehaviour
         }
     }
 
+    //функція для візуалу куща
+    private void ApplyVisualsFromBushes()
+    {
+        foreach (var pair in visualCache)
+        {
+            pair.Value.SetActive(false);
+        }
+
+        for (int i = 1; i <= 4; i++)
+        {
+            int currentStatus = branches[i];
+
+            if (currentStatus == 4)
+            {
+                if (visualCache.ContainsKey(i + "BudGreen")) visualCache[i + "BudGreen"].SetActive(true);
+                if (visualCache.ContainsKey(i + "FlowerWCharge")) visualCache[i + "FlowerWCharge"].SetActive(true);
+                if (visualCache.ContainsKey(i + "Shine")) visualCache[i + "Shine"].SetActive(true);
+            }
+            else if (currentStatus == 3)
+            {
+                if (visualCache.ContainsKey(i + "BudGreen")) visualCache[i + "BudGreen"].SetActive(true);
+                if (visualCache.ContainsKey(i + "FlowerNoCharge")) visualCache[i + "FlowerNoCharge"].SetActive(true);
+            }
+            else
+            {
+                string key = i + state[currentStatus]; // "1BudGreen" або "1BudYellow"
+                if (visualCache.ContainsKey(key)) visualCache[key].SetActive(true);
+            }
+        }
+    }
+
     IEnumerator Spawner()
     {
         GameObject[] enemies = { lightEnemy, blueEnemy, redEnemy, yellowEnemy };
         int spawnedCount = 0;
         int targetCount = enemiesToSpawn;
-
-
         int step = Mathf.Max(1, targetCount / enemies.Length);
 
         while (spawnedCount < targetCount)
@@ -189,11 +191,8 @@ public class objective : MonoBehaviour
 
             if (Vector3.Distance(spawnPos, transform.position) > safeDistance)
             {
-
                 enemyIndex = (spawnedCount / step) % enemies.Length;
-
                 Instantiate(enemies[enemyIndex], spawnPos, Quaternion.identity);
-
                 spawnedCount++;
                 yield return new WaitForSecondsRealtime(2.5f);
             }
