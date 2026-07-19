@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: e957b817294849b438e16729e3ad1e8b
+guid: fb969e2e0fb8dee4ab644ab8bbf19a6a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4390490298794550515
-    second: "\u0426\u0432\u0435\u0442\u043E\u043A\u0416\u0435\u043B\u0442\u044B\u0439\u0421\u0422\u0435\u043D\u044C\u044E_0"
+      213: 2741210319180490543
+    second: FLS-run-body-Y (4)_0
+  - first:
+      213: 7261990267826194192
+    second: FLS-run-body-Y (4)_1
+  - first:
+      213: -8758298668597322573
+    second: FLS-run-body-Y (4)_2
+  - first:
+      213: 4057805604948196262
+    second: FLS-run-body-Y (4)_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +55,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 60
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -100,13 +109,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\u0426\u0432\u0435\u0442\u043E\u043A\u0416\u0435\u043B\u0442\u044B\u0439\u0421\u0422\u0435\u043D\u044C\u044E_0"
+      name: FLS-run-body-Y (4)_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 529
-        height: 609
+        x: 442
+        y: 1018
+        width: 34
+        height: 71
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +124,74 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d0b5d86c558d113c0800000000000000
-      internalID: -4390490298794550515
+      spriteID: f276361034cba0620800000000000000
+      internalID: 2741210319180490543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FLS-run-body-Y (4)_1
+      rect:
+        serializedVersion: 2
+        x: 510
+        y: 997
+        width: 16
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 017cf144ca5c7c460800000000000000
+      internalID: 7261990267826194192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FLS-run-body-Y (4)_2
+      rect:
+        serializedVersion: 2
+        x: 213
+        y: 317
+        width: 1031
+        height: 628
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bcda7da3c5447680800000000000000
+      internalID: -8758298668597322573
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: FLS-run-body-Y (4)_3
+      rect:
+        serializedVersion: 2
+        x: 1182
+        y: 568
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6abb682d2b8305830800000000000000
+      internalID: 4057805604948196262
       vertices: []
       indices: 
       edges: []
@@ -125,7 +200,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +210,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\u0426\u0432\u0435\u0442\u043E\u043A\u0416\u0435\u043B\u0442\u044B\u0439\u0421\u0422\u0435\u043D\u044C\u044E_0": -4390490298794550515
+      FLS-run-body-Y (4)_0: 2741210319180490543
+      FLS-run-body-Y (4)_1: 7261990267826194192
+      FLS-run-body-Y (4)_2: -8758298668597322573
+      FLS-run-body-Y (4)_3: 4057805604948196262
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

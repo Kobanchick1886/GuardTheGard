@@ -974,11 +974,11 @@ PrefabInstance:
     - target: {fileID: -783194603233237648, guid: 1517b1edfaa24f742b84820c36b0e513, type: 3}
       propertyPath: redEnemy
       value: 
-      objectReference: {fileID: 6989872990085026278, guid: 7e7a9c6527ef2d74b8754d44b618e547, type: 3}
+      objectReference: {fileID: 7521308660850079017, guid: 6395e842745ed174dbbf5d65b3cce312, type: 3}
     - target: {fileID: -783194603233237648, guid: 1517b1edfaa24f742b84820c36b0e513, type: 3}
       propertyPath: blueEnemy
       value: 
-      objectReference: {fileID: 3566310031529589724, guid: 9e9116626a494714796f758958cba99c, type: 3}
+      objectReference: {fileID: 7521308660850079017, guid: 28f173073538341438643e7661fd4ffa, type: 3}
     - target: {fileID: -783194603233237648, guid: 1517b1edfaa24f742b84820c36b0e513, type: 3}
       propertyPath: background
       value: 
@@ -986,7 +986,7 @@ PrefabInstance:
     - target: {fileID: -783194603233237648, guid: 1517b1edfaa24f742b84820c36b0e513, type: 3}
       propertyPath: yellowEnemy
       value: 
-      objectReference: {fileID: 7554319419589031816, guid: 148d51fbde05576469b07e1add8b5a16, type: 3}
+      objectReference: {fileID: 7521308660850079017, guid: aa1121642bc4a8241adeba56a84fcb44, type: 3}
     - target: {fileID: 4712278709083018653, guid: 1517b1edfaa24f742b84820c36b0e513, type: 3}
       propertyPath: m_LocalScale.x
       value: 1.5

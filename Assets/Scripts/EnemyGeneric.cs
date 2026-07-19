@@ -25,6 +25,11 @@ public class EnemyGeneric : MonoBehaviour
     [SerializeField]
     public bool Marker;
 
+    //для анімацій
+    [Header("Animation Settings")]
+    public Transform legsTransform;
+    private Animator animator;
+
     void Awake()
     {
         root = GetComponentsInChildren<BoxCollider2D>();
@@ -32,6 +37,8 @@ public class EnemyGeneric : MonoBehaviour
         objective = GameObject.FindWithTag("Objective");
         player = GameObject.FindWithTag("Player");
         counter = Object.FindAnyObjectByType<objective>();
+
+        animator = GetComponent<Animator>();
 
         foreach (BoxCollider2D box in root)
         {
@@ -42,10 +49,25 @@ public class EnemyGeneric : MonoBehaviour
 
     void Update()
     {
-        // Если все корни уничтожены — умираем
-        if (transform.childCount == 0)
+
+        if (Marker)
         {
-            Die();
+            bool hasRootsLeft = false;
+
+            foreach (Transform child in transform)
+            {
+                if (child.name.StartsWith("root_0"))
+                {
+                    hasRootsLeft = true;
+                    break;
+                }
+            }
+
+            if (!hasRootsLeft)
+            {
+                Die();
+            }
+
         }
     }
 
@@ -79,8 +101,56 @@ public class EnemyGeneric : MonoBehaviour
             }
             finalDirection = direction + (directionFromPlayer * avoidanceWeight);
             rb.linearVelocity = (finalDirection * moveSpeed);
+
+            HandleVisuals(finalDirection);
+        }
+
+        if (animator != null)
+        {
+            foreach (AnimatorControllerParameter param in animator.parameters)
+            {
+                if (param.name == "isMoving")
+                {
+                    animator.SetBool("isMoving", isMoving);
+                    break;
+                }
+            }
+        }
+
+    }
+
+    //для фліпа й анімації ніг
+    private void HandleVisuals(Vector2 moveDir)
+    {
+        if (moveDir.sqrMagnitude < 0.01f) return;
+        bool isFlippedLeft = false;
+        if (moveDir.x < 0)
+        {
+            transform.localScale = new Vector3(-0.6f, 0.6f, 0.6f);
+            isFlippedLeft = true;
+        }
+        else if (moveDir.x > 0)
+        {
+            transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+            isFlippedLeft = false;
+        }
+        if (legsTransform != null)
+        {
+            float angle = Mathf.Atan2(moveDir.y, moveDir.x) * Mathf.Rad2Deg;
+            if (isFlippedLeft)
+            {
+                angle = 180f - angle;
+            }
+            else
+            {
+                angle = angle + 0f;
+            }
+            legsTransform.localRotation = Quaternion.Euler(0, 0, angle);
         }
     }
+
+
+
 
     public IEnumerator Stun()
     {
