@@ -29,9 +29,9 @@ public class AccountSelectionManager : MonoBehaviour
     public Button deleteButton;
 
     [Header("Кнопки закрытия / Назад")]
-    public Button backToMenuButton;  // Кнопка возврата в главное меню
-    public Button backToPanelButton; // Кнопка возврата к списку аккаунтов (стрелочка)
-    public Button cancelButton;      // Кнопка Cancel в попапе
+    public Button backToMenuButton;
+    public Button backToPanelButton;
+    public Button cancelButton;
 
     private string selectedAccountName = "";
     private string csvPath;
@@ -48,10 +48,13 @@ public class AccountSelectionManager : MonoBehaviour
         if (surnameInput != null) surnameInput.onValueChanged.AddListener(OnInputTextChanged);
         if (searchInput != null) searchInput.onValueChanged.AddListener(OnSearchInputChanged);
 
-        // АВТОМАТИЧЕСКАЯ ПРИВЯЗКА КНОПОК СВОРАЧИВАНИЯ
+        // АВТОМАТИЧЕСКАЯ ПРИВЯЗКА КНОПОК
         if (backToMenuButton != null) backToMenuButton.onClick.AddListener(CloseSelectionScreen);
         if (backToPanelButton != null) backToPanelButton.onClick.AddListener(CloseCreatePopup);
         if (cancelButton != null) cancelButton.onClick.AddListener(CloseCreatePopup);
+
+        // ВОТ ОНО: Привязываем кнопку Save к методу создания аккаунта
+        if (confirmCreateButton != null) confirmCreateButton.onClick.AddListener(CreateNewAccount);
     }
 
     public void OpenSelectionScreen()
@@ -100,6 +103,7 @@ public class AccountSelectionManager : MonoBehaviour
         LoadAccountsToUI(query);
     }
 
+    // ЭТОТ МЕТОД ТЕПЕРЬ АВТОМАТИЧЕСКИ ВЫЗЫВАЕТСЯ КНОПКОЙ SAVE
     public void CreateNewAccount()
     {
         string newName = nameInput.text.Trim();

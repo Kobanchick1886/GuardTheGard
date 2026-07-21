@@ -1,11 +1,40 @@
-using Unity.VisualScripting;
+﻿using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI; // Обязательно добавляем для работы с UI
 
 public class Magnet : MonoBehaviour
 {
     [SerializeField] private GameObject bullet;
 
     public Vector3 EnemyPos;
+
+    [Header("Cooldown Settings")]
+    public float cooldownTime = 1f; // Время перезарядки в секундах
+    public Image cooldownFillImage; // Сюда перетащи Bar Fill из Canvas
+    private float currentCooldown = 0f;
+    private bool canFire = true;
+
+    private void Update()
+    {
+        // Если способность на кулдауне, крутим таймер
+        if (!canFire)
+        {
+            currentCooldown -= Time.deltaTime;
+
+            // Плавно меняем заполнение картинки от 1 до 0
+            if (cooldownFillImage != null)
+            {
+                cooldownFillImage.fillAmount = 1f - (currentCooldown / cooldownTime);
+            }
+
+            // Когда время вышло, способность снова готова
+            if (currentCooldown <= 0f)
+            {
+                canFire = true;
+                currentCooldown = 0f;
+            }
+        }
+    }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -20,7 +49,8 @@ public class Magnet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        // Добавили проверку на canFire
+        if (collision.CompareTag("Enemy") && canFire)
         {
             GameObject holder = Instantiate(bullet, transform.parent.position, Quaternion.identity);
             Vector3 direction = collision.transform.position - transform.parent.position;
@@ -42,13 +72,16 @@ public class Magnet : MonoBehaviour
                 }
                 Destroy(holder);
             }
+
+            // ЗАПУСКАЕМ КУЛДАУН
+            canFire = false;
+            currentCooldown = cooldownTime;
+            if (cooldownFillImage != null) cooldownFillImage.fillAmount = 1f;
         }
     }
 
-    // --- NEW: RANGE EXTENSION FUNCTION ---
     public void UpgradeRange(float multiplier)
     {
-        // Assumes your trigger is a CircleCollider2D. 
         CircleCollider2D col = GetComponent<CircleCollider2D>();
         if (col != null)
         {
