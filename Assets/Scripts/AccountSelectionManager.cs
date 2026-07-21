@@ -4,25 +4,34 @@ using UnityEngine.UI;
 using TMPro;
 using System.IO;
 using System.Linq;
-using UnityEngine.SceneManagement; // Добавили пространство имен для работы со сценами
+using UnityEngine.SceneManagement;
 
 public class AccountSelectionManager : MonoBehaviour
 {
     [Header("Панели")]
     public GameObject accountSelectionPanel;
-    public GameObject createAccountPopup;
+    public GameObject createAccountPanel;
 
     [Header("Элементы списка")]
     public Transform contentParent;
     public GameObject accountRowPrefab;
 
-    [Header("Попап создания")]
-    public TMP_InputField newAccountInput;
-    public Button confirmCreateButton; // Кнопка "Save" в попапе
+    [Header("Попап создания (Инпуты)")]
+    public TMP_InputField nameInput;
+    public TMP_InputField surnameInput;
+    public Button confirmCreateButton;
+
+    [Header("Поиск (Опционально)")]
+    public TMP_InputField searchInput;
 
     [Header("Основные кнопки")]
     public Button playButton;
     public Button deleteButton;
+
+    [Header("Кнопки закрытия / Назад")]
+    public Button backToMenuButton;  // Кнопка возврата в главное меню
+    public Button backToPanelButton; // Кнопка возврата к списку аккаунтов (стрелочка)
+    public Button cancelButton;      // Кнопка Cancel в попапе
 
     private string selectedAccountName = "";
     private string csvPath;
@@ -30,50 +39,105 @@ public class AccountSelectionManager : MonoBehaviour
     void Start()
     {
         csvPath = Path.Combine(Application.persistentDataPath, "Accounts.csv");
-        accountSelectionPanel.SetActive(false);
-        if (createAccountPopup != null) createAccountPopup.SetActive(false);
 
-        // Подписываемся на событие изменения текста в инпуте
-        if (newAccountInput != null)
-        {
-            newAccountInput.onValueChanged.AddListener(OnInputTextChanged);
-        }
+        if (accountSelectionPanel != null) accountSelectionPanel.SetActive(false);
+        if (createAccountPanel != null) createAccountPanel.SetActive(false);
+
+        // Подписки на инпуты
+        if (nameInput != null) nameInput.onValueChanged.AddListener(OnInputTextChanged);
+        if (surnameInput != null) surnameInput.onValueChanged.AddListener(OnInputTextChanged);
+        if (searchInput != null) searchInput.onValueChanged.AddListener(OnSearchInputChanged);
+
+        // АВТОМАТИЧЕСКАЯ ПРИВЯЗКА КНОПОК СВОРАЧИВАНИЯ
+        if (backToMenuButton != null) backToMenuButton.onClick.AddListener(CloseSelectionScreen);
+        if (backToPanelButton != null) backToPanelButton.onClick.AddListener(CloseCreatePopup);
+        if (cancelButton != null) cancelButton.onClick.AddListener(CloseCreatePopup);
     }
 
     public void OpenSelectionScreen()
     {
-        accountSelectionPanel.SetActive(true);
-        // При открытии блокируем кнопки управления, пока аккаунт не выбран
+        if (accountSelectionPanel != null) accountSelectionPanel.SetActive(true);
         playButton.interactable = false;
         deleteButton.interactable = false;
         selectedAccountName = "";
+
+        if (searchInput != null) searchInput.text = "";
         LoadAccountsToUI();
     }
 
-    private void LoadAccountsToUI()
+    public void CloseSelectionScreen()
+    {
+        if (accountSelectionPanel != null) accountSelectionPanel.SetActive(false);
+    }
+
+    public void OpenCreatePopup()
+    {
+        if (createAccountPanel != null)
+        {
+            nameInput.text = "";
+            surnameInput.text = "";
+            if (confirmCreateButton != null) confirmCreateButton.interactable = false;
+            createAccountPanel.SetActive(true);
+        }
+    }
+
+    public void CloseCreatePopup()
+    {
+        if (createAccountPanel != null) createAccountPanel.SetActive(false);
+    }
+
+    private void OnInputTextChanged(string text)
+    {
+        if (confirmCreateButton != null)
+        {
+            string combinedText = nameInput.text + surnameInput.text;
+            confirmCreateButton.interactable = !string.IsNullOrWhiteSpace(combinedText);
+        }
+    }
+
+    private void OnSearchInputChanged(string query)
+    {
+        LoadAccountsToUI(query);
+    }
+
+    public void CreateNewAccount()
+    {
+        string newName = nameInput.text.Trim();
+        string newSurname = surnameInput.text.Trim();
+        string fullName = $"{newName} {newSurname}".Trim();
+
+        if (string.IsNullOrEmpty(fullName) || fullName.Contains(",")) return;
+
+        string today = System.DateTime.Now.ToString("dd/MM/yyyy");
+        File.AppendAllText(csvPath, $"{fullName},{today}\n");
+
+        CloseCreatePopup();
+
+        if (searchInput != null) searchInput.text = "";
+        LoadAccountsToUI();
+    }
+
+    private void LoadAccountsToUI(string searchQuery = "")
     {
         foreach (Transform child in contentParent) Destroy(child.gameObject);
 
-        // 1. ПЕРВАЯ ПЛАШКА "СОЗДАТЬ"
-        GameObject createNewRow = Instantiate(accountRowPrefab, contentParent);
-        TextMeshProUGUI[] createTexts = createNewRow.GetComponentsInChildren<TextMeshProUGUI>();
+        // 1. СОЗДАЕМ ПЛАШКУ "СОЗДАТЬ АККАУНТ" В НАЧАЛЕ СПИСКА
+        if (string.IsNullOrEmpty(searchQuery))
+        {
+            GameObject createRow = Instantiate(accountRowPrefab, contentParent);
 
-        // Записываем текст в первый компонент (Имя)
-        if (createTexts.Length > 0) createTexts[0].text = "+ Создать новый аккаунт";
-        // Очищаем второй компонент (Время), чтобы там не висело стандартное "New Text"
-        if (createTexts.Length > 1) createTexts[1].text = "";
+            TextMeshProUGUI createNameText = createRow.transform.Find("NameText")?.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI createTimeText = createRow.transform.Find("TimeText")?.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI createBestTimeText = createRow.transform.Find("BestTime")?.GetComponent<TextMeshProUGUI>();
 
-        createNewRow.GetComponent<Button>().onClick.AddListener(() => {
-            if (createAccountPopup != null)
-            {
-                newAccountInput.text = "";
-                // При открытии попапа кнопка Save должна быть заблокирована, так как поле ввода пустое
-                if (confirmCreateButton != null) confirmCreateButton.interactable = false;
-                createAccountPopup.SetActive(true);
-            }
-        });
+            if (createNameText != null) createNameText.text = "+ Создать новый аккаунт";
+            if (createTimeText != null) createTimeText.text = "";
+            if (createBestTimeText != null) createBestTimeText.text = "";
 
-        // 2. ЗАГРУЗКА ИЗ CSV
+            createRow.GetComponent<Button>().onClick.AddListener(OpenCreatePopup);
+        }
+
+        // 2. ЗАГРУЖАЕМ ОСТАЛЬНЫЕ АККАУНТЫ
         if (!File.Exists(csvPath)) { File.WriteAllText(csvPath, "PlayerName,LastPlayed\n"); return; }
 
         string[] lines = File.ReadAllLines(csvPath);
@@ -84,12 +148,20 @@ public class AccountSelectionManager : MonoBehaviour
             string name = data[0];
             string lastPlayed = data[1];
 
-            GameObject row = Instantiate(accountRowPrefab, contentParent);
-            TextMeshProUGUI[] texts = row.GetComponentsInChildren<TextMeshProUGUI>();
-            texts[0].text = name;
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                if (!name.ToLower().Contains(searchQuery.ToLower())) continue;
+            }
 
-            // Выводим только саму дату, без лишних длинных фраз, чтобы ничего не вылезало
-            texts[1].text = lastPlayed;
+            GameObject row = Instantiate(accountRowPrefab, contentParent);
+
+            TextMeshProUGUI nameText = row.transform.Find("NameText")?.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI timeText = row.transform.Find("TimeText")?.GetComponent<TextMeshProUGUI>();
+            TextMeshProUGUI bestTimeText = row.transform.Find("BestTime")?.GetComponent<TextMeshProUGUI>();
+
+            if (nameText != null) nameText.text = name;
+            if (bestTimeText != null) bestTimeText.text = "Best time: --:--";
+            if (timeText != null) timeText.text = $"Last time played: {lastPlayed}";
 
             row.GetComponent<Button>().onClick.AddListener(() => OnAccountSelected(name));
         }
@@ -102,31 +174,6 @@ public class AccountSelectionManager : MonoBehaviour
         deleteButton.interactable = true;
     }
 
-    // Вызывается автоматически при изменении текста в инпуте
-    private void OnInputTextChanged(string text)
-    {
-        if (confirmCreateButton != null)
-        {
-            // Кнопка активна только тогда, когда в поле есть текст (исключая пробелы)
-            confirmCreateButton.interactable = !string.IsNullOrWhiteSpace(text);
-        }
-    }
-
-    // ВЫЗЫВАЕТСЯ КНОПКОЙ "SAVE"
-    public void CreateNewAccount()
-    {
-        string newName = newAccountInput.text.Trim();
-        if (string.IsNullOrEmpty(newName) || newName.Contains(",")) return;
-
-        string today = System.DateTime.Now.ToString("dd/MM/yyyy");
-        File.AppendAllText(csvPath, $"{newName},{today}\n");
-
-        // Закрываем попап после сохранения
-        if (createAccountPopup != null) createAccountPopup.SetActive(false);
-        LoadAccountsToUI();
-    }
-
-    // ВЫЗЫВАЕТСЯ КНОПКОЙ "DELETE"
     public void DeleteSelectedAccount()
     {
         if (string.IsNullOrEmpty(selectedAccountName)) return;
@@ -138,7 +185,9 @@ public class AccountSelectionManager : MonoBehaviour
         selectedAccountName = "";
         playButton.interactable = false;
         deleteButton.interactable = false;
-        LoadAccountsToUI();
+
+        string currentSearch = searchInput != null ? searchInput.text : "";
+        LoadAccountsToUI(currentSearch);
     }
 
     public void StartGame()
@@ -146,14 +195,9 @@ public class AccountSelectionManager : MonoBehaviour
         if (!string.IsNullOrEmpty(selectedAccountName))
         {
             PlayerPrefs.SetString("CurrentPlayerName", selectedAccountName);
-            PlayerPrefs.Save(); // Сохраняем PlayerPrefs перед переходом
+            PlayerPrefs.Save();
             Debug.Log($"Играем за {selectedAccountName}!");
-
-            // Загружаем сцену с игрой
             SceneManager.LoadScene("SampleScene");
         }
     }
-
-    // Метод для закрытия попапа (повесь на кнопку отмены или фон)
-    public void CloseCreateAccountPopup() { if (createAccountPopup != null) createAccountPopup.SetActive(false); }
 }
