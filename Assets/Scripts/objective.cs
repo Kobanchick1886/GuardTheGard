@@ -41,6 +41,7 @@ public class objective : MonoBehaviour
     private PowerUpManagement UI;
     private int enemiesToSpawn;
     public int enemiesRemainingInWave;
+    private int currentWave;
 
     public Dictionary<string, int> missedStats = new Dictionary<string, int>
     {
@@ -50,16 +51,26 @@ public class objective : MonoBehaviour
         { "RIGHT", 0 },
         { "TOTAL", 0 }
     };
-
+    Dictionary<string, List<int>> fourDirections = new Dictionary<string, List<int>>()
+        {   { "TOP",    new List<int> { 45, 135 } },
+            { "BOTTOM", new List<int> { 225, 315 } },
+            { "LEFT",   new List<int> { 135, 225 } },
+            { "RIGHT",  new List<int> { 315, 45 } }
+        };
     public int[] missedColors = { 0, 0, 0, 0 };
 
     private bool isDataSaved = false;
 
-    private void DamageSystem()
+    private void DamageSystem(GameObject enemy)
     {
         if (canRestart) return;
         if (branch >= branches.Length) return;
-        missedColors[enemyIndex]++;
+
+        // Определяем цвет по имени объекта (работает, если в Unity имена префабов совпадают)
+        if (enemy.name.Contains("EnemyGeneric")) missedColors[0]++;
+        else if (enemy.name.Contains("BlueEnemy1")) missedColors[1]++;
+        else if (enemy.name.Contains("RedEnemy 1")) missedColors[2]++;
+        else if (enemy.name.Contains("YellowEnemy1")) missedColors[3]++;
 
         branches[branch]--;
 
@@ -72,7 +83,6 @@ public class objective : MonoBehaviour
             canRestart = true;
         }
 
-        // Оновлюємо візуал на основі нових розрахунків масиву
         ApplyVisualsFromBushes();
     }
 
@@ -145,7 +155,6 @@ public class objective : MonoBehaviour
         }
     }
 
-    //функція для візуалу куща
     private void ApplyVisualsFromBushes()
     {
         foreach (var pair in visualCache)
@@ -185,10 +194,34 @@ public class objective : MonoBehaviour
 
         while (spawnedCount < targetCount)
         {
-            x = UnityEngine.Random.Range(-bound_x / 2, bound_x / 2);
-            y = UnityEngine.Random.Range(-bound_y / 2, bound_y / 2);
-            spawnPos = new Vector3(x, y, 0);
-
+            var topTwoValues = missedStats.Where(x => x.Key != "TOTAL").OrderByDescending(x => x.Value).Select(x => x.Value).Take(2).ToList();                             
+            var topTwoKeys = missedStats.Where(x => x.Key != "TOTAL") .OrderByDescending(x => x.Value).Select(x => x.Key).Take(2).ToList();
+            if (topTwoValues[0] - topTwoValues[1] >= 2 && currentWave >= 2)
+            {
+                Vector3 baseDirection = Vector3.right;
+                List<int> limits = fourDirections[topTwoKeys[0]];
+                int angle = 0;
+                if (limits[0] > limits[1])
+                {   
+                    angle = UnityEngine.Random.Range(limits[0], limits[1] + 360) % 360;
+                }
+                else
+                {
+                    angle = UnityEngine.Random.Range(limits[0], limits[1]);
+                }
+                Quaternion rotation = Quaternion.Euler(0, 0, angle);
+                Vector3 rotatedDirection = rotation * baseDirection;
+                float maxDistance = Mathf.Min(bound_x, bound_y) / 2f;
+                float randomLength = UnityEngine.Random.Range(safeDistance, maxDistance);
+                Vector3 spawnOffset = rotatedDirection * randomLength;
+                spawnPos = transform.position + spawnOffset;
+            }
+            else
+            {
+                x = UnityEngine.Random.Range(-bound_x / 2, bound_x / 2);
+                y = UnityEngine.Random.Range(-bound_y / 2, bound_y / 2);
+                spawnPos = new Vector3(x, y, 0);
+            }
             if (Vector3.Distance(spawnPos, transform.position) > safeDistance)
             {
                 enemyIndex = (spawnedCount / step) % enemies.Length;
@@ -201,6 +234,7 @@ public class objective : MonoBehaviour
                 yield return null;
             }
         }
+        currentWave++;
     }
 
     IEnumerator waveManager()
@@ -237,7 +271,7 @@ public class objective : MonoBehaviour
             if (angle < 0) angle += 360f;
 
             CheckImpactSide(angle);
-            DamageSystem();
+            DamageSystem(collision.gameObject);
             CountEnemyDeath();
             Destroy(collision.gameObject);
         }
