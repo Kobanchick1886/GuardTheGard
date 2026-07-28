@@ -33,7 +33,9 @@ Roadmap
     🏗 Music, sounds
 
 Технічна архітектура проекту:
+
 GuardTheGard/
+
 │
 ├── Assets/                  ← почти всё, что относится к игре
 │   │
@@ -51,5 +53,7 @@ GuardTheGard/
 ├── ProjectSettings/         ← настройки Unity-проекта
 ├── .vs/                     ← служебные файлы Visual Studio
 ├── README.md                ← описание проекта
-└── UpgradeLog.htm           ← журнал обновления Unity
+└── UpgradeLog.htm           ← журнал обновления 
+
+Unity
     
