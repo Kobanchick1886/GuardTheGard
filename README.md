@@ -33,5 +33,23 @@ Roadmap
     🏗 Music, sounds
 
 Технічна архітектура проекту:
-    
+GuardTheGard/
+│
+├── Assets/                  ← почти всё, что относится к игре
+│   │
+│   ├── Scenes/              ← игровые сцены Unity
+│   ├── Scripts/             ← логика игры на C#
+│   ├── Prefabs/             ← готовые шаблоны игровых объектов
+│   ├── Animations/          ← анимации
+│   ├── Assets/              ← изображения, спрайты и другие ресурсы
+│   ├── Main Menu/           ← элементы главного меню
+│   ├── Settings/            ← настройки
+│   │
+│   └── guard the gard.unity ← основная игровая сцена
+│
+├── Packages/                ← подключённые пакеты Unity
+├── ProjectSettings/         ← настройки Unity-проекта
+├── .vs/                     ← служебные файлы Visual Studio
+├── README.md                ← описание проекта
+└── UpgradeLog.htm           ← журнал обновления Unity
     
