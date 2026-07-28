@@ -29,5 +29,9 @@ Roadmap
     ✅ Графіка (Дизайн, анімація)
     🏗 MPU sensor control with cellibration
     🏗 Settings
-    🏗 Ukrainian language 🇺🇦
+    🏗 Ukrainian language
+    🏗 Music, sounds
+
+Технічна архітектура проекту:
+    
     
