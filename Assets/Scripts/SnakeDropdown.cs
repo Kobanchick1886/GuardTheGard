@@ -41,14 +41,11 @@ public class SnakeDropdown : MonoBehaviour
     void Start()
     {
         myRectTransform = GetComponent<RectTransform>();
-
-        mainButtonText.text = "1920x1080";
+        string savedRes = PlayerPrefs.GetString("SavedResolution", "1920x1080");
+        SelectResolution(savedRes);
         mainTextRect.anchoredPosition = new Vector2(mainTextRect.anchoredPosition.x, textClosedY);
-        mainButtonText.fontSize = textClosedSize;
-
         middleRect.sizeDelta = new Vector2(middleRect.sizeDelta.x, 0);
     }
-
     public void ToggleDropdown()
     {
         isOpen = !isOpen;
@@ -69,6 +66,10 @@ public class SnakeDropdown : MonoBehaviour
 
     public void SelectResolution(string selectedRes)
     {
+        PlayerPrefs.SetString("SavedResolution", selectedRes);
+        PlayerPrefs.Save();
+
+        // Дальше идет твой стандартный код
         mainButtonText.text = selectedRes;
 
         if (selectedRes.Contains("3840")) Screen.SetResolution(3840, 2160, FullScreenMode.FullScreenWindow);
