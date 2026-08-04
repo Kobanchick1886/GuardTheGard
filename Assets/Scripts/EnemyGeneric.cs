@@ -38,6 +38,10 @@ public class EnemyGeneric : MonoBehaviour
 
     void Awake()
     {
+        // Читаем по новому ключу
+        moveSpeed = PlayerPrefs.GetFloat("Speed_Enemy", 8f);
+        Debug.Log("<color=red>СКОРОСТЬ ВРАГА ЗАГРУЖЕНА: " + moveSpeed + "</color>");
+
         root = GetComponentsInChildren<BoxCollider2D>();
         rb = GetComponent<Rigidbody2D>();
         objective = GameObject.FindWithTag("Objective");

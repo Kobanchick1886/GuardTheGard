@@ -11,6 +11,7 @@ public class AccountSelectionManager : MonoBehaviour
     [Header("Панели")]
     public GameObject accountSelectionPanel;
     public GameObject createAccountPanel;
+    public GameObject optionsPanel; // <--- ДОБАВЛЕНО: Ссылка на панель настроек
 
     [Header("Элементы списка")]
     public Transform contentParent;
@@ -43,6 +44,9 @@ public class AccountSelectionManager : MonoBehaviour
         if (accountSelectionPanel != null) accountSelectionPanel.SetActive(false);
         if (createAccountPanel != null) createAccountPanel.SetActive(false);
 
+        // Опционально: убеждаемся, что при старте настройки закрыты
+        if (optionsPanel != null) optionsPanel.SetActive(false);
+
         // Подписки на инпуты
         if (nameInput != null) nameInput.onValueChanged.AddListener(OnInputTextChanged);
         if (surnameInput != null) surnameInput.onValueChanged.AddListener(OnInputTextChanged);
@@ -53,8 +57,14 @@ public class AccountSelectionManager : MonoBehaviour
         if (backToPanelButton != null) backToPanelButton.onClick.AddListener(CloseCreatePopup);
         if (cancelButton != null) cancelButton.onClick.AddListener(CloseCreatePopup);
 
-        // ВОТ ОНО: Привязываем кнопку Save к методу создания аккаунта
+        // Привязываем кнопку Save к методу создания аккаунта
         if (confirmCreateButton != null) confirmCreateButton.onClick.AddListener(CreateNewAccount);
+    }
+
+    // --- ДОБАВЛЕНО: Метод для открытия настроек ---
+    public void OpenOptions()
+    {
+        if (optionsPanel != null) optionsPanel.SetActive(true);
     }
 
     public void OpenSelectionScreen()
@@ -103,7 +113,6 @@ public class AccountSelectionManager : MonoBehaviour
         LoadAccountsToUI(query);
     }
 
-    // ЭТОТ МЕТОД ТЕПЕРЬ АВТОМАТИЧЕСКИ ВЫЗЫВАЕТСЯ КНОПКОЙ SAVE
     public void CreateNewAccount()
     {
         string newName = nameInput.text.Trim();

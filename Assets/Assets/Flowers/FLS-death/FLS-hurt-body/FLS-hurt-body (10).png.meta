@@ -1,10 +1,19 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Assets/Flowers/FLS-death/FLS-hurt-body/FLS-hurt-body (10).png.meta
 guid: 53cf83aaecc4f034e981a3abc5d3c600
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: 2823621709212636390
     second: FLS-hurt-body (10)_0
+========
+guid: 619969da3b3039f43a1c148fd76bf70c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4803371626618953921
+    second: Property 1=Default_0
+>>>>>>>> 66d039ffa339dbb55c4b58609725da9fb5918b05:Assets/Main Menu/front/ExitButtons/Property 1=Default.png.meta
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,6 +109,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
+<<<<<<<< HEAD:Assets/Assets/Flowers/FLS-death/FLS-hurt-body/FLS-hurt-body (10).png.meta
       name: FLS-hurt-body (10)_0
       rect:
         serializedVersion: 2
@@ -107,6 +117,15 @@ TextureImporter:
         y: 41
         width: 912
         height: 862
+========
+      name: Property 1=Default_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 350
+        height: 147
+>>>>>>>> 66d039ffa339dbb55c4b58609725da9fb5918b05:Assets/Main Menu/front/ExitButtons/Property 1=Default.png.meta
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +134,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
+<<<<<<<< HEAD:Assets/Assets/Flowers/FLS-death/FLS-hurt-body/FLS-hurt-body (10).png.meta
       spriteID: 6e453bdfbf48f2720800000000000000
       internalID: 2823621709212636390
+========
+      spriteID: f3fdf2774fef65db0800000000000000
+      internalID: -4803371626618953921
+>>>>>>>> 66d039ffa339dbb55c4b58609725da9fb5918b05:Assets/Main Menu/front/ExitButtons/Property 1=Default.png.meta
       vertices: []
       indices: 
       edges: []
@@ -135,7 +159,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+<<<<<<<< HEAD:Assets/Assets/Flowers/FLS-death/FLS-hurt-body/FLS-hurt-body (10).png.meta
       FLS-hurt-body (10)_0: 2823621709212636390
+========
+      Property 1=Default_0: -4803371626618953921
+>>>>>>>> 66d039ffa339dbb55c4b58609725da9fb5918b05:Assets/Main Menu/front/ExitButtons/Property 1=Default.png.meta
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

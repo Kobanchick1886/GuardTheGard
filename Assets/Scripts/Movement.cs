@@ -1,10 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
-    private float moveSpeed = 120f;
+    public float moveSpeed = 120f;
     private float drag = 5f;
     private Rigidbody2D rb;
     private Vector2 moveInput;
@@ -22,12 +22,15 @@ public class Movement : MonoBehaviour
 
     void Awake()
     {
+        // Читаем по новому ключу
+        moveSpeed = PlayerPrefs.GetFloat("Speed_Player", 120f);
+        Debug.Log("<color=cyan>СКОРОСТЬ ИГРОКА ЗАГРУЖЕНА: " + moveSpeed + "</color>");
+
         rb = GetComponent<Rigidbody2D>();
         rb.linearDamping = drag;
         QualitySettings.vSyncCount = 1;
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        
     }
 
     public void OnMove(InputAction.CallbackContext context)

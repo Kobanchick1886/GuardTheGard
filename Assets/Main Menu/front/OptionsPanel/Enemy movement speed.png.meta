@@ -1,0 +1,585 @@
+fileFormatVersion: 2
+guid: bf198baec2a17a6479f87d156ff78d95
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 2003614655324930293
+    second: Enemy movement speed_0
+  - first:
+      213: 4432373665776217337
+    second: Enemy movement speed_1
+  - first:
+      213: -9059812874283981371
+    second: Enemy movement speed_2
+  - first:
+      213: -6000257369258974026
+    second: Enemy movement speed_3
+  - first:
+      213: -724960533452110916
+    second: Enemy movement speed_4
+  - first:
+      213: -3073135117107980053
+    second: Enemy movement speed_5
+  - first:
+      213: -8708424845506618907
+    second: Enemy movement speed_6
+  - first:
+      213: 7169342964111760193
+    second: Enemy movement speed_7
+  - first:
+      213: 7493399539045505858
+    second: Enemy movement speed_8
+  - first:
+      213: 1076490994066469036
+    second: Enemy movement speed_9
+  - first:
+      213: 7609148516335636461
+    second: Enemy movement speed_10
+  - first:
+      213: -7608101452947189421
+    second: Enemy movement speed_11
+  - first:
+      213: -2203262403565930005
+    second: Enemy movement speed_12
+  - first:
+      213: -2817666763750664169
+    second: Enemy movement speed_13
+  - first:
+      213: 7423340535383153614
+    second: Enemy movement speed_14
+  - first:
+      213: -2182193819544750638
+    second: Enemy movement speed_15
+  - first:
+      213: 8509834629061437146
+    second: Enemy movement speed_16
+  - first:
+      213: 350750655436337371
+    second: Enemy movement speed_17
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Enemy movement speed_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 6
+        width: 14
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f0c865d9e44ecb10800000000000000
+      internalID: 2003614655324930293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_1
+      rect:
+        serializedVersion: 2
+        x: 14
+        y: 6
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9fc23648d54f28d30800000000000000
+      internalID: 4432373665776217337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_2
+      rect:
+        serializedVersion: 2
+        x: 31
+        y: 6
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c5eac81134154280800000000000000
+      internalID: -9059812874283981371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 6
+        width: 25
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b42660a6bdcabca0800000000000000
+      internalID: -6000257369258974026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_4
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 0
+        width: 17
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb3c86f5c3c60f5f0800000000000000
+      internalID: -724960533452110916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_5
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 6
+        width: 25
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be81006a4e70a55d0800000000000000
+      internalID: -3073135117107980053
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_6
+      rect:
+        serializedVersion: 2
+        x: 127
+        y: 6
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e954620eb5752780800000000000000
+      internalID: -8708424845506618907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_7
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 6
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14bd3d8e07f9e7360800000000000000
+      internalID: 7169342964111760193
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_8
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 6
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24b12e4dd27edf760800000000000000
+      internalID: 7493399539045505858
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_9
+      rect:
+        serializedVersion: 2
+        x: 175
+        y: 6
+        width: 25
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca03d390bd670fe00800000000000000
+      internalID: 1076490994066469036
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_10
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 6
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: def4067b240299960800000000000000
+      internalID: 7609148516335636461
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_11
+      rect:
+        serializedVersion: 2
+        x: 217
+        y: 6
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35113f9b9089a6690800000000000000
+      internalID: -7608101452947189421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_12
+      rect:
+        serializedVersion: 2
+        x: 234
+        y: 6
+        width: 14
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be9ba7074807c61e0800000000000000
+      internalID: -2203262403565930005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_13
+      rect:
+        serializedVersion: 2
+        x: 261
+        y: 6
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 718973bc103a5e8d0800000000000000
+      internalID: -2817666763750664169
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_14
+      rect:
+        serializedVersion: 2
+        x: 276
+        y: 0
+        width: 17
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ecb554ae2e0050760800000000000000
+      internalID: 7423340535383153614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_15
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 6
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d57bfa684a47b1e0800000000000000
+      internalID: -2182193819544750638
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_16
+      rect:
+        serializedVersion: 2
+        x: 310
+        y: 6
+        width: 16
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad666821281091670800000000000000
+      internalID: 8509834629061437146
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Enemy movement speed_17
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 6
+        width: 15
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd0b40edcdd1ed400800000000000000
+      internalID: 350750655436337371
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Enemy movement speed_0: 2003614655324930293
+      Enemy movement speed_1: 4432373665776217337
+      Enemy movement speed_10: 7609148516335636461
+      Enemy movement speed_11: -7608101452947189421
+      Enemy movement speed_12: -2203262403565930005
+      Enemy movement speed_13: -2817666763750664169
+      Enemy movement speed_14: 7423340535383153614
+      Enemy movement speed_15: -2182193819544750638
+      Enemy movement speed_16: 8509834629061437146
+      Enemy movement speed_17: 350750655436337371
+      Enemy movement speed_2: -9059812874283981371
+      Enemy movement speed_3: -6000257369258974026
+      Enemy movement speed_4: -724960533452110916
+      Enemy movement speed_5: -3073135117107980053
+      Enemy movement speed_6: -8708424845506618907
+      Enemy movement speed_7: 7169342964111760193
+      Enemy movement speed_8: 7493399539045505858
+      Enemy movement speed_9: 1076490994066469036
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
