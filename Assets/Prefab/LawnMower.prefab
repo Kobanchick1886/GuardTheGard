@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4497841279699582845}
   - component: {fileID: -7081833275452695358}
   - component: {fileID: 4314396446786050047}
+  - component: {fileID: 7091240970382834454}
   m_Layer: 0
   m_Name: LawnMower
   m_TagString: Untagged
@@ -85,15 +86,15 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 20
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5913854472892262580, guid: d49a5df5aa26d61428ad659743683e89, type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 3.97, y: 4.24}
+  m_Size: {x: 10.916667, y: 9.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!61 &-7419580971153127807
 BoxCollider2D:
@@ -133,8 +134,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 4.13, y: 4.38}
-    newSize: {x: 3.97, y: 4.24}
+    oldSize: {x: 10.916667, y: 9.5}
+    newSize: {x: 10.916667, y: 9.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -154,6 +155,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MowerItself
   smashedEnemies: 0
+  animator: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+  slowDownDistance: 2
+  initialSpawnOffset: 0.8
+  extraDriveOutDistance: 3
 --- !u!50 &-7081833275452695358
 Rigidbody2D:
   serializedVersion: 5
@@ -218,3 +224,25 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 3.8, y: 4.3}
   m_Direction: 0
+--- !u!95 &7091240970382834454
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4348188846187116631}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2b499179a94d11a4eb0a4f057cee581e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

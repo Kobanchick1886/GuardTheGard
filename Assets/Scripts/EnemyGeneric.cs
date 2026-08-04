@@ -25,10 +25,16 @@ public class EnemyGeneric : MonoBehaviour
     [SerializeField]
     public bool Marker;
 
-    //для анімацій
+    //для анімацій переміщення ворогів
     [Header("Animation Settings")]
     public Transform legsTransform;
     private Animator animator;
+
+    //для анімації помирання ворогів
+    private static readonly int IsMovingHash = Animator.StringToHash("isMoving");
+    private static readonly int HitHash = Animator.StringToHash("Hit");
+    private static readonly int DeathHash = Animator.StringToHash("Die");
+
 
     void Awake()
     {
@@ -40,17 +46,13 @@ public class EnemyGeneric : MonoBehaviour
 
         animator = GetComponent<Animator>();
 
-        foreach (BoxCollider2D box in root)
-        {
-            if (box != null) box.GetComponent<SpriteRenderer>().enabled = false;
-            box.enabled = false;
-        }
+        HideRoots();
     }
 
     void Update()
     {
 
-        if (Marker)
+        if (Marker && !isDead)
         {
             bool hasRootsLeft = false;
 
@@ -75,7 +77,52 @@ public class EnemyGeneric : MonoBehaviour
     {
         if (isDead) return;
         isDead = true;
-        counter.CountEnemyDeath();
+        isMoving = false;
+
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.bodyType = RigidbodyType2D.Kinematic;
+        }
+
+        HideRoots();
+
+        if (counter != null)
+        {
+            counter.CountEnemyDeath();
+        }
+        StartCoroutine(PlayDeathAndDestroy());
+    }
+
+    private IEnumerator PlayDeathAndDestroy()
+    {
+        if (animator != null)
+        {
+            animator.ResetTrigger(HitHash);
+            animator.SetTrigger(DeathHash);
+
+            int initialStateHash = animator.GetCurrentAnimatorStateInfo(0).fullPathHash;
+            float safetyTime = 0.3f;
+
+            while (animator.GetCurrentAnimatorStateInfo(0).fullPathHash == initialStateHash && safetyTime > 0)
+            {
+                safetyTime -= Time.deltaTime;
+                yield return null;
+            }
+
+            while (animator.IsInTransition(0))
+            {
+                yield return null;
+            }
+
+            AnimatorStateInfo deathState = animator.GetCurrentAnimatorStateInfo(0);
+            float remainingTime = deathState.length * (1f - (deathState.normalizedTime % 1f));
+
+            if (remainingTime > 0f)
+            {
+                yield return new WaitForSeconds(remainingTime);
+            }
+        }
         Destroy(gameObject);
     }
 
@@ -104,17 +151,14 @@ public class EnemyGeneric : MonoBehaviour
 
             HandleVisuals(finalDirection);
         }
+        else
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
 
         if (animator != null)
         {
-            foreach (AnimatorControllerParameter param in animator.parameters)
-            {
-                if (param.name == "isMoving")
-                {
-                    animator.SetBool("isMoving", isMoving);
-                    break;
-                }
-            }
+            animator.SetBool(IsMovingHash, isMoving);
         }
 
     }
@@ -154,42 +198,65 @@ public class EnemyGeneric : MonoBehaviour
 
     public IEnumerator Stun()
     {
-        if (!Marker)
-        {
-            Die();
-            yield break;
-        }
+       
+        if (isDead) yield break;
 
         isMoving = false;
-        foreach (BoxCollider2D box in root)
-        {
-            if (box != null)
-            {
-                box.GetComponent<SpriteRenderer>().enabled = true;
-                box.enabled = true;
-            }
-        }
-
         rb.bodyType = RigidbodyType2D.Kinematic;
         rb.linearVelocity = Vector2.zero;
         rb.angularVelocity = 0;
 
-        yield return new WaitForSeconds(5);
 
-        // Если врага убили за время стана, прерываем корутину, чтобы не было ошибок
-        if (isDead) yield break;
-
-        rb.bodyType = RigidbodyType2D.Dynamic;
-
-        foreach (BoxCollider2D box in root)
+        if (animator != null)
         {
-            if (box != null)
-            {
-                box.GetComponent<SpriteRenderer>().enabled = false;
-                box.enabled = false;
-            }
+            animator.SetTrigger(HitHash);
         }
-        isMoving = true;
+
+        StartCoroutine(SmoothResetLegsRotation());
+
+        if (Marker)
+        {
+            yield return new WaitForSeconds(5f);
+
+            // Если врага убили за время стана, прерываем корутину, чтобы не было ошибок
+            if (isDead) yield break;
+
+            rb.bodyType = RigidbodyType2D.Dynamic;
+            HideRoots();
+            isMoving = true;
+        }
+    }
+
+    private IEnumerator SmoothResetLegsRotation()
+    {
+        if (legsTransform == null) yield break;
+
+        yield return null;
+
+        float duration = 0.3f;
+        if (animator != null)
+        {
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            duration = stateInfo.length;
+        }
+
+        Quaternion startRotation = legsTransform.localRotation;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            if (isDead) yield break;
+
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / duration);
+
+            // Сферична інтерполяція
+            legsTransform.localRotation = Quaternion.Slerp(startRotation, Quaternion.identity, t);
+
+            yield return null;
+        }
+
+        legsTransform.localRotation = Quaternion.identity;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -204,9 +271,81 @@ public class EnemyGeneric : MonoBehaviour
                 {
                     if (box.bounds.Intersects(other.bounds))
                     {
-                        Destroy(box.gameObject);
+                        box.enabled = false;
+
+                        Animator rootAnimator = box.GetComponent<Animator>();
+
+                        if (rootAnimator != null)
+                        {
+                            StartCoroutine(PlayDigAndDestroy(rootAnimator, box.gameObject));
+                        }
+                        else
+                        {
+                            Destroy(box.gameObject);
+                        }
                     }
                 }
+            }
+        }
+    }
+
+    //для анімації викопуванняя
+    private IEnumerator PlayDigAndDestroy(Animator rootAnim, GameObject rootGO)
+    {
+        if (rootAnim != null)
+        {
+            rootAnim.Play("Root-dig", 0, 0f);
+
+            yield return null;
+
+            AnimatorStateInfo stateInfo = rootAnim.GetCurrentAnimatorStateInfo(0);
+            float animLength = stateInfo.length / Mathf.Max(rootAnim.speed, 0.1f);
+
+            yield return new WaitForSeconds(animLength);
+        }
+
+        if (rootGO != null)
+        {
+            Destroy(rootGO);
+        }
+    }
+
+    public void OnHitAnimationEnd()
+    {
+        if (isDead) return;
+
+        if (Marker)
+        {
+            ShowRoots();
+        }
+        else
+        {
+            Die();
+        }
+    }
+
+    private void ShowRoots()
+    {
+        foreach (BoxCollider2D box in root)
+        {
+            if (box != null)
+            {
+                var sr = box.GetComponent<SpriteRenderer>();
+                if (sr != null) sr.enabled = true;
+                box.enabled = true;
+            }
+        }
+    }
+
+    private void HideRoots()
+    {
+        foreach (BoxCollider2D box in root)
+        {
+            if (box != null)
+            {
+                var sr = box.GetComponent<SpriteRenderer>();
+                if (sr != null ) sr.enabled = false;
+                box.enabled = false;
             }
         }
     }

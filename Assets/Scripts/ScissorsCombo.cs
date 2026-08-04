@@ -98,14 +98,7 @@ public class ScissorsCombo : MonoBehaviour
 
                 if (enemyScript != null)
                 {
-                    if (enemyScript.Marker)
-                    {
                         StartCoroutine(DelayedStun(enemyScript, 0.667f));
-                    }
-                    else
-                    {
-                        StartCoroutine(DelayedDestroy(target, 0.667f));
-                    }
                 }
             }
         }

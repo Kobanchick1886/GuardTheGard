@@ -46,4 +46,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LawnMower
   mowerPrefab: {fileID: 4348188846187116631, guid: b93c8b05194f56442ba108f4a68d1bac, type: 3}
   basePrefab: {fileID: 6541255097028684020, guid: b848bc8f30399434ea226e992b92cb25, type: 3}
-  mowerSpeed: 2
+  verticalBaseDown:
+    background: {fileID: -2342071948975198916, guid: ae45a9bbdabb2e9428b6b0f9db2b1c6b, type: 3}
+    foreground: {fileID: -3144337835502122050, guid: ae45a9bbdabb2e9428b6b0f9db2b1c6b, type: 3}
+    foregroundOffset: {x: 0, y: 0}
+  verticalBaseUp:
+    background: {fileID: -9204598990564004522, guid: 82be5939af4a6d54a971eabc6845f8da, type: 3}
+    foreground: {fileID: 4033648096586756550, guid: 82be5939af4a6d54a971eabc6845f8da, type: 3}
+    foregroundOffset: {x: 0, y: 0}
+  horizontalBase:
+    background: {fileID: -6865001834712775770, guid: 78cb91ea9eacea24aacc73f0dc907a42, type: 3}
+    foreground: {fileID: 5461749983028557713, guid: 78cb91ea9eacea24aacc73f0dc907a42, type: 3}
+    foregroundOffset: {x: 0, y: 0}
+  diagUpLeftBase:
+    background: {fileID: 940311093065053327, guid: 5d854722522821746a59ed80369bc9e2, type: 3}
+    foreground: {fileID: -2018991805776676798, guid: 5d854722522821746a59ed80369bc9e2, type: 3}
+    foregroundOffset: {x: 0, y: 0}
+  diagDownLeftBase:
+    background: {fileID: -1950999259845786744, guid: f421c73a09d481245a9bb123cde8c268, type: 3}
+    foreground: {fileID: -3636469098913773544, guid: f421c73a09d481245a9bb123cde8c268, type: 3}
+    foregroundOffset: {x: 0, y: 0}
+  countdownTimer: 0
+  isPlacing: 0
