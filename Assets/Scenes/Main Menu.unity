@@ -4589,7 +4589,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -4803371626618953921, guid: 619969da3b3039f43a1c148fd76bf70c, type: 3}
+  m_Sprite: {fileID: 3259670693943622467, guid: dff97b3d62e97324dacdbe6b6ced4e22, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5616,6 +5616,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AccountSelectionManager
   accountSelectionPanel: {fileID: 1550806058}
   createAccountPanel: {fileID: 1670395821}
+  optionsPanel: {fileID: 0}
   contentParent: {fileID: 1798250342}
   accountRowPrefab: {fileID: 561673378721831866, guid: bc4539c7e69d7684baa47c7adb0e7435, type: 3}
   nameInput: {fileID: 366608185}

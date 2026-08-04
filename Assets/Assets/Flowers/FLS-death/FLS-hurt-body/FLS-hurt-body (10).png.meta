@@ -1,19 +1,7 @@
 fileFormatVersion: 2
-<<<<<<<< HEAD:Assets/Assets/Flowers/FLS-death/FLS-hurt-body/FLS-hurt-body (10).png.meta
 guid: 53cf83aaecc4f034e981a3abc5d3c600
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 2823621709212636390
-    second: FLS-hurt-body (10)_0
-========
-guid: 619969da3b3039f43a1c148fd76bf70c
-TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: -4803371626618953921
-    second: Property 1=Default_0
->>>>>>>> 66d039ffa339dbb55c4b58609725da9fb5918b05:Assets/Main Menu/front/ExitButtons/Property 1=Default.png.meta
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +39,7 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 1
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -75,16 +63,16 @@ TextureImporter:
   compressionQualitySet: 0
   textureFormatSet: 0
   ignorePngGamma: 0
-  applyGammaDecoding: 0
+  applyGammaDecoding: 1
   swizzle: 50462976
-  cookieLightType: 0
+  cookieLightType: 2
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -97,7 +85,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -107,44 +95,7 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-<<<<<<<< HEAD:Assets/Assets/Flowers/FLS-death/FLS-hurt-body/FLS-hurt-body (10).png.meta
-      name: FLS-hurt-body (10)_0
-      rect:
-        serializedVersion: 2
-        x: 202
-        y: 41
-        width: 912
-        height: 862
-========
-      name: Property 1=Default_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 0
-        width: 350
-        height: 147
->>>>>>>> 66d039ffa339dbb55c4b58609725da9fb5918b05:Assets/Main Menu/front/ExitButtons/Property 1=Default.png.meta
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-<<<<<<<< HEAD:Assets/Assets/Flowers/FLS-death/FLS-hurt-body/FLS-hurt-body (10).png.meta
-      spriteID: 6e453bdfbf48f2720800000000000000
-      internalID: 2823621709212636390
-========
-      spriteID: f3fdf2774fef65db0800000000000000
-      internalID: -4803371626618953921
->>>>>>>> 66d039ffa339dbb55c4b58609725da9fb5918b05:Assets/Main Menu/front/ExitButtons/Property 1=Default.png.meta
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
+    sprites: []
     outline: []
     customData: 
     physicsShape: []
@@ -158,12 +109,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-<<<<<<<< HEAD:Assets/Assets/Flowers/FLS-death/FLS-hurt-body/FLS-hurt-body (10).png.meta
-      FLS-hurt-body (10)_0: 2823621709212636390
-========
-      Property 1=Default_0: -4803371626618953921
->>>>>>>> 66d039ffa339dbb55c4b58609725da9fb5918b05:Assets/Main Menu/front/ExitButtons/Property 1=Default.png.meta
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
