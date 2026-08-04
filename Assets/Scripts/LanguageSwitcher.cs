@@ -2,52 +2,47 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System; // <--- Нужно для событий
 
 public class LanguageSwitcher : MonoBehaviour
 {
     [Header("UI Elements")]
-    public TextMeshProUGUI valueText; // Текст по центру (например, "English")
-    public Button leftButton;         // Кнопка влево
-    public Button rightButton;        // Кнопка вправо
+    public TextMeshProUGUI valueText;
+    public Button leftButton;
+    public Button rightButton;
 
     [Header("Settings")]
-    private List<string> languages = new List<string> { "English", "Українська" }; // Можешь добавить еще языки
+    private List<string> languages = new List<string> { "English", "Українська" };
     private int currentIndex = 0;
+
+    // --- СОБЫТИЕ, КОТОРОЕ БУДЕТ ОПОВЕЩАТЬ ВСЕ КАРТИНКИ ОБ ИЗМЕНЕНИИ ЯЗЫКА ---
+    public static event Action OnLanguageChanged;
 
     void Start()
     {
         leftButton.onClick.AddListener(PrevLanguage);
         rightButton.onClick.AddListener(NextLanguage);
+
         string savedLang = PlayerPrefs.GetString("SavedLanguage", "English");
         int savedIndex = languages.IndexOf(savedLang);
-        if (savedIndex != -1)
-        {
-            currentIndex = savedIndex;
-        }
-        else
-        {
-            currentIndex = 0;
-        }
+
+        if (savedIndex != -1) currentIndex = savedIndex;
+        else currentIndex = 0;
+
         UpdateUI();
     }
 
     public void NextLanguage()
     {
         currentIndex++;
-        if (currentIndex >= languages.Count)
-        {
-            currentIndex = 0;
-        }
+        if (currentIndex >= languages.Count) currentIndex = 0;
         UpdateUI();
     }
 
     public void PrevLanguage()
     {
         currentIndex--;
-        if (currentIndex < 0)
-        {
-            currentIndex = languages.Count - 1; 
-        }
+        if (currentIndex < 0) currentIndex = languages.Count - 1;
         UpdateUI();
     }
 
@@ -55,8 +50,11 @@ public class LanguageSwitcher : MonoBehaviour
     {
         string currentLang = languages[currentIndex];
         valueText.text = currentLang;
+
         PlayerPrefs.SetString("SavedLanguage", currentLang);
         PlayerPrefs.Save();
-        Debug.Log("Выбран и сохранен язык: " + currentLang);
+
+        // Кричим всем скриптам в игре: "Язык поменялся, обновитесь!"
+        OnLanguageChanged?.Invoke();
     }
 }

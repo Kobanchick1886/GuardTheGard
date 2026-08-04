@@ -11,18 +11,19 @@ public class AccountSelectionManager : MonoBehaviour
     [Header("Панели")]
     public GameObject accountSelectionPanel;
     public GameObject createAccountPanel;
-    public GameObject optionsPanel; // <--- ДОБАВЛЕНО: Ссылка на панель настроек
+    public GameObject optionsPanel;
 
     [Header("Элементы списка")]
     public Transform contentParent;
     public GameObject accountRowPrefab;
+    public GameObject createAccountRowPrefab;
 
     [Header("Попап создания (Инпуты)")]
     public TMP_InputField nameInput;
     public TMP_InputField surnameInput;
     public Button confirmCreateButton;
 
-    [Header("Поиск (Опционально)")]
+    [Header("Поиск")]
     public TMP_InputField searchInput;
 
     [Header("Основные кнопки")]
@@ -43,25 +44,41 @@ public class AccountSelectionManager : MonoBehaviour
 
         if (accountSelectionPanel != null) accountSelectionPanel.SetActive(false);
         if (createAccountPanel != null) createAccountPanel.SetActive(false);
-
-        // Опционально: убеждаемся, что при старте настройки закрыты
         if (optionsPanel != null) optionsPanel.SetActive(false);
 
-        // Подписки на инпуты
         if (nameInput != null) nameInput.onValueChanged.AddListener(OnInputTextChanged);
         if (surnameInput != null) surnameInput.onValueChanged.AddListener(OnInputTextChanged);
+
         if (searchInput != null) searchInput.onValueChanged.AddListener(OnSearchInputChanged);
 
-        // АВТОМАТИЧЕСКАЯ ПРИВЯЗКА КНОПОК
         if (backToMenuButton != null) backToMenuButton.onClick.AddListener(CloseSelectionScreen);
         if (backToPanelButton != null) backToPanelButton.onClick.AddListener(CloseCreatePopup);
         if (cancelButton != null) cancelButton.onClick.AddListener(CloseCreatePopup);
 
-        // Привязываем кнопку Save к методу создания аккаунта
         if (confirmCreateButton != null) confirmCreateButton.onClick.AddListener(CreateNewAccount);
     }
 
-    // --- ДОБАВЛЕНО: Метод для открытия настроек ---
+    // --- ПОДПИСКА НА ИЗМЕНЕНИЕ ЯЗЫКА ДЛЯ МГНОВЕННОГО ПЕРЕВОДА СПИСКА ---
+    void OnEnable()
+    {
+        LanguageSwitcher.OnLanguageChanged += ReloadListOnLanguageChange;
+    }
+
+    void OnDisable()
+    {
+        LanguageSwitcher.OnLanguageChanged -= ReloadListOnLanguageChange;
+    }
+
+    private void ReloadListOnLanguageChange()
+    {
+        // Перезагружаем список только если панель выбора сейчас открыта
+        if (accountSelectionPanel != null && accountSelectionPanel.activeInHierarchy)
+        {
+            string currentSearch = searchInput != null ? searchInput.text : "";
+            LoadAccountsToUI(currentSearch);
+        }
+    }
+
     public void OpenOptions()
     {
         if (optionsPanel != null) optionsPanel.SetActive(true);
@@ -134,20 +151,21 @@ public class AccountSelectionManager : MonoBehaviour
     {
         foreach (Transform child in contentParent) Destroy(child.gameObject);
 
-        // 1. СОЗДАЕМ ПЛАШКУ "СОЗДАТЬ АККАУНТ" В НАЧАЛЕ СПИСКА
-        if (string.IsNullOrEmpty(searchQuery))
+        // Читаем текущий язык один раз перед циклом
+        string currentLang = PlayerPrefs.GetString("SavedLanguage", "English");
+
+        // 1. СОЗДАЕМ КНОПКУ "СОЗДАТЬ АККАУНТ"
+        if (string.IsNullOrEmpty(searchQuery) && createAccountRowPrefab != null)
         {
-            GameObject createRow = Instantiate(accountRowPrefab, contentParent);
+            GameObject createRow = Instantiate(createAccountRowPrefab, contentParent);
 
-            TextMeshProUGUI createNameText = createRow.transform.Find("NameText")?.GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI createTimeText = createRow.transform.Find("TimeText")?.GetComponent<TextMeshProUGUI>();
-            TextMeshProUGUI createBestTimeText = createRow.transform.Find("BestTime")?.GetComponent<TextMeshProUGUI>();
+            Button createBtn = createRow.GetComponent<Button>();
+            if (createBtn == null) createBtn = createRow.GetComponentInChildren<Button>();
 
-            if (createNameText != null) createNameText.text = "+ Создать новый аккаунт";
-            if (createTimeText != null) createTimeText.text = "";
-            if (createBestTimeText != null) createBestTimeText.text = "";
-
-            createRow.GetComponent<Button>().onClick.AddListener(OpenCreatePopup);
+            if (createBtn != null)
+            {
+                createBtn.onClick.AddListener(OpenCreatePopup);
+            }
         }
 
         // 2. ЗАГРУЖАЕМ ОСТАЛЬНЫЕ АККАУНТЫ
@@ -159,7 +177,7 @@ public class AccountSelectionManager : MonoBehaviour
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
             string[] data = lines[i].Split(',');
             string name = data[0];
-            string lastPlayed = data[1];
+            string lastPlayed = data.Length > 1 ? data[1] : "";
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
@@ -173,8 +191,18 @@ public class AccountSelectionManager : MonoBehaviour
             TextMeshProUGUI bestTimeText = row.transform.Find("BestTime")?.GetComponent<TextMeshProUGUI>();
 
             if (nameText != null) nameText.text = name;
-            if (bestTimeText != null) bestTimeText.text = "Best time: --:--";
-            if (timeText != null) timeText.text = $"Last time played: {lastPlayed}";
+
+            // --- ПЕРЕВОД ДИНАМИЧЕСКОГО ТЕКСТА ---
+            if (currentLang == "Українська")
+            {
+                if (bestTimeText != null) bestTimeText.text = "Кращий час: --:--";
+                if (timeText != null) timeText.text = $"Остання дата гри: {lastPlayed}";
+            }
+            else // English
+            {
+                if (bestTimeText != null) bestTimeText.text = "Best time: --:--";
+                if (timeText != null) timeText.text = $"Last time played: {lastPlayed}";
+            }
 
             row.GetComponent<Button>().onClick.AddListener(() => OnAccountSelected(name));
         }
@@ -209,7 +237,7 @@ public class AccountSelectionManager : MonoBehaviour
         {
             PlayerPrefs.SetString("CurrentPlayerName", selectedAccountName);
             PlayerPrefs.Save();
-            Debug.Log($"Играем за {selectedAccountName}!");
+            Debug.Log($"Граємо за {selectedAccountName}!");
             SceneManager.LoadScene("SampleScene");
         }
     }
