@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using UnityEngine;
 
@@ -7,8 +7,8 @@ public class LawnMower : MonoBehaviour
     [System.Serializable]
     public struct BaseSpritePair
     {
-        public Sprite background; // ������ ���
-        public Sprite foreground; // �������� ���
+        public Sprite background; // Задній шар
+        public Sprite foreground; // Передній шар
         public Vector2 foregroundOffset;
     }
 
@@ -32,15 +32,20 @@ public class LawnMower : MonoBehaviour
     [Tooltip("DOWN-LEFT")]
     [SerializeField] private BaseSpritePair diagDownLeftBase;
 
+    [Header("Obstacle Detection")]
+    [Tooltip("Тег главного куста, который блокирует траекторию")]
+    [SerializeField] private string obstacleTag = "Objective";
+
     private Transform player;
     private GameObject spawnedMower;
     private GameObject spawnedBase1;
     private GameObject spawnedBase2;
 
-    private float mowerSpeed = 5f;
+    public float mowerSpeed = 5f;
 
     [HideInInspector] public float countdownTimer = 0f;
     [HideInInspector] public bool isPlacing = false;
+    [HideInInspector] public bool isPathBlocked = false; // Можно использовать для UI (показывать красную линию)
 
     void Awake()
     {
@@ -60,8 +65,9 @@ public class LawnMower : MonoBehaviour
     private IEnumerator PowerUpSequence()
     {
         isPlacing = true;
+        isPathBlocked = false;
 
-        // Fase 1
+        // Fase 1 - Установка первой базы
         countdownTimer = 5f;
         while (countdownTimer > 0)
         {
@@ -72,20 +78,41 @@ public class LawnMower : MonoBehaviour
         spawnedBase1 = Instantiate(basePrefab, player.position, Quaternion.identity);
         SetSingleBaseSprite(spawnedBase1, verticalBaseDown);
 
-        // Fase 2
+        Vector3 pos1 = spawnedBase1.transform.position;
+
+        // Fase 2 - Установка второй базы (с проверкой траектории)
         countdownTimer = 5f;
         while (countdownTimer > 0)
         {
-            countdownTimer -= Time.deltaTime;
+            Vector3 currentPos = player.position;
+            bool pathClear = true;
+
+            // Пускаем луч от первой базы к игроку, чтобы проверить, есть ли куст на пути
+            RaycastHit2D[] hits = Physics2D.LinecastAll(pos1, currentPos);
+            foreach (RaycastHit2D hit in hits)
+            {
+                if (hit.collider != null && hit.collider.CompareTag(obstacleTag))
+                {
+                    pathClear = false;
+                    break;
+                }
+            }
+
+            isPathBlocked = !pathClear;
+
+            // Если путь чист, таймер идет. Если нет - замораживается.
+            if (pathClear)
+            {
+                countdownTimer -= Time.deltaTime;
+            }
+
             yield return null;
         }
 
+        // Fase 3 - Размещение и запуск газонокосилки
         spawnedBase2 = Instantiate(basePrefab, player.position, Quaternion.identity);
 
-        // Fase 3
-        Vector3 pos1 = spawnedBase1.transform.position;
         Vector3 pos2 = spawnedBase2.transform.position;
-
         Vector3 direction = (pos2 - pos1).normalized;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
@@ -94,6 +121,7 @@ public class LawnMower : MonoBehaviour
         spawnedMower = Instantiate(mowerPrefab, pos1, Quaternion.identity);
 
         isPlacing = false;
+        isPathBlocked = false;
 
         MowerItself mowerScript = spawnedMower.GetComponent<MowerItself>();
         if (mowerScript != null)
@@ -124,7 +152,7 @@ public class LawnMower : MonoBehaviour
 
         if (renderers1.Length < 2 || renderers2.Length < 2)
         {
-            Debug.LogError("���� ������� ���� �� ������ 2 ������� SpriteRenderer (Back �� Front)!");
+            Debug.LogError("База повинна мати як мінімум 2 дочірні SpriteRenderer (Back та Front)!");
             return;
         }
 
@@ -140,22 +168,21 @@ public class LawnMower : MonoBehaviour
 
         ResetFlips(back1, front1, back2, front2);
 
-        // ���������Ͳ ����
+        // ВЕРТИКАЛЬНІ БАЗИ
         if ((angle > 67.5f && angle < 112.5f) || (angle < -67.5f && angle > -112.5f))
         {
-            // angle > 0 ������ ��� ����� ����� Base1 - �����
             if (angle > 0)
             {
-                ApplyIndividualPair(verticalBaseDown, back1, front1); 
-                ApplyIndividualPair(verticalBaseUp, back2, front2);  
+                ApplyIndividualPair(verticalBaseDown, back1, front1);
+                ApplyIndividualPair(verticalBaseUp, back2, front2);
             }
             else
             {
-                ApplyIndividualPair(verticalBaseUp, back1, front1);   
+                ApplyIndividualPair(verticalBaseUp, back1, front1);
                 ApplyIndividualPair(verticalBaseDown, back2, front2);
             }
         }
-        // �����������Ͳ ����
+        // ГОРИЗОНТАЛЬНІ БАЗИ
         else if (angle >= 157.5f || angle <= -157.5f || (angle >= -22.5f && angle <= 22.5f))
         {
             ApplyIndividualPair(horizontalBase, back1, front1);
@@ -170,40 +197,32 @@ public class LawnMower : MonoBehaviour
                 SetFlipX(true, back1, front1);
             }
         }
-        // Ĳ������� UP-RIGHT
+        // ДІАГОНАЛЬ UP-RIGHT
         else if (angle >= 22.5f && angle <= 67.5f)
         {
-            // Base1 - ���
             ApplyIndividualPair(diagDownLeftBase, back1, front1);
             ApplyIndividualPair(diagUpLeftBase, back2, front2);
-
             SetFlipX(true, back1, front1);
         }
         // UP-LEFT
         else if (angle > 112.5f && angle < 157.5f)
         {
-            // Base1 - ���
             ApplyIndividualPair(diagDownLeftBase, back1, front1);
             ApplyIndividualPair(diagUpLeftBase, back2, front2);
-
             SetFlipX(true, back2, front2);
         }
         // DOWN-RIGHT
         else if (angle > -67.5f && angle < -22.5f)
         {
-            // Base1 - ����
             ApplyIndividualPair(diagUpLeftBase, back1, front1);
             ApplyIndividualPair(diagDownLeftBase, back2, front2);
-
             SetFlipX(true, back2, front2);
         }
         // DOWN-LEFT
         else if (angle >= -157.5f && angle <= -112.5f)
         {
-            // Base1 - ����
             ApplyIndividualPair(diagUpLeftBase, back1, front1);
             ApplyIndividualPair(diagDownLeftBase, back2, front2);
-
             SetFlipX(true, back1, front1);
         }
     }
@@ -212,7 +231,6 @@ public class LawnMower : MonoBehaviour
     {
         back.sprite = pair.background;
         front.sprite = pair.foreground;
-
         back.transform.localPosition = Vector3.zero;
         front.transform.localPosition = pair.foregroundOffset;
     }

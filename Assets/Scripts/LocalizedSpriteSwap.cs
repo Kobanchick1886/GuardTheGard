@@ -9,11 +9,13 @@ public class LocalizedSpriteSwap : MonoBehaviour
     public Sprite normalEN;
     public Sprite highlightedEN;
     public Sprite pressedEN;
+    public Sprite disabledEN; // <--- ДОБАВЛЕНО
 
     [Header("Украинская версия")]
     public Sprite normalUA;
     public Sprite highlightedUA;
     public Sprite pressedUA;
+    public Sprite disabledUA; // <--- ДОБАВЛЕНО
 
     private Button btn;
     private Image img;
@@ -32,7 +34,7 @@ public class LocalizedSpriteSwap : MonoBehaviour
     void OnEnable()
     {
         LanguageSwitcher.OnLanguageChanged += UpdateLanguage;
-        UpdateLanguage(); // <--- ДОБАВЛЕНО: Обновляем кнопку сразу при включении
+        UpdateLanguage(); // Обновляем кнопку сразу при включении
     }
 
     void OnDisable()
@@ -52,12 +54,14 @@ public class LocalizedSpriteSwap : MonoBehaviour
             if (normalUA != null) img.sprite = normalUA;
             if (highlightedUA != null) state.highlightedSprite = highlightedUA;
             if (pressedUA != null) state.pressedSprite = pressedUA;
+            if (disabledUA != null) state.disabledSprite = disabledUA; // <--- ДОБАВЛЕНО
         }
         else // English
         {
             if (normalEN != null) img.sprite = normalEN;
             if (highlightedEN != null) state.highlightedSprite = highlightedEN;
             if (pressedEN != null) state.pressedSprite = pressedEN;
+            if (disabledEN != null) state.disabledSprite = disabledEN; // <--- ДОБАВЛЕНО
         }
 
         // Возвращаем обновленные состояния обратно в кнопку

@@ -1,19 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
-using TMPro;
 
 public class PowerUpManagement : MonoBehaviour
 {
     [Header("UI References")]
     public GameObject menuPanel;
     public Button buttonLeft, buttonRight;
+    public Image leftCardImage, rightCardImage;
     public Image leftFill, rightFill;
-    public TextMeshProUGUI textLeft, textRight;
     public Volume blurVolume;
+
+    [Header("Бабушки (Отдельные объекты поверх карточек)")]
+    public GameObject leftGrandma;
+    public GameObject rightGrandma;
+
+    [System.Serializable]
+    public class PowerUpSprites
+    {
+        public Sprite spriteEN;
+        public Sprite spriteUA;
+    }
+
+    [Header("Спрайты цельных карточек (Все 6 штук)")]
+    public PowerUpSprites sprayerLvl2;
+    public PowerUpSprites sprayerLvl4;
+    public PowerUpSprites scissorsLvl1;
+    public PowerUpSprites scissorsLvl2;
+    public PowerUpSprites lawnmowerLvl1;
+    public PowerUpSprites lawnmowerLvl2;
 
     [Header("Settings")]
     public float holdDuration = 2.0f;
@@ -21,31 +40,29 @@ public class PowerUpManagement : MonoBehaviour
     private bool isLeftSelected = true;
     public bool isMenuActive = false;
 
-    // Analytics tracking for your CSV
     [HideInInspector] public List<string> selectedHistory = new List<string>();
 
-    // Сохраняем сами объекты улучшений, чтобы знать, что удалять
     private PowerUp leftPowerUp;
     private PowerUp rightPowerUp;
 
     [SerializeField]
-    private GameObject LawnMower;
+    private GameObject LawnMowerPrefab; // Закинь сюда ПРЕФАБ газонокосилки (LawnMower)
 
     [SerializeField]
     private GameObject scissorsVisualObject;
 
-    // --- DATA STRUCTURE FOR POWER-UPS ---
     private class PowerUp
     {
         public string Name;
         public Action Execute;
-        public bool IsOneTime; // Новый флаг для одноразовых апгрейдов
+        public bool IsOneTime;
+        public PowerUpSprites Sprites;
 
-        // По умолчанию IsOneTime = false, если не указано иное
-        public PowerUp(string name, Action execute, bool isOneTime = false)
+        public PowerUp(string name, Action execute, PowerUpSprites sprites, bool isOneTime = false)
         {
             Name = name;
             Execute = execute;
+            Sprites = sprites;
             IsOneTime = isOneTime;
         }
     }
@@ -60,61 +77,107 @@ public class PowerUpManagement : MonoBehaviour
         InitializePowerUps();
     }
 
-    // --- THE POWER-UP POOL ---
+    void OnEnable()
+    {
+        LanguageSwitcher.OnLanguageChanged += UpdateCardTranslations;
+    }
+
+    void OnDisable()
+    {
+        LanguageSwitcher.OnLanguageChanged -= UpdateCardTranslations;
+    }
+
     private void InitializePowerUps()
     {
-        powerUpPool = new List<PowerUp>
+        // Изначально создаем пустой пул
+        powerUpPool = new List<PowerUp>();
+
+        // --- БАЗОВЫЕ УЛУЧШЕНИЯ (Доступны сразу) ---
+
+        // 1. ПШИКАЛКА 2 УРОВЕНЬ
+        powerUpPool.Add(new PowerUp("Sprayer Lvl 2", () =>
         {
-            // Многоразовое
-            new PowerUp("Lawn Mower", () =>
-            {
-                GameObject player = GameObject.FindWithTag("Player");
-                if (LawnMower != null && player != null)
-                {
-                    Instantiate(LawnMower, player.transform.position, Quaternion.identity);
-                    Debug.Log("Spawned Lawn Mower at Player.");
-                }
-            }),
+            Magnet sprayer = FindFirstObjectByType<Magnet>(FindObjectsInactive.Include);
+            if (sprayer != null) sprayer.cooldownTime = 4f;
 
-            // ОДНОРАЗОВОЕ (добавили true в конце)
-            new PowerUp("Scissors", () =>
+            // Как только взяли 2 уровень, добавляем в пул 4-й уровень
+            powerUpPool.Add(new PowerUp("Sprayer Lvl 4", () =>
             {
-                ScissorsCombo scissors = FindFirstObjectByType<ScissorsCombo>(FindObjectsInactive.Include);
-                if (scissors != null)
-                {
-                    scissors.gameObject.SetActive(true);
-                    scissors.canSnip = true;
-                }
+                Magnet s = FindFirstObjectByType<Magnet>(FindObjectsInactive.Include);
+                if (s != null) s.cooldownTime = 3f;
+            }, sprayerLvl4, true));
 
-                if (scissorsVisualObject != null) {
-                    scissorsVisualObject.gameObject.SetActive(true);
-                }
-            }, true),
+        }, sprayerLvl2, true));
 
-            // Многоразовое
-            new PowerUp("Attack Range x1.5", () =>
+        // 3. НОЖНИЦЫ 1 УРОВЕНЬ
+        powerUpPool.Add(new PowerUp("Scissors Lvl 1", () =>
+        {
+            ScissorsCombo scissors = FindFirstObjectByType<ScissorsCombo>(FindObjectsInactive.Include);
+            if (scissors != null)
             {
-                Magnet mainAttack = FindFirstObjectByType<Magnet>();
-                if (mainAttack != null)
+                scissors.gameObject.SetActive(true);
+                scissors.canSnip = true;
+            }
+            if (scissorsVisualObject != null) scissorsVisualObject.SetActive(true);
+
+            // Как только активировали ножницы, добавляем в пул их прокачку
+            powerUpPool.Add(new PowerUp("Scissors Lvl 2", () =>
+            {
+                ScissorsCombo sc = FindFirstObjectByType<ScissorsCombo>(FindObjectsInactive.Include);
+                if (sc != null)
                 {
-                    mainAttack.UpgradeRange(1.5f);
+                    sc.cooldownTime -= 1f;
+                    Debug.Log("<color=green>Scissors cooldown upgraded to: </color>" + sc.cooldownTime);
                 }
-            })
-        };
+            }, scissorsLvl2, true));
+
+        }, scissorsLvl1, true));
+
+        // 5. ГАЗОНОКОСИЛКА 1 УРОВЕНЬ
+        powerUpPool.Add(new PowerUp("Lawnmower Lvl 1", () =>
+        {
+            GameObject player = GameObject.FindWithTag("Player");
+            if (LawnMowerPrefab != null && player != null)
+            {
+                Instantiate(LawnMowerPrefab, player.transform.position, Quaternion.identity);
+            }
+
+            // Как только заспавнили косилку, добавляем в пул её ускорение
+            powerUpPool.Add(new PowerUp("Lawnmower Lvl 2", () =>
+            {
+                LawnMower spawnedMower = FindFirstObjectByType<LawnMower>();
+                if (spawnedMower != null)
+                {
+                    spawnedMower.mowerSpeed *= 1.2f;
+
+                    MowerItself actualMower = FindFirstObjectByType<MowerItself>();
+                    if (actualMower != null)
+                    {
+                        // actualMower.speed *= 1.2f; 
+                    }
+                }
+            }, lawnmowerLvl2, true));
+
+        }, lawnmowerLvl1, true));
     }
 
     void Update()
     {
         if (!isMenuActive) return;
 
-        // Navigation
-        if (Keyboard.current.aKey.wasPressedThisFrame) { isLeftSelected = true; ResetHold(); }
-        if (Keyboard.current.dKey.wasPressedThisFrame) { isLeftSelected = false; ResetHold(); }
+        if (Keyboard.current.aKey.wasPressedThisFrame && !isLeftSelected)
+        {
+            isLeftSelected = true;
+            ResetHold();
+            UpdateHoverState();
+        }
+        if (Keyboard.current.dKey.wasPressedThisFrame && isLeftSelected)
+        {
+            isLeftSelected = false;
+            ResetHold();
+            UpdateHoverState();
+        }
 
-        if (isLeftSelected) buttonLeft.Select();
-        else buttonRight.Select();
-
-        // Hold Logic
         bool isHolding = (isLeftSelected && Keyboard.current.aKey.isPressed) ||
                          (!isLeftSelected && Keyboard.current.dKey.isPressed);
 
@@ -139,11 +202,7 @@ public class PowerUpManagement : MonoBehaviour
 
     public void OpenUpgradeMenu()
     {
-        if (powerUpPool.Count == 0)
-        {
-            Debug.LogWarning("No more power-ups in the pool!");
-            return;
-        }
+        if (powerUpPool.Count == 0) return;
 
         int index1 = UnityEngine.Random.Range(0, powerUpPool.Count);
         int index2 = index1;
@@ -159,14 +218,40 @@ public class PowerUpManagement : MonoBehaviour
         leftPowerUp = powerUpPool[index1];
         rightPowerUp = powerUpPool[index2];
 
-        if (textLeft != null) textLeft.text = leftPowerUp.Name;
-        if (textRight != null) textRight.text = rightPowerUp.Name;
-
+        isLeftSelected = true;
         isMenuActive = true;
         menuPanel.SetActive(true);
         if (blurVolume != null) blurVolume.weight = 1f;
         Time.timeScale = 0f;
+
         ResetHold();
+        UpdateHoverState();
+        UpdateCardTranslations();
+    }
+
+    private void UpdateHoverState()
+    {
+        if (leftGrandma != null) leftGrandma.SetActive(isLeftSelected);
+        if (rightGrandma != null) rightGrandma.SetActive(!isLeftSelected);
+
+        if (isLeftSelected) buttonLeft.Select();
+        else buttonRight.Select();
+    }
+
+    private void UpdateCardTranslations()
+    {
+        if (!isMenuActive) return;
+        string currentLang = PlayerPrefs.GetString("SavedLanguage", "English");
+
+        if (leftCardImage != null && leftPowerUp != null)
+        {
+            leftCardImage.sprite = (currentLang == "Українська") ? leftPowerUp.Sprites.spriteUA : leftPowerUp.Sprites.spriteEN;
+        }
+
+        if (rightCardImage != null && rightPowerUp != null)
+        {
+            rightCardImage.sprite = (currentLang == "Українська") ? rightPowerUp.Sprites.spriteUA : rightPowerUp.Sprites.spriteEN;
+        }
     }
 
     private void ExecuteSelection()
@@ -177,16 +262,13 @@ public class PowerUpManagement : MonoBehaviour
         {
             selectedPowerUp.Execute.Invoke();
             selectedHistory.Add(selectedPowerUp.Name);
-            Debug.Log("<color=green>Executed PowerUp: " + selectedPowerUp.Name + "</color>");
 
             if (selectedPowerUp.IsOneTime)
             {
                 powerUpPool.Remove(selectedPowerUp);
-                Debug.Log($"<color=orange>{selectedPowerUp.Name} was removed from the pool.</color>");
             }
         }
 
-        // Closing the menu and resuming the game
         if (blurVolume != null) blurVolume.weight = 0f;
         isMenuActive = false;
         Time.timeScale = 1f;
@@ -198,5 +280,31 @@ public class PowerUpManagement : MonoBehaviour
         currentHoldTime = 0f;
         if (leftFill != null) leftFill.fillAmount = 0f;
         if (rightFill != null) rightFill.fillAmount = 0f;
+    }
+
+    public void OpenAnalytics()
+    {
+        try
+        {
+            string targetPath = Path.Combine(Application.persistentDataPath, "analytics.exe");
+
+            if (File.Exists(targetPath))
+            {
+                System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+                startInfo.FileName = targetPath;
+                startInfo.WorkingDirectory = Application.persistentDataPath;
+
+                System.Diagnostics.Process.Start(startInfo);
+                UnityEngine.Debug.Log("<color=green>Успешный запуск аналитики из AppData: </color>" + targetPath);
+            }
+            else
+            {
+                UnityEngine.Debug.LogError("<color=red>Файл не найден в AppData!</color> Искал здесь: " + targetPath);
+            }
+        }
+        catch (Exception e)
+        {
+            UnityEngine.Debug.LogError("Ошибка запуска аналитики: " + e.Message);
+        }
     }
 }
