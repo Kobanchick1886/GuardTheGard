@@ -5262,7 +5262,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1237279631}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1537580511}
+        m_TargetAssemblyTypeName: AccountSelectionManager, Assembly-CSharp
+        m_MethodName: QuitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &1237279629
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -5283,7 +5295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4dbba873f8c6834f9a0cbaa50a60127, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LocalizedImage
-  englishTexture: {fileID: 2800000, guid: 619969da3b3039f43a1c148fd76bf70c, type: 3}
+  englishTexture: {fileID: 2800000, guid: 490dec671b3c06241abe474a35ca9e00, type: 3}
   ukrainianTexture: {fileID: 2800000, guid: fb504d68070463f43a654e58a0b01047, type: 3}
 --- !u!114 &1237279631
 MonoBehaviour:
@@ -6363,12 +6375,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.CanvasScaler
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

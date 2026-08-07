@@ -207,7 +207,17 @@ public class AccountSelectionManager : MonoBehaviour
             row.GetComponent<Button>().onClick.AddListener(() => OnAccountSelected(name));
         }
     }
+    public void QuitGame()
+    {
+        Debug.Log("Выход из игры...");
+        Application.Quit(); // Закрывает сбилженную игру
 
+        // Если ты тестируешь прямо в редакторе Unity, Application.Quit() не закроет редактор. 
+        // Эта строчка остановит режим Play в редакторе (можешь оставить её для удобства):
+    #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+    #endif
+    }
     private void OnAccountSelected(string accountName)
     {
         selectedAccountName = accountName;
