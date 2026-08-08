@@ -105,30 +105,28 @@ public class PowerUpManagement : MonoBehaviour
     {
         powerUpPool = new List<PowerUp>();
 
-        // 1. ПШИКАЛКА 2 УРОВЕНЬ
+        // 1. ПШИКАЛКА 2 УРОВЕНЬ (КД падает с 3с до 2с)
         powerUpPool.Add(new PowerUp("Sprayer Lvl 2", () =>
         {
             Magnet sprayer = FindFirstObjectByType<Magnet>(FindObjectsInactive.Include);
             if (sprayer != null)
             {
-                sprayer.cooldownTime = 4f;
-                // Обновляем сразу три элемента (Fill, Border, Bg)
-                sprayer.UpdateBarVisuals(sprayerLvl2Bar.fillSprite, sprayerLvl2Bar.borderSprite, sprayerLvl2Bar.backgroundSprite);
+                sprayer.ApplyUpgrade(2f, sprayerLvl2Bar.fillSprite, sprayerLvl2Bar.borderSprite, sprayerLvl2Bar.backgroundSprite);
             }
 
+            // ПШИКАЛКА 4 УРОВЕНЬ (КД падает с 2с до 1с)
             powerUpPool.Add(new PowerUp("Sprayer Lvl 4", () =>
             {
                 Magnet s = FindFirstObjectByType<Magnet>(FindObjectsInactive.Include);
                 if (s != null)
                 {
-                    s.cooldownTime = 3f;
-                    s.UpdateBarVisuals(sprayerLvl4Bar.fillSprite, sprayerLvl4Bar.borderSprite, sprayerLvl4Bar.backgroundSprite);
+                    s.ApplyUpgrade(1f, sprayerLvl4Bar.fillSprite, sprayerLvl4Bar.borderSprite, sprayerLvl4Bar.backgroundSprite);
                 }
             }, sprayerLvl4, true));
 
         }, sprayerLvl2, true));
 
-        // 3. НОЖНИЦЫ 1 УРОВЕНЬ
+        // 3. НОЖНИЦЫ 1 УРОВЕНЬ (Активация, базовый КД 4с)
         powerUpPool.Add(new PowerUp("Scissors Lvl 1", () =>
         {
             ScissorsCombo scissors = FindFirstObjectByType<ScissorsCombo>(FindObjectsInactive.Include);
@@ -136,22 +134,23 @@ public class PowerUpManagement : MonoBehaviour
             {
                 scissors.gameObject.SetActive(true);
                 scissors.canSnip = true;
+                scissors.cooldownTime = 4f;
             }
             if (scissorsVisualObject != null) scissorsVisualObject.SetActive(true);
 
+            // НОЖНИЦЫ 2 УРОВЕНЬ (КД падает с 4с до 3с)
             powerUpPool.Add(new PowerUp("Scissors Lvl 2", () =>
             {
                 ScissorsCombo sc = FindFirstObjectByType<ScissorsCombo>(FindObjectsInactive.Include);
                 if (sc != null)
                 {
-                    sc.cooldownTime -= 1f;
-                    sc.UpdateBarVisuals(scissorsLvl2Bar.fillSprite, scissorsLvl2Bar.borderSprite, scissorsLvl2Bar.backgroundSprite);
+                    sc.ApplyUpgrade(3f, scissorsLvl2Bar.fillSprite, scissorsLvl2Bar.borderSprite, scissorsLvl2Bar.backgroundSprite);
                 }
             }, scissorsLvl2, true));
 
         }, scissorsLvl1, true));
 
-        // 5. ГАЗОНОКОСИЛКА 1 УРОВЕНЬ
+        // 5. ГАЗОНОКОСИЛКА 1 УРОВЕНЬ (Спавн)
         powerUpPool.Add(new PowerUp("Lawnmower Lvl 1", () =>
         {
             GameObject player = GameObject.FindWithTag("Player");
@@ -160,6 +159,7 @@ public class PowerUpManagement : MonoBehaviour
                 Instantiate(LawnMowerPrefab, player.transform.position, Quaternion.identity);
             }
 
+            // ГАЗОНОКОСИЛКА 2 УРОВЕНЬ (+20% к скорости)
             powerUpPool.Add(new PowerUp("Lawnmower Lvl 2", () =>
             {
                 LawnMower spawnedMower = FindFirstObjectByType<LawnMower>();

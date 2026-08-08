@@ -12,12 +12,13 @@ public class ScissorsCombo : MonoBehaviour
     private bool isCountingDown = false;
     public int cuttedEnemies = 0;
 
-    public float cooldownTime = 4f;
+    [Header("Cooldown Settings")]
+    public float cooldownTime = 4f; // Базовое время для 1 уровня
 
     [Header("UI Bar Components")]
     public Image cooldownFillImage;       // SC_Bar Fill
     public Image cooldownBorderImage;     // SC_Border
-    public Image cooldownBackgroundImage;  // SC_Background
+    public Image cooldownBackgroundImage; // SC_Background
 
     private float currentCooldown = 0f;
 
@@ -40,9 +41,17 @@ public class ScissorsCombo : MonoBehaviour
         }
     }
 
-    // МЕТОД ДЛЯ ПОЛНОЙ ОБНОВЫ ВИЗУАЛА ШКАЛЫ (Fill, Border, Background)
-    public void UpdateBarVisuals(Sprite fillSprite, Sprite borderSprite, Sprite bgSprite)
+    // МЕТОД ДЛЯ БЕЗОПАСНОГО ОБНОВЛЕНИЯ КУЛДАУНА И ВИЗУАЛА
+    public void ApplyUpgrade(float newCooldownTime, Sprite fillSprite, Sprite borderSprite, Sprite bgSprite)
     {
+        cooldownTime = newCooldownTime;
+
+        // Фикс "супер кулдауна": обрезаем таймер под новое значение
+        if (currentCooldown > cooldownTime)
+        {
+            currentCooldown = cooldownTime;
+        }
+
         if (cooldownFillImage != null && fillSprite != null) cooldownFillImage.sprite = fillSprite;
         if (cooldownBorderImage != null && borderSprite != null) cooldownBorderImage.sprite = borderSprite;
         if (cooldownBackgroundImage != null && bgSprite != null) cooldownBackgroundImage.sprite = bgSprite;

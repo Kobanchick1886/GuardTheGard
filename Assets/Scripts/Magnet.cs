@@ -8,12 +8,13 @@ public class Magnet : MonoBehaviour
 
     public Vector3 EnemyPos;
 
-    public float cooldownTime = 3f;
+    [Header("Cooldown Settings")]
+    public float cooldownTime = 3f; // Базовое время для 1 уровня
 
     [Header("UI Bar Components")]
     public Image cooldownFillImage;       // Bar Fill
     public Image cooldownBorderImage;     // Border (Рамка)
-    public Image cooldownBackgroundImage;  // Background (Фон)
+    public Image cooldownBackgroundImage; // Background (Фон)
 
     private float currentCooldown = 0f;
     private bool canFire = true;
@@ -38,6 +39,7 @@ public class Magnet : MonoBehaviour
 
                 enemiesInRange.RemoveAll(item => item == null);
 
+                // Если кулдаун спал и враги есть - стреляем сразу
                 if (enemiesInRange.Count > 0)
                 {
                     TryShootAtFirstAvailableEnemy();
@@ -46,9 +48,17 @@ public class Magnet : MonoBehaviour
         }
     }
 
-    // МЕТОД ДЛЯ ПОЛНОЙ ОБНОВЫ ВИЗУАЛА ШКАЛЫ (Fill, Border, Background)
-    public void UpdateBarVisuals(Sprite fillSprite, Sprite borderSprite, Sprite bgSprite)
+    // МЕТОД ДЛЯ БЕЗОПАСНОГО ОБНОВЛЕНИЯ КУЛДАУНА И ВИЗУАЛА
+    public void ApplyUpgrade(float newCooldownTime, Sprite fillSprite, Sprite borderSprite, Sprite bgSprite)
     {
+        cooldownTime = newCooldownTime;
+
+        // Фикс "супер кулдауна": обрезаем таймер под новое значение
+        if (currentCooldown > cooldownTime)
+        {
+            currentCooldown = cooldownTime;
+        }
+
         if (cooldownFillImage != null && fillSprite != null) cooldownFillImage.sprite = fillSprite;
         if (cooldownBorderImage != null && borderSprite != null) cooldownBorderImage.sprite = borderSprite;
         if (cooldownBackgroundImage != null && bgSprite != null) cooldownBackgroundImage.sprite = bgSprite;
@@ -102,6 +112,7 @@ public class Magnet : MonoBehaviour
             if (enemy != null)
             {
                 EnemyGeneric enemyScript = enemy.GetComponent<EnemyGeneric>();
+                // Игнорируем застаненных врагов
                 if (enemyScript == null || !enemyScript.IsStunned())
                 {
                     targetEnemy = enemy;
