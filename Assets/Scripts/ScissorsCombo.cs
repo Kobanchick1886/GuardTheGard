@@ -12,7 +12,6 @@ public class ScissorsCombo : MonoBehaviour
     private bool isCountingDown = false;
     public int cuttedEnemies = 0;
 
-    [Header("Cooldown Settings")]
     public float cooldownTime = 4f;
 
     [Header("UI Bar Components")]

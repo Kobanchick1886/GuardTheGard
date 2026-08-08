@@ -8,8 +8,7 @@ public class Magnet : MonoBehaviour
 
     public Vector3 EnemyPos;
 
-    [Header("Cooldown Settings")]
-    public float cooldownTime = 1f;
+    public float cooldownTime = 3f;
 
     [Header("UI Bar Components")]
     public Image cooldownFillImage;       // Bar Fill

@@ -3,16 +3,32 @@
   "WorkspaceRootPath": "C:\\UnityProjects\\GuardTheGard\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\magnet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\magnet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\languageswitcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\languageswitcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\powerupmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\powerupmanagement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\scissorscombo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\scissorscombo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\movement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\movement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\magnet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\magnet.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\holdermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\holdermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|c:\\unityprojects\\guardthegard\\assets\\scripts\\statisticmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\statisticmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\scissorscombo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\scissorscombo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\lawnmower.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -23,15 +39,11 @@
       "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\buttonwiggle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\movement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\movement.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\player.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|c:\\unityprojects\\guardthegard\\assets\\scripts\\accountselectionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\accountselectionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\accountselectionmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -43,7 +55,7 @@
       "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\objective.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|c:\\unityprojects\\guardthegard\\assets\\scripts\\ui_manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\ui_manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\ui_manager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -55,20 +67,12 @@
       "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\optionsmenu.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\statisticmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\statisticmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\localizedspriteswap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\localizedspriteswap.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\localizedimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\localizedimage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\languageswitcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\languageswitcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\localizedtext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -83,10 +87,6 @@
       "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\snakedropdown.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\holdermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\holdermanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|C:\\UnityProjects\\GuardTheGard\\assets\\scripts\\backgroundshifter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{7C4BF1C0-19FC-FB01-85A4-585D40659C05}|Assembly-CSharp.csproj|solutionrelative:assets\\scripts\\backgroundshifter.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
@@ -98,11 +98,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 15,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "UI_Manager.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\UI_Manager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\UI_Manager.cs",
@@ -110,12 +110,11 @@
               "RelativeToolTip": "Assets\\Scripts\\UI_Manager.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACUAAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-08T11:48:21.152Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-08T11:48:21.152Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 7,
               "Title": "LawnMower.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\LawnMower.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\LawnMower.cs",
@@ -123,12 +122,11 @@
               "RelativeToolTip": "Assets\\Scripts\\LawnMower.cs",
               "ViewState": "AgIAAA0AAAAAAAAAAAAgwCsAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-05T12:36:01.122Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-05T12:36:01.122Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 8,
               "Title": "ButtonWiggle.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\ButtonWiggle.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\ButtonWiggle.cs",
@@ -136,12 +134,11 @@
               "RelativeToolTip": "Assets\\Scripts\\ButtonWiggle.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-05T12:11:04.277Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-05T12:11:04.277Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "LocalizedSpriteSwap.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\LocalizedSpriteSwap.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\LocalizedSpriteSwap.cs",
@@ -153,7 +150,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "LocalizedText.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\LocalizedText.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\LocalizedText.cs",
@@ -165,7 +162,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "LocalizedImage.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\LocalizedImage.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\LocalizedImage.cs",
@@ -177,7 +174,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "MainMenu.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\MainMenu.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\MainMenu.cs",
@@ -189,19 +186,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 5,
               "Title": "StatisticManager.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\StatisticManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\StatisticManager.cs",
               "ToolTip": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\StatisticManager.cs",
               "RelativeToolTip": "Assets\\Scripts\\StatisticManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAADcAAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADsAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-03T13:05:01.029Z"
+              "WhenOpened": "2026-08-03T13:05:01.029Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 15,
               "Title": "OptionsMenu.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\OptionsMenu.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\OptionsMenu.cs",
@@ -213,7 +211,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 1,
               "Title": "LanguageSwitcher.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\LanguageSwitcher.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\LanguageSwitcher.cs",
@@ -221,11 +219,12 @@
               "RelativeToolTip": "Assets\\Scripts\\LanguageSwitcher.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACcAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-29T13:05:09.054Z"
+              "WhenOpened": "2026-07-29T13:05:09.054Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "SnakeDropdown.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\SnakeDropdown.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\SnakeDropdown.cs",
@@ -237,20 +236,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "Magnet.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\Magnet.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Magnet.cs",
               "ToolTip": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\Magnet.cs",
               "RelativeToolTip": "Assets\\Scripts\\Magnet.cs",
-              "ViewState": "AgIAAF8AAAAAAAAAAAAzwIIAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-21T12:56:04.217Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 4,
               "Title": "HolderManager.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\HolderManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\HolderManager.cs",
@@ -258,11 +257,12 @@
               "RelativeToolTip": "Assets\\Scripts\\HolderManager.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-21T12:55:43.025Z"
+              "WhenOpened": "2026-07-21T12:55:43.025Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "Player.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\Player.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Player.cs",
@@ -270,12 +270,11 @@
               "RelativeToolTip": "Assets\\Scripts\\Player.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-21T12:55:34.778Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-21T12:55:34.778Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "Movement.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\Movement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\Movement.cs",
@@ -288,20 +287,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "PowerUpManagement.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\PowerUpManagement.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\PowerUpManagement.cs",
               "ToolTip": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\PowerUpManagement.cs",
               "RelativeToolTip": "Assets\\Scripts\\PowerUpManagement.cs",
-              "ViewState": "AgIAAP8AAAAAAAAAAAAYwBABAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAAFEAAAAAAAAAAAAgwGwAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-07-19T12:15:27.012Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 6,
               "Title": "ScissorsCombo.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\ScissorsCombo.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\ScissorsCombo.cs",
@@ -309,12 +308,11 @@
               "RelativeToolTip": "Assets\\Scripts\\ScissorsCombo.cs",
               "ViewState": "AgIAAFwAAAAAAAAAAAAYwGwAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-18T10:39:50.634Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-18T10:39:50.634Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 14,
               "Title": "EnemyGeneric.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\EnemyGeneric.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\EnemyGeneric.cs",
@@ -322,12 +320,11 @@
               "RelativeToolTip": "Assets\\Scripts\\EnemyGeneric.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACMAAAAZAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-14T13:31:07.866Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-14T13:31:07.866Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "objective.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\objective.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\objective.cs",
@@ -335,12 +332,11 @@
               "RelativeToolTip": "Assets\\Scripts\\objective.cs",
               "ViewState": "AgIAAGsBAAAAAAAAAAAAAB0AAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-14T13:26:42.031Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-14T13:26:42.031Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "DataToCSV.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\DataToCSV.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\DataToCSV.cs",
@@ -348,12 +344,11 @@
               "RelativeToolTip": "Assets\\Scripts\\DataToCSV.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACkAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-14T11:31:38.752Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-14T11:31:38.752Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "AccountSelectionManager.cs",
               "DocumentMoniker": "C:\\UnityProjects\\GuardTheGard\\Assets\\Scripts\\AccountSelectionManager.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\AccountSelectionManager.cs",
@@ -361,8 +356,7 @@
               "RelativeToolTip": "Assets\\Scripts\\AccountSelectionManager.cs",
               "ViewState": "AgIAAFAAAAAAAAAAAAAAANoAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-07-13T17:04:51.962Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-07-13T17:04:51.962Z"
             },
             {
               "$type": "Document",
