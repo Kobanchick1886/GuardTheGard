@@ -19,7 +19,7 @@ public class UI_Manager : MonoBehaviour
         // 1. Update Enemy Text
         if (objectiveScript != null && enemyText != null)
         {
-            enemyText.text = "Enemies Left: " + objectiveScript.enemiesRemainingInWave.ToString();
+            enemyText.text = objectiveScript.enemiesRemainingInWave.ToString() + "/"+ 8 * objectiveScript.multiplier;
         }
 
         // 2. Update Mower Placement Timer
@@ -35,7 +35,7 @@ public class UI_Manager : MonoBehaviour
 
                 // Mathf.CeilToInt rounds 1.5 up to 2, 0.5 up to 1, etc., for a clean UI
                 int displaySeconds = Mathf.CeilToInt(activeMower.countdownTimer);
-                mowerSeconds.text = "Seconds before placement: " + displaySeconds.ToString();
+                mowerSeconds.text = displaySeconds.ToString();
             }
             else
             {

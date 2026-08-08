@@ -1,43 +1,52 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI; // Обязательно добавляем для UI
+using UnityEngine.UI;
 
 public class ScissorsCombo : MonoBehaviour
 {
     public GameObject scissors;
     private List<GameObject> enemiesInRange = new List<GameObject>();
 
-    // canSnip теперь будет автоматически включаться после отработки кулдауна
     public bool canSnip = false;
     private bool isCountingDown = false;
     public int cuttedEnemies = 0;
 
     [Header("Cooldown Settings")]
-    public float cooldownTime = 4f; // Настрой нужное время
-    public Image cooldownFillImage; // Сюда перетащи SC_Bar Fill
+    public float cooldownTime = 4f;
+
+    [Header("UI Bar Components")]
+    public Image cooldownFillImage;       // SC_Bar Fill
+    public Image cooldownBorderImage;     // SC_Border
+    public Image cooldownBackgroundImage;  // SC_Background
+
     private float currentCooldown = 0f;
 
     private void Update()
     {
-        // Если способность на кулдауне (уже использована, но мы ждем отката)
         if (!canSnip && currentCooldown > 0f)
         {
             currentCooldown -= Time.deltaTime;
 
-            // Плавно опустошаем иконку
             if (cooldownFillImage != null)
             {
                 cooldownFillImage.fillAmount = 1f - (currentCooldown / cooldownTime);
             }
 
-            // Когда кулдаун закончился
             if (currentCooldown <= 0f)
             {
                 canSnip = true;
                 currentCooldown = 0f;
             }
         }
+    }
+
+    // МЕТОД ДЛЯ ПОЛНОЙ ОБНОВЫ ВИЗУАЛА ШКАЛЫ (Fill, Border, Background)
+    public void UpdateBarVisuals(Sprite fillSprite, Sprite borderSprite, Sprite bgSprite)
+    {
+        if (cooldownFillImage != null && fillSprite != null) cooldownFillImage.sprite = fillSprite;
+        if (cooldownBorderImage != null && borderSprite != null) cooldownBorderImage.sprite = borderSprite;
+        if (cooldownBackgroundImage != null && bgSprite != null) cooldownBackgroundImage.sprite = bgSprite;
     }
 
     private IEnumerator WaitAndThenProcessEnemies()
@@ -86,7 +95,7 @@ public class ScissorsCombo : MonoBehaviour
     private void ProcessEnemiesInZone()
     {
         GameObject[] targets = enemiesInRange.ToArray();
-        canSnip = false; // Блокируем новые атаки
+        canSnip = false;
 
         foreach (GameObject target in targets)
         {
@@ -98,13 +107,12 @@ public class ScissorsCombo : MonoBehaviour
 
                 if (enemyScript != null)
                 {
-                        StartCoroutine(DelayedStun(enemyScript, 0.667f));
+                    StartCoroutine(DelayedStun(enemyScript, 0.667f));
                 }
             }
         }
         enemiesInRange.Clear();
 
-        // Вместо Invoke теперь запускаем таймер кулдауна
         currentCooldown = cooldownTime;
         if (cooldownFillImage != null) cooldownFillImage.fillAmount = 1f;
     }

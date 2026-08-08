@@ -54,7 +54,7 @@ public class objective : MonoBehaviour
     private bool wasChanged = false;
     string targetKey;
     private bool canRestart = false; // Використовується як прапорець поразки
-    private float multiplier = 1.0f;
+    public float multiplier = 1.0f;
     private PowerUpManagement UI;
     private int enemiesToSpawn;
     public int enemiesRemainingInWave;

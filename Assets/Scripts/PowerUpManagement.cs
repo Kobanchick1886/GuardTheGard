@@ -26,6 +26,15 @@ public class PowerUpManagement : MonoBehaviour
         public Sprite spriteUA;
     }
 
+    // СТРУКТУРА ДЛЯ ТРЕХ СПРАЙТОВ ШКАЛЫ (Fill, Border, Background)
+    [System.Serializable]
+    public struct CooldownBarSet
+    {
+        public Sprite fillSprite;
+        public Sprite borderSprite;
+        public Sprite backgroundSprite;
+    }
+
     [Header("Спрайты цельных карточек (Все 6 штук)")]
     public PowerUpSprites sprayerLvl2;
     public PowerUpSprites sprayerLvl4;
@@ -33,6 +42,11 @@ public class PowerUpManagement : MonoBehaviour
     public PowerUpSprites scissorsLvl2;
     public PowerUpSprites lawnmowerLvl1;
     public PowerUpSprites lawnmowerLvl2;
+
+    [Header("Спрайты шкал кулдауна (Комплекты 3 в 1)")]
+    public CooldownBarSet sprayerLvl2Bar;
+    public CooldownBarSet sprayerLvl4Bar;
+    public CooldownBarSet scissorsLvl2Bar;
 
     [Header("Settings")]
     public float holdDuration = 2.0f;
@@ -46,7 +60,7 @@ public class PowerUpManagement : MonoBehaviour
     private PowerUp rightPowerUp;
 
     [SerializeField]
-    private GameObject LawnMowerPrefab; // Закинь сюда ПРЕФАБ газонокосилки (LawnMower)
+    private GameObject LawnMowerPrefab;
 
     [SerializeField]
     private GameObject scissorsVisualObject;
@@ -89,22 +103,27 @@ public class PowerUpManagement : MonoBehaviour
 
     private void InitializePowerUps()
     {
-        // Изначально создаем пустой пул
         powerUpPool = new List<PowerUp>();
-
-        // --- БАЗОВЫЕ УЛУЧШЕНИЯ (Доступны сразу) ---
 
         // 1. ПШИКАЛКА 2 УРОВЕНЬ
         powerUpPool.Add(new PowerUp("Sprayer Lvl 2", () =>
         {
             Magnet sprayer = FindFirstObjectByType<Magnet>(FindObjectsInactive.Include);
-            if (sprayer != null) sprayer.cooldownTime = 4f;
+            if (sprayer != null)
+            {
+                sprayer.cooldownTime = 4f;
+                // Обновляем сразу три элемента (Fill, Border, Bg)
+                sprayer.UpdateBarVisuals(sprayerLvl2Bar.fillSprite, sprayerLvl2Bar.borderSprite, sprayerLvl2Bar.backgroundSprite);
+            }
 
-            // Как только взяли 2 уровень, добавляем в пул 4-й уровень
             powerUpPool.Add(new PowerUp("Sprayer Lvl 4", () =>
             {
                 Magnet s = FindFirstObjectByType<Magnet>(FindObjectsInactive.Include);
-                if (s != null) s.cooldownTime = 3f;
+                if (s != null)
+                {
+                    s.cooldownTime = 3f;
+                    s.UpdateBarVisuals(sprayerLvl4Bar.fillSprite, sprayerLvl4Bar.borderSprite, sprayerLvl4Bar.backgroundSprite);
+                }
             }, sprayerLvl4, true));
 
         }, sprayerLvl2, true));
@@ -120,14 +139,13 @@ public class PowerUpManagement : MonoBehaviour
             }
             if (scissorsVisualObject != null) scissorsVisualObject.SetActive(true);
 
-            // Как только активировали ножницы, добавляем в пул их прокачку
             powerUpPool.Add(new PowerUp("Scissors Lvl 2", () =>
             {
                 ScissorsCombo sc = FindFirstObjectByType<ScissorsCombo>(FindObjectsInactive.Include);
                 if (sc != null)
                 {
                     sc.cooldownTime -= 1f;
-                    Debug.Log("<color=green>Scissors cooldown upgraded to: </color>" + sc.cooldownTime);
+                    sc.UpdateBarVisuals(scissorsLvl2Bar.fillSprite, scissorsLvl2Bar.borderSprite, scissorsLvl2Bar.backgroundSprite);
                 }
             }, scissorsLvl2, true));
 
@@ -142,19 +160,12 @@ public class PowerUpManagement : MonoBehaviour
                 Instantiate(LawnMowerPrefab, player.transform.position, Quaternion.identity);
             }
 
-            // Как только заспавнили косилку, добавляем в пул её ускорение
             powerUpPool.Add(new PowerUp("Lawnmower Lvl 2", () =>
             {
                 LawnMower spawnedMower = FindFirstObjectByType<LawnMower>();
                 if (spawnedMower != null)
                 {
                     spawnedMower.mowerSpeed *= 1.2f;
-
-                    MowerItself actualMower = FindFirstObjectByType<MowerItself>();
-                    if (actualMower != null)
-                    {
-                        // actualMower.speed *= 1.2f; 
-                    }
                 }
             }, lawnmowerLvl2, true));
 

@@ -24,7 +24,10 @@ public class EnemyGeneric : MonoBehaviour
 
     [SerializeField]
     public bool Marker;
-
+    public bool IsStunned()
+    {
+        return !isMoving || isDead;
+    }
     //для анімацій переміщення ворогів
     [Header("Animation Settings")]
     public Transform legsTransform;
