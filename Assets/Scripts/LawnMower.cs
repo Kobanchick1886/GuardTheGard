@@ -202,14 +202,14 @@ public class LawnMower : MonoBehaviour
         {
             ApplyIndividualPair(diagDownLeftBase, back1, front1);
             ApplyIndividualPair(diagUpLeftBase, back2, front2);
-            SetFlipX(true, back1, front1);
+            SetFlipX(true, back2, front2);
         }
         // UP-LEFT
         else if (angle > 112.5f && angle < 157.5f)
         {
             ApplyIndividualPair(diagDownLeftBase, back1, front1);
             ApplyIndividualPair(diagUpLeftBase, back2, front2);
-            SetFlipX(true, back2, front2);
+            SetFlipX(true, back1, front1);
         }
         // DOWN-RIGHT
         else if (angle > -67.5f && angle < -22.5f)
