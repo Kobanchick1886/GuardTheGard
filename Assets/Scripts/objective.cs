@@ -152,7 +152,6 @@ public class objective : MonoBehaviour
             ApplyVisualsFromBushes();
             wasChanged = false;
 
-            // ПЕРЕВІРКА НА ПЕРЕМОГУ: Якщо всі 4 гілки виросли до 4 рівня
             if (branches[1] == 4 && branches[2] == 4 && branches[3] == 4 && branches[4] == 4)
             {
                 TriggerVictory();
@@ -164,8 +163,6 @@ public class objective : MonoBehaviour
             TriggerDefeat();
         }
     }
-
-    // --- ЛОГІКА UI ТА СТАНІВ ГРИ ---
 
     public void TogglePause()
     {
@@ -187,6 +184,8 @@ public class objective : MonoBehaviour
         if (losePanel != null) losePanel.SetActive(true);
         if (loseTimeText != null) loseTimeText.text = "Час: " + FormatTime(gameTimer);
 
+        SaveBestTimeIfNeeded(); // Сохраняем в CSV
+
         missedStats["TOTAL"] = missedStats["RIGHT"] + missedStats["LEFT"] + missedStats["TOP"] + missedStats["BOTTOM"];
         DataToCSV csvManager = UnityEngine.Object.FindFirstObjectByType<DataToCSV>();
         if (csvManager == null)
@@ -203,6 +202,51 @@ public class objective : MonoBehaviour
 
         if (winPanel != null) winPanel.SetActive(true);
         if (winTimeText != null) winTimeText.text = "Час: " + FormatTime(gameTimer);
+
+        SaveBestTimeIfNeeded(); // Сохраняем в CSV
+    }
+
+    // --- НОВАЯ ЛОГИКА СОХРАНЕНИЯ В CSV ---
+    private void SaveBestTimeIfNeeded()
+    {
+        string playerName = PlayerPrefs.GetString("CurrentPlayerName", "Unknown");
+        string csvPath = System.IO.Path.Combine(Application.persistentDataPath, "Accounts.csv");
+
+        if (!System.IO.File.Exists(csvPath)) return;
+
+        string[] lines = System.IO.File.ReadAllLines(csvPath);
+        bool fileUpdated = false;
+
+        for (int i = 1; i < lines.Length; i++)
+        {
+            if (string.IsNullOrWhiteSpace(lines[i])) continue;
+
+            string[] data = lines[i].Split(',');
+            if (data[0] == playerName)
+            {
+                float oldBestTime = 0f;
+                if (data.Length > 2)
+                {
+                    float.TryParse(data[2], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out oldBestTime);
+                }
+
+                if (oldBestTime == 0f || gameTimer > oldBestTime)
+                {
+                    string creationDate = data.Length > 1 ? data[1] : "";
+                    // Перезаписываем строку новыми данными
+                    string newTimeStr = gameTimer.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                    lines[i] = $"{playerName},{creationDate},{newTimeStr}";
+                    fileUpdated = true;
+                    Debug.Log($"<color=green>[CSV] Новый рекорд для {playerName}: {newTimeStr}</color>");
+                }
+                break;
+            }
+        }
+
+        if (fileUpdated)
+        {
+            System.IO.File.WriteAllLines(csvPath, lines);
+        }
     }
 
     public void ReturnToMenu()
@@ -223,8 +267,6 @@ public class objective : MonoBehaviour
         return time.ToString(@"hh\:mm\:ss");
     }
 
-    // ---------------------------------
-
     private void DamageSystem(GameObject enemy)
     {
         if (canRestart || isGameWon) return;
@@ -242,7 +284,6 @@ public class objective : MonoBehaviour
             branch++;
         }
 
-        // Поразка, якщо всі гілки знищено, і при цьому ми ще не виграли
         if (branch >= branches.Length && !isGameWon)
         {
             canRestart = true;
@@ -354,7 +395,6 @@ public class objective : MonoBehaviour
         }
     }
 
-    // --- ОТКРЫТИЕ ВНЕШНЕЙ АНАЛИТИКИ (ИЗ APPDATA) ---
     public void OpenAnalytics()
     {
         try

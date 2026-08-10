@@ -5,6 +5,7 @@ using TMPro;
 using System.IO;
 using System.Linq;
 using UnityEngine.SceneManagement;
+using System;
 
 public class AccountSelectionManager : MonoBehaviour
 {
@@ -58,7 +59,6 @@ public class AccountSelectionManager : MonoBehaviour
         if (confirmCreateButton != null) confirmCreateButton.onClick.AddListener(CreateNewAccount);
     }
 
-    // --- ПОДПИСКА НА ИЗМЕНЕНИЕ ЯЗЫКА ДЛЯ МГНОВЕННОГО ПЕРЕВОДА СПИСКА ---
     void OnEnable()
     {
         LanguageSwitcher.OnLanguageChanged += ReloadListOnLanguageChange;
@@ -71,7 +71,6 @@ public class AccountSelectionManager : MonoBehaviour
 
     private void ReloadListOnLanguageChange()
     {
-        // Перезагружаем список только если панель выбора сейчас открыта
         if (accountSelectionPanel != null && accountSelectionPanel.activeInHierarchy)
         {
             string currentSearch = searchInput != null ? searchInput.text : "";
@@ -139,7 +138,8 @@ public class AccountSelectionManager : MonoBehaviour
         if (string.IsNullOrEmpty(fullName) || fullName.Contains(",")) return;
 
         string today = System.DateTime.Now.ToString("dd/MM/yyyy");
-        File.AppendAllText(csvPath, $"{fullName},{today}\n");
+        // Записываем структуру: Имя, Дата, Рекорд (по умолчанию 0)
+        File.AppendAllText(csvPath, $"{fullName},{today},0\n");
 
         CloseCreatePopup();
 
@@ -151,25 +151,18 @@ public class AccountSelectionManager : MonoBehaviour
     {
         foreach (Transform child in contentParent) Destroy(child.gameObject);
 
-        // Читаем текущий язык один раз перед циклом
         string currentLang = PlayerPrefs.GetString("SavedLanguage", "English");
 
-        // 1. СОЗДАЕМ КНОПКУ "СОЗДАТЬ АККАУНТ"
         if (string.IsNullOrEmpty(searchQuery) && createAccountRowPrefab != null)
         {
             GameObject createRow = Instantiate(createAccountRowPrefab, contentParent);
-
             Button createBtn = createRow.GetComponent<Button>();
             if (createBtn == null) createBtn = createRow.GetComponentInChildren<Button>();
-
-            if (createBtn != null)
-            {
-                createBtn.onClick.AddListener(OpenCreatePopup);
-            }
+            if (createBtn != null) createBtn.onClick.AddListener(OpenCreatePopup);
         }
 
-        // 2. ЗАГРУЖАЕМ ОСТАЛЬНЫЕ АККАУНТЫ
-        if (!File.Exists(csvPath)) { File.WriteAllText(csvPath, "PlayerName,LastPlayed\n"); return; }
+        // Задаем новую шапку для файла (добавили BestTime)
+        if (!File.Exists(csvPath)) { File.WriteAllText(csvPath, "PlayerName,CreationDate,BestTime\n"); return; }
 
         string[] lines = File.ReadAllLines(csvPath);
         for (int i = 1; i < lines.Length; i++)
@@ -177,7 +170,14 @@ public class AccountSelectionManager : MonoBehaviour
             if (string.IsNullOrWhiteSpace(lines[i])) continue;
             string[] data = lines[i].Split(',');
             string name = data[0];
-            string lastPlayed = data.Length > 1 ? data[1] : "";
+            string creationDate = data.Length > 1 ? data[1] : "";
+
+            // Читаем рекорд из 3-й колонки (используем InvariantCulture чтобы точки/запятые не ломались)
+            float bestTimeSeconds = 0f;
+            if (data.Length > 2)
+            {
+                float.TryParse(data[2], System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out bestTimeSeconds);
+            }
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
@@ -192,32 +192,39 @@ public class AccountSelectionManager : MonoBehaviour
 
             if (nameText != null) nameText.text = name;
 
-            // --- ПЕРЕВОД ДИНАМИЧЕСКОГО ТЕКСТА ---
+            string formattedTime = bestTimeSeconds > 0f ? FormatTime(bestTimeSeconds) : "--:--";
+
             if (currentLang == "Українська")
             {
-                if (bestTimeText != null) bestTimeText.text = "Кращий час: --:--";
-                if (timeText != null) timeText.text = $"Остання дата гри: {lastPlayed}";
+                if (bestTimeText != null) bestTimeText.text = $"Кращий час: {formattedTime}";
+                if (timeText != null) timeText.text = $"Створено: {creationDate}";
             }
             else // English
             {
-                if (bestTimeText != null) bestTimeText.text = "Best time: --:--";
-                if (timeText != null) timeText.text = $"Last time played: {lastPlayed}";
+                if (bestTimeText != null) bestTimeText.text = $"Best time: {formattedTime}";
+                if (timeText != null) timeText.text = $"Created: {creationDate}";
             }
 
             row.GetComponent<Button>().onClick.AddListener(() => OnAccountSelected(name));
         }
     }
+
+    private string FormatTime(float timeInSeconds)
+    {
+        TimeSpan time = TimeSpan.FromSeconds(timeInSeconds);
+        return time.ToString(@"hh\:mm\:ss");
+    }
+
     public void QuitGame()
     {
         Debug.Log("Выход из игры...");
-        Application.Quit(); // Закрывает сбилженную игру
+        Application.Quit();
 
-        // Если ты тестируешь прямо в редакторе Unity, Application.Quit() не закроет редактор. 
-        // Эта строчка остановит режим Play в редакторе (можешь оставить её для удобства):
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-    #endif
+#endif
     }
+
     private void OnAccountSelected(string accountName)
     {
         selectedAccountName = accountName;
