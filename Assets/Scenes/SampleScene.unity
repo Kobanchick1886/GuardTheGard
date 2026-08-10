@@ -5454,11 +5454,11 @@ MonoBehaviour:
   leftGrandma: {fileID: 1628129324}
   rightGrandma: {fileID: 333444832}
   sprayerLvl2:
-    spriteEN: {fileID: -2744835912335794367, guid: dad24b8cde363634fb3dae8f29ad7e8a, type: 3}
-    spriteUA: {fileID: 3369318730763996388, guid: 347508e9acec4264bb7f66d8185942e7, type: 3}
-  sprayerLvl4:
     spriteEN: {fileID: 7474381388793422967, guid: 1a6f3afa96b9968438279db7863ed00d, type: 3}
     spriteUA: {fileID: -231577643947560469, guid: 66e312a8c3829314f88b3b612303d80a, type: 3}
+  sprayerLvl4:
+    spriteEN: {fileID: -2744835912335794367, guid: dad24b8cde363634fb3dae8f29ad7e8a, type: 3}
+    spriteUA: {fileID: 3369318730763996388, guid: 347508e9acec4264bb7f66d8185942e7, type: 3}
   scissorsLvl1:
     spriteEN: {fileID: 3563975036328285020, guid: d7843b95a2a115e4f88189ee4f37203b, type: 3}
     spriteUA: {fileID: -1869639124341542083, guid: 04c3e492ca632394fa258113d327fbe6, type: 3}
@@ -8609,7 +8609,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1267309825
 RectTransform:
   m_ObjectHideFlags: 0

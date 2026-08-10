@@ -48,7 +48,6 @@ public class objective : MonoBehaviour
     };
 
     private int[] branches = new int[5] { 1, 2, 2, 2, 2 };
-    private int branch = 1;
     private Dictionary<string, GameObject> visualCache = new Dictionary<string, GameObject>();
     private bool wasChanged = false;
     string targetKey;
@@ -123,35 +122,36 @@ public class objective : MonoBehaviour
 
         if (wasChanged)
         {
-            if (branch < branches.Length)
+            // 1. Находим первую доступную для прокачки ветку (которая жива, но еще не 4 уровня)
+            int upgradeTarget = -1;
+            for (int i = 1; i <= 4; i++)
             {
-                switch (branches[branch])
+                if (branches[i] >= 2 && branches[i] < 4)
                 {
-                    case 4:
-                        branch++;
-                        break;
-                    case 3:
-                        branches[branch]++;
-                        branch++;
-                        break;
-                    case 2:
-                        branches[branch]++;
-                        break;
+                    upgradeTarget = i;
+                    break;
                 }
             }
 
-            if (branches.Any(i => i == 4) && branches.Skip(1).Any(i => i == 1))
+            if (upgradeTarget != -1)
             {
-                int index = System.Array.FindIndex(branches, i => i == 4);
-                branches[index]--;
+                branches[upgradeTarget]++;
+            }
 
-                index = System.Array.FindIndex(branches, 1, i => i == 1);
-                branches[index]++;
+            // 2. Логика "исцеления" убитой ветки за счет полностью выращенной
+            if (branches.Skip(1).Any(i => i == 4) && branches.Skip(1).Any(i => i == 1))
+            {
+                int maxIndex = System.Array.FindIndex(branches, 1, i => i == 4);
+                int minIndex = System.Array.FindIndex(branches, 1, i => i == 1);
+
+                branches[maxIndex]--;
+                branches[minIndex]++;
             }
 
             ApplyVisualsFromBushes();
             wasChanged = false;
 
+            // 3. ПЕРЕВІРКА НА ПЕРЕМОГУ: Якщо всі 4 гілки виросли до 4 рівня
             if (branches[1] == 4 && branches[2] == 4 && branches[3] == 4 && branches[4] == 4)
             {
                 TriggerVictory();
@@ -184,7 +184,7 @@ public class objective : MonoBehaviour
         if (losePanel != null) losePanel.SetActive(true);
         if (loseTimeText != null) loseTimeText.text = "Час: " + FormatTime(gameTimer);
 
-        SaveBestTimeIfNeeded(); // Сохраняем в CSV
+        SaveBestTimeIfNeeded();
 
         missedStats["TOTAL"] = missedStats["RIGHT"] + missedStats["LEFT"] + missedStats["TOP"] + missedStats["BOTTOM"];
         DataToCSV csvManager = UnityEngine.Object.FindFirstObjectByType<DataToCSV>();
@@ -203,10 +203,9 @@ public class objective : MonoBehaviour
         if (winPanel != null) winPanel.SetActive(true);
         if (winTimeText != null) winTimeText.text = "Час: " + FormatTime(gameTimer);
 
-        SaveBestTimeIfNeeded(); // Сохраняем в CSV
+        SaveBestTimeIfNeeded();
     }
 
-    // --- НОВАЯ ЛОГИКА СОХРАНЕНИЯ В CSV ---
     private void SaveBestTimeIfNeeded()
     {
         string playerName = PlayerPrefs.GetString("CurrentPlayerName", "Unknown");
@@ -233,7 +232,6 @@ public class objective : MonoBehaviour
                 if (oldBestTime == 0f || gameTimer > oldBestTime)
                 {
                     string creationDate = data.Length > 1 ? data[1] : "";
-                    // Перезаписываем строку новыми данными
                     string newTimeStr = gameTimer.ToString(System.Globalization.CultureInfo.InvariantCulture);
                     lines[i] = $"{playerName},{creationDate},{newTimeStr}";
                     fileUpdated = true;
@@ -270,21 +268,40 @@ public class objective : MonoBehaviour
     private void DamageSystem(GameObject enemy)
     {
         if (canRestart || isGameWon) return;
-        if (branch >= branches.Length) return;
 
         if (enemy.name.Contains("EnemyGeneric")) missedColors[0]++;
         else if (enemy.name.Contains("BlueEnemy1")) missedColors[1]++;
         else if (enemy.name.Contains("RedEnemy 1")) missedColors[2]++;
         else if (enemy.name.Contains("YellowEnemy1")) missedColors[3]++;
 
-        branches[branch]--;
-
-        if (branches[branch] <= 1)
+        // 1. Находим первую ЖИВУЮ ветку и наносим ей урон
+        int damageTarget = -1;
+        for (int i = 1; i <= 4; i++)
         {
-            branch++;
+            if (branches[i] > 1)
+            {
+                damageTarget = i;
+                break;
+            }
         }
 
-        if (branch >= branches.Length && !isGameWon)
+        if (damageTarget != -1)
+        {
+            branches[damageTarget]--;
+        }
+
+        // 2. Проверяем, не уничтожены ли все 4 ветки (поражение)
+        bool allDead = true;
+        for (int i = 1; i <= 4; i++)
+        {
+            if (branches[i] > 1)
+            {
+                allDead = false;
+                break;
+            }
+        }
+
+        if (allDead && !isGameWon)
         {
             canRestart = true;
         }
