@@ -1,57 +1,117 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class OptionsMenu : MonoBehaviour
 {
     [Header("Sliders Reference")]
     public Slider musicSlider;
     public Slider soundsSlider;
-    public Slider playerSpeedSlider;
-    public Slider enemySpeedSlider;
+
+    [Header("Difficulty Settings")]
+    public Button prevDifficultyButton;
+    public Button nextDifficultyButton;
+    public TextMeshProUGUI difficultyText;
 
     [Header("Buttons")]
-    public Button backButton; // Ссылка на кнопку выхода
+    public Button backButton;
+
+    private float[] difficultyMultipliers = { 0.75f, 1f, 1.25f, 1.5f, 1.75f, 2f };
+
+    // Массивы с переводами
+    private string[] difficultyNamesEN = { "Very Easy", "Easy", "Normal", "Hard", "Very Hard", "Extreme" };
+    private string[] difficultyNamesUA = { "Дуже легко", "Легко", "Нормально", "Складно", "Дуже складно", "Екстремально" };
+
+    private int currentDifficultyIndex = 1;
+
+    private const float BASE_PLAYER_SPEED = 115f;
+    private const float BASE_ENEMY_SPEED = 3f;
 
     void Start()
     {
-        // 1. ПРИНУДИТЕЛЬНО задаем лимиты для ползунков скорости
-        if (playerSpeedSlider != null)
-        {
-            playerSpeedSlider.minValue = 50f;
-            playerSpeedSlider.maxValue = 250f;
-        }
+        currentDifficultyIndex = PlayerPrefs.GetInt("DifficultyIndex", 1);
+        UpdateDifficultyUI();
 
-        if (enemySpeedSlider != null)
-        {
-            enemySpeedSlider.minValue = 3f;
-            enemySpeedSlider.maxValue = 15f;
-        }
-
-        // 2. Подгружаем сохраненные данные (если их нет, ставим дефолты)
         if (musicSlider != null) musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
         if (soundsSlider != null) soundsSlider.value = PlayerPrefs.GetFloat("SoundsVolume", 1f);
-        if (playerSpeedSlider != null) playerSpeedSlider.value = PlayerPrefs.GetFloat("Speed_Player", 120f);
-        if (enemySpeedSlider != null) enemySpeedSlider.value = PlayerPrefs.GetFloat("Speed_Enemy", 8f);
 
-        // 3. Подписываем ползунки на автоматическое сохранение при любом их движении
         if (musicSlider != null) musicSlider.onValueChanged.AddListener(SaveMusic);
         if (soundsSlider != null) soundsSlider.onValueChanged.AddListener(SaveSounds);
-        if (playerSpeedSlider != null) playerSpeedSlider.onValueChanged.AddListener(SavePlayerSpeed);
-        if (enemySpeedSlider != null) enemySpeedSlider.onValueChanged.AddListener(SaveEnemySpeed);
 
-        // 4. Подвязываем кнопку выхода в главное меню
+        if (prevDifficultyButton != null) prevDifficultyButton.onClick.AddListener(PrevDifficulty);
+        if (nextDifficultyButton != null) nextDifficultyButton.onClick.AddListener(NextDifficulty);
+
         if (backButton != null) backButton.onClick.AddListener(CloseOptions);
     }
 
-    // --- Логика интерфейса ---
+    // Подписываемся на смену языка для моментального обновления UI
+    void OnEnable()
+    {
+        LanguageSwitcher.OnLanguageChanged += UpdateDifficultyUI;
+    }
+
+    void OnDisable()
+    {
+        LanguageSwitcher.OnLanguageChanged -= UpdateDifficultyUI;
+    }
+
+    private void PrevDifficulty()
+    {
+        if (currentDifficultyIndex > 0)
+        {
+            currentDifficultyIndex--;
+            ApplyAndSaveDifficulty();
+        }
+    }
+
+    private void NextDifficulty()
+    {
+        if (currentDifficultyIndex < difficultyMultipliers.Length - 1)
+        {
+            currentDifficultyIndex++;
+            ApplyAndSaveDifficulty();
+        }
+    }
+
+    private void ApplyAndSaveDifficulty()
+    {
+        UpdateDifficultyUI();
+        PlayerPrefs.SetInt("DifficultyIndex", currentDifficultyIndex);
+
+        float multiplier = difficultyMultipliers[currentDifficultyIndex];
+        float finalPlayerSpeed = BASE_PLAYER_SPEED * multiplier;
+        float finalEnemySpeed = BASE_ENEMY_SPEED * multiplier;
+
+        PlayerPrefs.SetFloat("Speed_Player", finalPlayerSpeed);
+        PlayerPrefs.SetFloat("Speed_Enemy", finalEnemySpeed);
+        PlayerPrefs.Save();
+    }
+
+    private void UpdateDifficultyUI()
+    {
+        if (difficultyText != null)
+        {
+            string currentLang = PlayerPrefs.GetString("SavedLanguage", "English");
+
+            if (currentLang == "Українська")
+            {
+                difficultyText.text = difficultyNamesUA[currentDifficultyIndex];
+            }
+            else // English
+            {
+                difficultyText.text = difficultyNamesEN[currentDifficultyIndex];
+            }
+        }
+
+        if (prevDifficultyButton != null) prevDifficultyButton.interactable = (currentDifficultyIndex > 0);
+        if (nextDifficultyButton != null) nextDifficultyButton.interactable = (currentDifficultyIndex < difficultyMultipliers.Length - 1);
+    }
+
     private void CloseOptions()
     {
-        // Просто выключаем объект OptionsPanel. 
-        // Главное меню находится под ним, поэтому оно сразу станет доступно.
         gameObject.SetActive(false);
     }
 
-    // --- Логика сохранения (записывает данные на жесткий диск на лету) ---
     private void SaveMusic(float value)
     {
         PlayerPrefs.SetFloat("MusicVolume", value);
@@ -61,18 +121,6 @@ public class OptionsMenu : MonoBehaviour
     private void SaveSounds(float value)
     {
         PlayerPrefs.SetFloat("SoundsVolume", value);
-        PlayerPrefs.Save();
-    }
-
-    private void SavePlayerSpeed(float value)
-    {
-        PlayerPrefs.SetFloat("Speed_Player", value);
-        PlayerPrefs.Save();
-    }
-
-    private void SaveEnemySpeed(float value)
-    {
-        PlayerPrefs.SetFloat("Speed_Enemy", value);
         PlayerPrefs.Save();
     }
 }

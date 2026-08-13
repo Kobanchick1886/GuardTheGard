@@ -16,6 +16,14 @@ public class LawnMower : MonoBehaviour
     [SerializeField] private GameObject mowerPrefab;
     [SerializeField] private GameObject basePrefab;
 
+    [Header("Hover Icon (Placement preview)")]
+    [Tooltip("Спрайт зеленой косилки (путь свободен)")]
+    [SerializeField] private Sprite iconClear;
+    [Tooltip("Спрайт красной косилки (путь заблокирован)")]
+    [SerializeField] private Sprite iconBlocked;
+    [Tooltip("Отступ для иконки косилки от игрока")]
+    [SerializeField] private Vector3 hoverIconOffset = new Vector3(0, 1.5f, 0);
+
     [Header("Two-Layer Base Sprites")]
     [Tooltip("DOWN")]
     [SerializeField] private BaseSpritePair verticalBaseDown;
@@ -41,11 +49,15 @@ public class LawnMower : MonoBehaviour
     private GameObject spawnedBase1;
     private GameObject spawnedBase2;
 
+    // Переменные для визуала над головой (теперь только иконка)
+    private GameObject currentHoverIcon;
+    private SpriteRenderer hoverIconRenderer;
+
     public float mowerSpeed = 5f;
 
     [HideInInspector] public float countdownTimer = 0f;
     [HideInInspector] public bool isPlacing = false;
-    [HideInInspector] public bool isPathBlocked = false; // Можно использовать для UI (показывать красную линию)
+    [HideInInspector] public bool isPathBlocked = false;
 
     void Awake()
     {
@@ -67,11 +79,20 @@ public class LawnMower : MonoBehaviour
         isPlacing = true;
         isPathBlocked = false;
 
-        // Fase 1 - Установка первой базы
-        countdownTimer = 5f;
+        // 1. Динамически создаем объект для иконки косилки
+        currentHoverIcon = new GameObject("StylizedHoverIcon");
+        hoverIconRenderer = currentHoverIcon.AddComponent<SpriteRenderer>();
+        hoverIconRenderer.sortingOrder = 99;
+
+        // Fase 1 - Установка первой базы (отсчет 3 секунды)
+        countdownTimer = 3f;
         while (countdownTimer > 0)
         {
             countdownTimer -= Time.deltaTime;
+
+            UpdateHoverIconPosition();
+            UpdateHoverIconSprite();
+
             yield return null;
         }
 
@@ -80,37 +101,46 @@ public class LawnMower : MonoBehaviour
 
         Vector3 pos1 = spawnedBase1.transform.position;
 
-        // Fase 2 - Установка второй базы (с проверкой траектории)
-        countdownTimer = 5f;
+        // Fase 2 - Установка второй базы 
+        countdownTimer = 3f;
         while (countdownTimer > 0)
         {
             Vector3 currentPos = player.position;
             bool pathClear = true;
 
-            // Пускаем луч от первой базы к игроку, чтобы проверить, есть ли куст на пути
+            // Пускаем луч от первой базы к игроку
             RaycastHit2D[] hits = Physics2D.LinecastAll(pos1, currentPos);
+
             foreach (RaycastHit2D hit in hits)
             {
                 if (hit.collider != null && hit.collider.CompareTag(obstacleTag))
                 {
                     pathClear = false;
-                    break;
+                    break; // Как только наткнулись на куст - путь заблокирован
                 }
             }
 
             isPathBlocked = !pathClear;
 
-            // Если путь чист, таймер идет. Если нет - замораживается.
+            // ТАЙМЕР ИДЕТ ТОЛЬКО ЕСЛИ ПУТЬ ЧИСТ
             if (pathClear)
             {
                 countdownTimer -= Time.deltaTime;
             }
 
+            UpdateHoverIconPosition();
+            UpdateHoverIconSprite();
+
             yield return null;
         }
 
+        Vector3 finalPos2 = player.position;
+
+        // Удаляем иконку косилки, когда таймер вышел
+        if (currentHoverIcon != null) Destroy(currentHoverIcon);
+
         // Fase 3 - Размещение и запуск газонокосилки
-        spawnedBase2 = Instantiate(basePrefab, player.position, Quaternion.identity);
+        spawnedBase2 = Instantiate(basePrefab, finalPos2, Quaternion.identity);
 
         Vector3 pos2 = spawnedBase2.transform.position;
         Vector3 direction = (pos2 - pos1).normalized;
@@ -127,6 +157,22 @@ public class LawnMower : MonoBehaviour
         if (mowerScript != null)
         {
             mowerScript.StartPatrol(pos1, pos2, mowerSpeed);
+        }
+    }
+
+    private void UpdateHoverIconPosition()
+    {
+        if (currentHoverIcon != null)
+        {
+            currentHoverIcon.transform.position = player.position + hoverIconOffset;
+        }
+    }
+
+    private void UpdateHoverIconSprite()
+    {
+        if (hoverIconRenderer != null)
+        {
+            hoverIconRenderer.sprite = isPathBlocked ? iconBlocked : iconClear;
         }
     }
 
@@ -168,7 +214,6 @@ public class LawnMower : MonoBehaviour
 
         ResetFlips(back1, front1, back2, front2);
 
-        // ВЕРТИКАЛЬНІ БАЗИ
         if ((angle > 67.5f && angle < 112.5f) || (angle < -67.5f && angle > -112.5f))
         {
             if (angle > 0)
@@ -182,7 +227,6 @@ public class LawnMower : MonoBehaviour
                 ApplyIndividualPair(verticalBaseDown, back2, front2);
             }
         }
-        // ГОРИЗОНТАЛЬНІ БАЗИ
         else if (angle >= 157.5f || angle <= -157.5f || (angle >= -22.5f && angle <= 22.5f))
         {
             ApplyIndividualPair(horizontalBase, back1, front1);
@@ -197,28 +241,24 @@ public class LawnMower : MonoBehaviour
                 SetFlipX(true, back1, front1);
             }
         }
-        // ДІАГОНАЛЬ UP-RIGHT
         else if (angle >= 22.5f && angle <= 67.5f)
         {
             ApplyIndividualPair(diagDownLeftBase, back1, front1);
             ApplyIndividualPair(diagUpLeftBase, back2, front2);
             SetFlipX(true, back1, front1);
         }
-        // UP-LEFT
         else if (angle > 112.5f && angle < 157.5f)
         {
             ApplyIndividualPair(diagDownLeftBase, back1, front1);
             ApplyIndividualPair(diagUpLeftBase, back2, front2);
             SetFlipX(true, back2, front2);
         }
-        // DOWN-RIGHT
         else if (angle > -67.5f && angle < -22.5f)
         {
             ApplyIndividualPair(diagUpLeftBase, back1, front1);
             ApplyIndividualPair(diagDownLeftBase, back2, front2);
             SetFlipX(true, back2, front2);
         }
-        // DOWN-LEFT
         else if (angle >= -157.5f && angle <= -112.5f)
         {
             ApplyIndividualPair(diagUpLeftBase, back1, front1);
