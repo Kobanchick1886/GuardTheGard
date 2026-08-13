@@ -14,6 +14,13 @@ public class AccountSelectionManager : MonoBehaviour
     public GameObject createAccountPanel;
     public GameObject optionsPanel;
 
+    [Header("Мануал (Обучение)")]
+    public GameObject manualPanel; // Общая панель мануала (фон)
+    public GameObject manualContentEN; // Картинка/контент на английском
+    public GameObject manualContentUA; // Картинка/контент на украинском
+    public Button openManualButton; // Кнопка, которая открывает мануал
+    public Button closeManualButton; // Твоя кнопка закрытия (с LocalizedImages)
+
     [Header("Элементы списка")]
     public Transform contentParent;
     public GameObject accountRowPrefab;
@@ -43,13 +50,14 @@ public class AccountSelectionManager : MonoBehaviour
     {
         csvPath = Path.Combine(Application.persistentDataPath, "Accounts.csv");
 
+        // Прячем все панели на старте
         if (accountSelectionPanel != null) accountSelectionPanel.SetActive(false);
         if (createAccountPanel != null) createAccountPanel.SetActive(false);
         if (optionsPanel != null) optionsPanel.SetActive(false);
+        if (manualPanel != null) manualPanel.SetActive(false);
 
         if (nameInput != null) nameInput.onValueChanged.AddListener(OnInputTextChanged);
         if (surnameInput != null) surnameInput.onValueChanged.AddListener(OnInputTextChanged);
-
         if (searchInput != null) searchInput.onValueChanged.AddListener(OnSearchInputChanged);
 
         if (backToMenuButton != null) backToMenuButton.onClick.AddListener(CloseSelectionScreen);
@@ -57,6 +65,10 @@ public class AccountSelectionManager : MonoBehaviour
         if (cancelButton != null) cancelButton.onClick.AddListener(CloseCreatePopup);
 
         if (confirmCreateButton != null) confirmCreateButton.onClick.AddListener(CreateNewAccount);
+
+        // Подписываем кнопки мануала
+        if (openManualButton != null) openManualButton.onClick.AddListener(OpenManual);
+        if (closeManualButton != null) closeManualButton.onClick.AddListener(CloseManual);
     }
 
     void OnEnable()
@@ -76,7 +88,48 @@ public class AccountSelectionManager : MonoBehaviour
             string currentSearch = searchInput != null ? searchInput.text : "";
             LoadAccountsToUI(currentSearch);
         }
+
+        // Если мануал открыт во время смены языка, обновляем его на лету
+        if (manualPanel != null && manualPanel.activeInHierarchy)
+        {
+            UpdateManualLanguage();
+        }
     }
+
+    // --- ЛОГИКА МАНУАЛА ---
+    public void OpenManual()
+    {
+        if (manualPanel != null)
+        {
+            manualPanel.SetActive(true);
+            UpdateManualLanguage();
+        }
+    }
+
+    public void CloseManual()
+    {
+        if (manualPanel != null)
+        {
+            manualPanel.SetActive(false);
+        }
+    }
+
+    private void UpdateManualLanguage()
+    {
+        string currentLang = PlayerPrefs.GetString("SavedLanguage", "English");
+
+        if (currentLang == "Українська")
+        {
+            if (manualContentUA != null) manualContentUA.SetActive(true);
+            if (manualContentEN != null) manualContentEN.SetActive(false);
+        }
+        else // English
+        {
+            if (manualContentUA != null) manualContentUA.SetActive(false);
+            if (manualContentEN != null) manualContentEN.SetActive(true);
+        }
+    }
+    // -----------------------
 
     public void OpenOptions()
     {
@@ -138,7 +191,6 @@ public class AccountSelectionManager : MonoBehaviour
         if (string.IsNullOrEmpty(fullName) || fullName.Contains(",")) return;
 
         string today = System.DateTime.Now.ToString("dd/MM/yyyy");
-        // Записываем структуру: Имя, Дата, Рекорд (по умолчанию 0)
         File.AppendAllText(csvPath, $"{fullName},{today},0\n");
 
         CloseCreatePopup();
@@ -161,7 +213,6 @@ public class AccountSelectionManager : MonoBehaviour
             if (createBtn != null) createBtn.onClick.AddListener(OpenCreatePopup);
         }
 
-        // Задаем новую шапку для файла (добавили BestTime)
         if (!File.Exists(csvPath)) { File.WriteAllText(csvPath, "PlayerName,CreationDate,BestTime\n"); return; }
 
         string[] lines = File.ReadAllLines(csvPath);
@@ -172,7 +223,6 @@ public class AccountSelectionManager : MonoBehaviour
             string name = data[0];
             string creationDate = data.Length > 1 ? data[1] : "";
 
-            // Читаем рекорд из 3-й колонки (используем InvariantCulture чтобы точки/запятые не ломались)
             float bestTimeSeconds = 0f;
             if (data.Length > 2)
             {
