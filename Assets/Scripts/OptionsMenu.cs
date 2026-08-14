@@ -13,19 +13,19 @@ public class OptionsMenu : MonoBehaviour
     public Button nextDifficultyButton;
     public TextMeshProUGUI difficultyText;
 
+    [Header("Manual Speed Settings per Difficulty")]
+    [Tooltip("Индексы: 0 - Very Easy, 1 - Easy, 2 - Normal, 3 - Hard, 4 - Very Hard, 5 - Extreme")]
+    public float[] playerSpeeds = { 85f, 115f, 145f, 175f, 200f, 230f };
+    public float[] enemySpeeds = { 2.25f, 3f, 3.75f, 4.5f, 5.25f, 6f };
+
     [Header("Buttons")]
     public Button backButton;
-
-    private float[] difficultyMultipliers = { 0.75f, 1f, 1.25f, 1.5f, 1.75f, 2f };
 
     // Массивы с переводами
     private string[] difficultyNamesEN = { "Very Easy", "Easy", "Normal", "Hard", "Very Hard", "Extreme" };
     private string[] difficultyNamesUA = { "Дуже легко", "Легко", "Нормально", "Складно", "Дуже складно", "Екстремально" };
 
     private int currentDifficultyIndex = 1;
-
-    private const float BASE_PLAYER_SPEED = 115f;
-    private const float BASE_ENEMY_SPEED = 3f;
 
     void Start()
     {
@@ -66,7 +66,7 @@ public class OptionsMenu : MonoBehaviour
 
     private void NextDifficulty()
     {
-        if (currentDifficultyIndex < difficultyMultipliers.Length - 1)
+        if (currentDifficultyIndex < difficultyNamesEN.Length - 1)
         {
             currentDifficultyIndex++;
             ApplyAndSaveDifficulty();
@@ -78,9 +78,9 @@ public class OptionsMenu : MonoBehaviour
         UpdateDifficultyUI();
         PlayerPrefs.SetInt("DifficultyIndex", currentDifficultyIndex);
 
-        float multiplier = difficultyMultipliers[currentDifficultyIndex];
-        float finalPlayerSpeed = BASE_PLAYER_SPEED * multiplier;
-        float finalEnemySpeed = BASE_ENEMY_SPEED * multiplier;
+        // Берем конкретные значения скорости из массивов по текущему индексу сложности
+        float finalPlayerSpeed = playerSpeeds[currentDifficultyIndex];
+        float finalEnemySpeed = enemySpeeds[currentDifficultyIndex];
 
         PlayerPrefs.SetFloat("Speed_Player", finalPlayerSpeed);
         PlayerPrefs.SetFloat("Speed_Enemy", finalEnemySpeed);
@@ -104,7 +104,7 @@ public class OptionsMenu : MonoBehaviour
         }
 
         if (prevDifficultyButton != null) prevDifficultyButton.interactable = (currentDifficultyIndex > 0);
-        if (nextDifficultyButton != null) nextDifficultyButton.interactable = (currentDifficultyIndex < difficultyMultipliers.Length - 1);
+        if (nextDifficultyButton != null) nextDifficultyButton.interactable = (currentDifficultyIndex < difficultyNamesEN.Length - 1);
     }
 
     private void CloseOptions()
