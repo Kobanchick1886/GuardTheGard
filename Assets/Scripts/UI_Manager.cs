@@ -1,11 +1,16 @@
-using UnityEngine;
-using TMPro; // Essential for TextMeshPro
+﻿using UnityEngine;
+using TMPro;
+using UnityEngine.UI; // Обязательно добавляем для работы с RawImage
 
 public class UI_Manager : MonoBehaviour
 {
-    // This creates the slot in the Inspector
     public TextMeshProUGUI enemyText;
-    public TextMeshProUGUI mowerSeconds;
+
+    [Header("Mower Countdown UI")]
+    public RawImage mowerCountdownImage;
+    public Texture texNum3;
+    public Texture texNum2;
+    public Texture texNum1;
 
     private objective objectiveScript;
 
@@ -19,28 +24,33 @@ public class UI_Manager : MonoBehaviour
         // 1. Update Enemy Text
         if (objectiveScript != null && enemyText != null)
         {
-            enemyText.text = objectiveScript.enemiesRemainingInWave.ToString() + "/"+ 8 * objectiveScript.multiplier;
+            enemyText.text = objectiveScript.enemiesRemainingInWave.ToString() + "/" + (8 * objectiveScript.multiplier);
         }
 
         // 2. Update Mower Placement Timer
-        if (mowerSeconds != null)
+        if (mowerCountdownImage != null)
         {
-            // Find the active Lawn Mower in the scene
+            // Ищем активную газонокосилку на сцене
             LawnMower activeMower = Object.FindFirstObjectByType<LawnMower>();
 
             if (activeMower != null && activeMower.isPlacing)
             {
-                // Turn the text ON and update the seconds
-                mowerSeconds.enabled = true;
+                // Включаем отображение картинки
+                mowerCountdownImage.enabled = true;
 
-                // Mathf.CeilToInt rounds 1.5 up to 2, 0.5 up to 1, etc., for a clean UI
+                // Округляем время вверх
                 int displaySeconds = Mathf.CeilToInt(activeMower.countdownTimer);
-                mowerSeconds.text = displaySeconds.ToString();
+
+                // Подставляем нужную текстуру в зависимости от оставшегося времени
+                if (displaySeconds >= 3) mowerCountdownImage.texture = texNum3;
+                else if (displaySeconds == 2) mowerCountdownImage.texture = texNum2;
+                else if (displaySeconds == 1) mowerCountdownImage.texture = texNum1;
+                else mowerCountdownImage.texture = null;
             }
             else
             {
-                // Turn the text OFF when the mower is done placing or doesn't exist
-                mowerSeconds.enabled = false;
+                // Прячем картинку, когда косилка не устанавливается
+                mowerCountdownImage.enabled = false;
             }
         }
     }
