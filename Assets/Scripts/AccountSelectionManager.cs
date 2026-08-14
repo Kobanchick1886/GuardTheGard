@@ -14,12 +14,19 @@ public class AccountSelectionManager : MonoBehaviour
     public GameObject createAccountPanel;
     public GameObject optionsPanel;
 
+    [Header("Попап удаления (Confirmation)")]
+    public GameObject deleteConfirmationPanel;
+    public TextMeshProUGUI deleteConfirmationText;
+    public Button confirmDeleteButton;
+    public Button cancelDeleteButton;
+    public Button closeDeletePopupButton;
+
     [Header("Мануал (Обучение)")]
-    public GameObject manualPanel; // Общая панель мануала (фон)
-    public GameObject manualContentEN; // Картинка/контент на английском
-    public GameObject manualContentUA; // Картинка/контент на украинском
-    public Button openManualButton; // Кнопка, которая открывает мануал
-    public Button closeManualButton; // Твоя кнопка закрытия (с LocalizedImages)
+    public GameObject manualParentPanel; // Сюда закинешь сам объект Manual
+    public GameObject manualPanelEN;
+    public GameObject manualPanelUA;
+    public Button openManualButton;
+    public Button[] closeManualButtons;
 
     [Header("Элементы списка")]
     public Transform contentParent;
@@ -50,11 +57,15 @@ public class AccountSelectionManager : MonoBehaviour
     {
         csvPath = Path.Combine(Application.persistentDataPath, "Accounts.csv");
 
-        // Прячем все панели на старте
         if (accountSelectionPanel != null) accountSelectionPanel.SetActive(false);
         if (createAccountPanel != null) createAccountPanel.SetActive(false);
         if (optionsPanel != null) optionsPanel.SetActive(false);
-        if (manualPanel != null) manualPanel.SetActive(false);
+        if (deleteConfirmationPanel != null) deleteConfirmationPanel.SetActive(false);
+
+        // Гасим весь мануал со старта
+        if (manualParentPanel != null) manualParentPanel.SetActive(false);
+        if (manualPanelEN != null) manualPanelEN.SetActive(false);
+        if (manualPanelUA != null) manualPanelUA.SetActive(false);
 
         if (nameInput != null) nameInput.onValueChanged.AddListener(OnInputTextChanged);
         if (surnameInput != null) surnameInput.onValueChanged.AddListener(OnInputTextChanged);
@@ -66,9 +77,33 @@ public class AccountSelectionManager : MonoBehaviour
 
         if (confirmCreateButton != null) confirmCreateButton.onClick.AddListener(CreateNewAccount);
 
-        // Подписываем кнопки мануала
-        if (openManualButton != null) openManualButton.onClick.AddListener(OpenManual);
-        if (closeManualButton != null) closeManualButton.onClick.AddListener(CloseManual);
+        if (openManualButton != null)
+        {
+            openManualButton.onClick.RemoveAllListeners();
+            openManualButton.onClick.AddListener(OpenManual);
+        }
+
+        if (closeManualButtons != null)
+        {
+            foreach (Button closeBtn in closeManualButtons)
+            {
+                if (closeBtn != null)
+                {
+                    closeBtn.onClick.RemoveAllListeners();
+                    closeBtn.onClick.AddListener(CloseManual);
+                }
+            }
+        }
+
+        if (deleteButton != null)
+        {
+            deleteButton.onClick.RemoveAllListeners();
+            deleteButton.onClick.AddListener(OpenDeleteConfirmation);
+        }
+
+        if (confirmDeleteButton != null) confirmDeleteButton.onClick.AddListener(ConfirmAndExecuteDeletion);
+        if (cancelDeleteButton != null) cancelDeleteButton.onClick.AddListener(CloseDeleteConfirmation);
+        if (closeDeletePopupButton != null) closeDeletePopupButton.onClick.AddListener(CloseDeleteConfirmation);
     }
 
     void OnEnable()
@@ -89,47 +124,83 @@ public class AccountSelectionManager : MonoBehaviour
             LoadAccountsToUI(currentSearch);
         }
 
-        // Если мануал открыт во время смены языка, обновляем его на лету
-        if (manualPanel != null && manualPanel.activeInHierarchy)
+        bool isAnyManualOpen = (manualParentPanel != null && manualParentPanel.activeInHierarchy);
+
+        if (isAnyManualOpen)
         {
-            UpdateManualLanguage();
+            CloseManual();
+            OpenManual();
+        }
+
+        if (deleteConfirmationPanel != null && deleteConfirmationPanel.activeInHierarchy)
+        {
+            UpdateDeleteConfirmationText();
         }
     }
 
-    // --- ЛОГИКА МАНУАЛА ---
+    public void OpenDeleteConfirmation()
+    {
+        if (string.IsNullOrEmpty(selectedAccountName)) return;
+
+        if (deleteConfirmationPanel != null)
+        {
+            deleteConfirmationPanel.SetActive(true);
+            UpdateDeleteConfirmationText();
+        }
+    }
+
+    public void CloseDeleteConfirmation()
+    {
+        if (deleteConfirmationPanel != null)
+        {
+            deleteConfirmationPanel.SetActive(false);
+        }
+    }
+
+    private void UpdateDeleteConfirmationText()
+    {
+        if (deleteConfirmationText == null) return;
+
+        string currentLang = PlayerPrefs.GetString("SavedLanguage", "English");
+        string colorOrange = "#F26D50";
+        string colorGreen = "#C0E15F";
+
+        if (currentLang == "Українська")
+        {
+            deleteConfirmationText.text = $"Ви впевнені, що хочете <color={colorOrange}>видалити</color> наступний акаунт: <color={colorGreen}>{selectedAccountName}</color>?\nВся інформація буде втрачена!";
+        }
+        else
+        {
+            deleteConfirmationText.text = $"Are you sure you want to <color={colorOrange}>delete</color> the following account: <color={colorGreen}>{selectedAccountName}</color>?\nAll the information will be lost!";
+        }
+    }
+
     public void OpenManual()
     {
-        if (manualPanel != null)
+        string currentLang = PlayerPrefs.GetString("SavedLanguage", "English");
+
+        // Включаем родителя
+        if (manualParentPanel != null) manualParentPanel.SetActive(true);
+
+        // Включаем нужный язык, выключаем ненужный
+        if (currentLang == "Українська")
         {
-            manualPanel.SetActive(true);
-            UpdateManualLanguage();
+            if (manualPanelEN != null) manualPanelEN.SetActive(false);
+            if (manualPanelUA != null) manualPanelUA.SetActive(true);
+        }
+        else
+        {
+            if (manualPanelUA != null) manualPanelUA.SetActive(false);
+            if (manualPanelEN != null) manualPanelEN.SetActive(true);
         }
     }
 
     public void CloseManual()
     {
-        if (manualPanel != null)
-        {
-            manualPanel.SetActive(false);
-        }
+        if (manualParentPanel != null) manualParentPanel.SetActive(false);
+        if (manualPanelEN != null) manualPanelEN.SetActive(false);
+        if (manualPanelUA != null) manualPanelUA.SetActive(false);
     }
-
-    private void UpdateManualLanguage()
-    {
-        string currentLang = PlayerPrefs.GetString("SavedLanguage", "English");
-
-        if (currentLang == "Українська")
-        {
-            if (manualContentUA != null) manualContentUA.SetActive(true);
-            if (manualContentEN != null) manualContentEN.SetActive(false);
-        }
-        else // English
-        {
-            if (manualContentUA != null) manualContentUA.SetActive(false);
-            if (manualContentEN != null) manualContentEN.SetActive(true);
-        }
-    }
-    // -----------------------
 
     public void OpenOptions()
     {
@@ -249,7 +320,7 @@ public class AccountSelectionManager : MonoBehaviour
                 if (bestTimeText != null) bestTimeText.text = $"Кращий час: {formattedTime}";
                 if (timeText != null) timeText.text = $"Створено: {creationDate}";
             }
-            else // English
+            else
             {
                 if (bestTimeText != null) bestTimeText.text = $"Best time: {formattedTime}";
                 if (timeText != null) timeText.text = $"Created: {creationDate}";
@@ -282,17 +353,47 @@ public class AccountSelectionManager : MonoBehaviour
         deleteButton.interactable = true;
     }
 
-    public void DeleteSelectedAccount()
+    public void ConfirmAndExecuteDeletion()
     {
         if (string.IsNullOrEmpty(selectedAccountName)) return;
 
+        // 1. Удаляем из Accounts.csv
         List<string> lines = File.ReadAllLines(csvPath).ToList();
         lines = lines.Where(line => !line.StartsWith(selectedAccountName + ",")).ToList();
         File.WriteAllLines(csvPath, lines);
 
+        // 2. Удаляем из DefeatAnalytics.csv
+        string analyticsPath = Path.Combine(Application.persistentDataPath, "DefeatAnalytics.csv");
+        if (File.Exists(analyticsPath))
+        {
+            List<string> analyticsLines = File.ReadAllLines(analyticsPath).ToList();
+
+            // Оставляем нулевую строку (заголовки) и те строки, где имя игрока (3-я колонка, индекс 2) не совпадает с удаляемым
+            analyticsLines = analyticsLines.Where((line, index) =>
+            {
+                if (index == 0) return true;
+
+                string[] parts = line.Split(',');
+                if (parts.Length > 2)
+                {
+                    return parts[2] != selectedAccountName;
+                }
+                return true;
+            }).ToList();
+
+            File.WriteAllLines(analyticsPath, analyticsLines);
+        }
+
+        // 3. Удаляем счетчик сессий из памяти
+        PlayerPrefs.DeleteKey("SessionCount_" + selectedAccountName);
+        PlayerPrefs.Save();
+
+        // 4. Обновляем интерфейс
         selectedAccountName = "";
         playButton.interactable = false;
         deleteButton.interactable = false;
+
+        CloseDeleteConfirmation();
 
         string currentSearch = searchInput != null ? searchInput.text : "";
         LoadAccountsToUI(currentSearch);
