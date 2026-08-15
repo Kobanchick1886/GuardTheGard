@@ -1,6 +1,6 @@
-﻿using Unity.VisualScripting;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class Magnet : MonoBehaviour
 {
@@ -19,7 +19,10 @@ public class Magnet : MonoBehaviour
     private float currentCooldown = 0f;
     private bool canFire = true;
 
-    private System.Collections.Generic.List<GameObject> enemiesInRange = new System.Collections.Generic.List<GameObject>();
+    // ВАЖНО: Теперь мы отслеживаем не GameObject, а конкретные Collider2D.
+    // Это спасает от бага, когда удаление/выключение дочернего коллайдера (корешка)
+    // заставляло Пшикалку "забыть" про всего врага.
+    private List<Collider2D> collidersInRange = new List<Collider2D>();
 
     private void Update()
     {
@@ -37,13 +40,8 @@ public class Magnet : MonoBehaviour
                 canFire = true;
                 currentCooldown = 0f;
 
-                enemiesInRange.RemoveAll(item => item == null);
-
-                // Если кулдаун спал и враги есть - стреляем сразу
-                if (enemiesInRange.Count > 0)
-                {
-                    TryShootAtFirstAvailableEnemy();
-                }
+                // Если кулдаун спал - пробуем выстрелить сразу
+                TryShootAtFirstAvailableEnemy();
             }
         }
     }
@@ -73,15 +71,28 @@ public class Magnet : MonoBehaviour
                 orb.StartFlying(transform.parent);
             }
         }
+        else if (collision.CompareTag("Enemy"))
+        {
+            // Подстраховка: если враг чудом оказался в зоне, но не в списке
+            if (!collidersInRange.Contains(collision))
+            {
+                collidersInRange.Add(collision);
+            }
+
+            if (canFire)
+            {
+                TryShootAtFirstAvailableEnemy();
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Enemy"))
         {
-            if (!enemiesInRange.Contains(collision.gameObject))
+            if (!collidersInRange.Contains(collision))
             {
-                enemiesInRange.Add(collision.gameObject);
+                collidersInRange.Add(collision);
             }
 
             if (canFire)
@@ -95,35 +106,37 @@ public class Magnet : MonoBehaviour
     {
         if (collision.CompareTag("Enemy"))
         {
-            if (enemiesInRange.Contains(collision.gameObject))
+            if (collidersInRange.Contains(collision))
             {
-                enemiesInRange.Remove(collision.gameObject);
+                collidersInRange.Remove(collision);
             }
         }
     }
 
     private void TryShootAtFirstAvailableEnemy()
     {
-        enemiesInRange.RemoveAll(item => item == null);
+        // Очищаем список от уничтоженных (null) или выключенных (enabled = false) коллайдеров корешков
+        collidersInRange.RemoveAll(c => c == null || !c.enabled || !c.gameObject.activeInHierarchy);
 
-        GameObject targetEnemy = null;
-        foreach (var enemy in enemiesInRange)
+        Transform targetTransform = null;
+
+        foreach (var col in collidersInRange)
         {
-            if (enemy != null)
+            // Ищем скрипт на самом коллайдере ИЛИ на его родителе (EnemyGeneric)
+            EnemyGeneric enemyScript = col.GetComponentInParent<EnemyGeneric>();
+
+            // Если это враг и он НЕ в стане (или это объект без скрипта, но с тегом Enemy)
+            if (enemyScript == null || !enemyScript.IsStunned())
             {
-                EnemyGeneric enemyScript = enemy.GetComponent<EnemyGeneric>();
-                // Игнорируем застаненных врагов
-                if (enemyScript == null || !enemyScript.IsStunned())
-                {
-                    targetEnemy = enemy;
-                    break;
-                }
+                // Целимся в родительский объект (центр врага), а не в его отдельный корешок
+                targetTransform = enemyScript != null ? enemyScript.transform : col.transform;
+                break;
             }
         }
 
-        if (targetEnemy != null)
+        if (targetTransform != null)
         {
-            Shoot(targetEnemy.transform);
+            Shoot(targetTransform);
         }
     }
 

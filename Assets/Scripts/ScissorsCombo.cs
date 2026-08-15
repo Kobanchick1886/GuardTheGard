@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public class ScissorsCombo : MonoBehaviour
 {
     public GameObject scissors;
-    private List<GameObject> enemiesInRange = new List<GameObject>();
+
+    // ВАЖНО: Следим за коллайдерами, а не объектами (фикс бага с корешками)
+    private List<Collider2D> collidersInRange = new List<Collider2D>();
 
     public bool canSnip = false;
     private bool isCountingDown = false;
@@ -37,6 +39,9 @@ public class ScissorsCombo : MonoBehaviour
             {
                 canSnip = true;
                 currentCooldown = 0f;
+
+                // Таймер вышел - сразу проверяем, есть ли кого резать
+                TryStartSnipSequence();
             }
         }
     }
@@ -57,72 +62,132 @@ public class ScissorsCombo : MonoBehaviour
         if (cooldownBackgroundImage != null && bgSprite != null) cooldownBackgroundImage.sprite = bgSprite;
     }
 
-    private IEnumerator WaitAndThenProcessEnemies()
+    private void OnTriggerStay2D(Collider2D other)
     {
-        isCountingDown = true;
-        yield return new WaitForSeconds(0.5f);
-        if (enemiesInRange.Count >= 2)
+        if (other.CompareTag("Enemy"))
         {
-            ProcessEnemiesInZone();
+            if (!collidersInRange.Contains(other))
+            {
+                collidersInRange.Add(other);
+            }
+
+            TryStartSnipSequence();
         }
-        isCountingDown = false;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy") && !enemiesInRange.Contains(other.gameObject))
+        if (other.CompareTag("Enemy"))
         {
-            enemiesInRange.Add(other.gameObject);
-            if (enemiesInRange.Count >= 2 && canSnip && !isCountingDown)
+            if (!collidersInRange.Contains(other))
+            {
+                collidersInRange.Add(other);
+            }
+
+            TryStartSnipSequence();
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            if (collidersInRange.Contains(other))
+            {
+                collidersInRange.Remove(other);
+            }
+        }
+    }
+
+    // Метод, который фильтрует корешки и возвращает только уникальных врагов
+    private List<Transform> GetUniqueEnemies()
+    {
+        collidersInRange.RemoveAll(c => c == null || !c.enabled || !c.gameObject.activeInHierarchy);
+        List<Transform> uniqueEnemies = new List<Transform>();
+
+        foreach (var col in collidersInRange)
+        {
+            EnemyGeneric enemyScript = col.GetComponentInParent<EnemyGeneric>();
+
+            if (enemyScript != null)
+            {
+                // Игнорируем врагов в стане и избегаем дублирования
+                if (!enemyScript.IsStunned() && !uniqueEnemies.Contains(enemyScript.transform))
+                {
+                    uniqueEnemies.Add(enemyScript.transform);
+                }
+            }
+            else
+            {
+                // Резервный вариант для объектов без скрипта, но с тегом Enemy
+                if (!uniqueEnemies.Contains(col.transform))
+                {
+                    uniqueEnemies.Add(col.transform);
+                }
+            }
+        }
+
+        return uniqueEnemies;
+    }
+
+    private void TryStartSnipSequence()
+    {
+        if (canSnip && !isCountingDown)
+        {
+            // Проверяем, набралось ли минимум 2 УНИКАЛЬНЫХ врага
+            if (GetUniqueEnemies().Count >= 2)
             {
                 StartCoroutine(WaitAndThenProcessEnemies());
             }
         }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private IEnumerator WaitAndThenProcessEnemies()
     {
-        if (enemiesInRange.Contains(other.gameObject))
+        isCountingDown = true;
+        yield return new WaitForSeconds(0.5f);
+
+        List<Transform> targets = GetUniqueEnemies();
+
+        // Повторная проверка после ожидания
+        if (targets.Count >= 2 && canSnip)
         {
-            enemiesInRange.Remove(other.gameObject);
+            ProcessEnemiesInZone(targets);
         }
+
+        isCountingDown = false;
     }
 
-    private void ExecuteSnip(GameObject targetEnemy)
+    private void ProcessEnemiesInZone(List<Transform> targets)
     {
-        Vector3 direction = targetEnemy.transform.position - transform.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Quaternion snipRotation = Quaternion.Euler(0, 0, angle);
-        if (scissors != null)
-        {
-            Instantiate(scissors, targetEnemy.transform.position, snipRotation);
-            Debug.Log($"Snipping {targetEnemy.name} at angle: {angle}");
-        }
-    }
-
-    private void ProcessEnemiesInZone()
-    {
-        GameObject[] targets = enemiesInRange.ToArray();
         canSnip = false;
 
-        foreach (GameObject target in targets)
+        foreach (Transform target in targets)
         {
-            if (target != null)
+            ExecuteSnip(target);
+
+            EnemyGeneric enemyScript = target.GetComponent<EnemyGeneric>();
+            if (enemyScript != null)
             {
-                ExecuteSnip(target);
-
-                EnemyGeneric enemyScript = target.GetComponent<EnemyGeneric>();
-
-                if (enemyScript != null)
-                {
-                    StartCoroutine(DelayedStun(enemyScript, 0.667f));
-                }
+                StartCoroutine(DelayedStun(enemyScript, 0.667f));
             }
         }
-        enemiesInRange.Clear();
 
         currentCooldown = cooldownTime;
         if (cooldownFillImage != null) cooldownFillImage.fillAmount = 1f;
+    }
+
+    private void ExecuteSnip(Transform targetTransform)
+    {
+        Vector3 direction = targetTransform.position - transform.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion snipRotation = Quaternion.Euler(0, 0, angle);
+
+        if (scissors != null)
+        {
+            Instantiate(scissors, targetTransform.position, snipRotation);
+            Debug.Log($"Snipping {targetTransform.name} at angle: {angle}");
+        }
     }
 
     private IEnumerator DelayedStun(EnemyGeneric enemyScript, float delay)
@@ -139,28 +204,5 @@ public class ScissorsCombo : MonoBehaviour
         }
     }
 
-    private IEnumerator DelayedDestroy(GameObject target, float delay)
-    {
-        if (target != null)
-        {
-            cuttedEnemies++;
-
-            yield return new WaitForSeconds(delay);
-
-            if (target != null)
-            {
-                EnemyGeneric enemyScript = target.GetComponent<EnemyGeneric>();
-                if (enemyScript != null)
-                {
-                    enemyScript.Die();
-                }
-                else
-                {
-                    var objScript = FindFirstObjectByType<objective>();
-                    if (objScript != null) objScript.CountEnemyDeath();
-                    Destroy(target);
-                }
-            }
-        }
-    }
+   
 }

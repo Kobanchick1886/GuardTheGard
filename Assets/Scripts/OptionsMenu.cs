@@ -13,10 +13,9 @@ public class OptionsMenu : MonoBehaviour
     public Button nextDifficultyButton;
     public TextMeshProUGUI difficultyText;
 
-    [Header("Manual Speed Settings per Difficulty")]
-    [Tooltip("Индексы: 0 - Very Easy, 1 - Easy, 2 - Normal, 3 - Hard, 4 - Very Hard, 5 - Extreme")]
-    public float[] playerSpeeds = { 85f, 115f, 145f, 175f, 200f, 230f };
-    public float[] enemySpeeds = { 2.25f, 3f, 3.75f, 4.5f, 5.25f, 6f };
+    
+    private float[] playerSpeeds = { 35f, 40f, 50f, 62f, 70f, 80f };
+    private float[] enemySpeeds = { 1f, 1.2f, 1.4f, 1.62f, 2f, 4f }; 
 
     [Header("Buttons")]
     public Button backButton;
@@ -30,7 +29,7 @@ public class OptionsMenu : MonoBehaviour
     void Start()
     {
         currentDifficultyIndex = PlayerPrefs.GetInt("DifficultyIndex", 1);
-        UpdateDifficultyUI();
+        ApplyAndSaveDifficulty();
 
         if (musicSlider != null) musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
         if (soundsSlider != null) soundsSlider.value = PlayerPrefs.GetFloat("SoundsVolume", 1f);

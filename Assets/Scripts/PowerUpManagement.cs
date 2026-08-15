@@ -15,6 +15,9 @@ public class PowerUpManagement : MonoBehaviour
     public Image leftFill, rightFill;
     public Volume blurVolume;
 
+    [Header("UI Bars (Шкалы на экране)")]
+    public GameObject scissorsUI; // <--- НОВОЕ: Сюда закинь объект шкалы ножниц с Канваса
+
     [Header("Бабушки (Отдельные объекты поверх карточек)")]
     public GameObject leftGrandma;
     public GameObject rightGrandma;
@@ -88,6 +91,9 @@ public class PowerUpManagement : MonoBehaviour
         if (menuPanel != null) menuPanel.SetActive(false);
         if (blurVolume != null) blurVolume.weight = 0f;
 
+        // Прячем шкалу ножниц при запуске уровня
+        if (scissorsUI != null) scissorsUI.SetActive(false);
+
         InitializePowerUps();
     }
 
@@ -137,6 +143,9 @@ public class PowerUpManagement : MonoBehaviour
                 scissors.cooldownTime = 4f;
             }
             if (scissorsVisualObject != null) scissorsVisualObject.SetActive(true);
+
+            // Включаем шкалу ножниц в интерфейсе, так как мы их только что получили
+            if (scissorsUI != null) scissorsUI.SetActive(true);
 
             // НОЖНИЦЫ 2 УРОВЕНЬ (КД падает с 4с до 3с)
             powerUpPool.Add(new PowerUp("Scissors Lvl 2", () =>
@@ -286,13 +295,6 @@ public class PowerUpManagement : MonoBehaviour
         menuPanel.SetActive(false);
     }
 
-    private void ResetHold()
-    {
-        currentHoldTime = 0f;
-        if (leftFill != null) leftFill.fillAmount = 0f;
-        if (rightFill != null) rightFill.fillAmount = 0f;
-    }
-
     public void OpenAnalytics()
     {
         try
@@ -317,5 +319,12 @@ public class PowerUpManagement : MonoBehaviour
         {
             UnityEngine.Debug.LogError("Ошибка запуска аналитики: " + e.Message);
         }
+    }
+
+    private void ResetHold()
+    {
+        currentHoldTime = 0f;
+        if (leftFill != null) leftFill.fillAmount = 0f;
+        if (rightFill != null) rightFill.fillAmount = 0f;
     }
 }

@@ -21,8 +21,8 @@ public class LawnMower : MonoBehaviour
     [SerializeField] private Sprite iconClear;
     [Tooltip("Спрайт красной косилки (путь заблокирован)")]
     [SerializeField] private Sprite iconBlocked;
-    [Tooltip("Отступ для иконки косилки от игрока")]
-    [SerializeField] private Vector3 hoverIconOffset = new Vector3(0, 1.5f, 0);
+    
+    private Vector3 hoverIconOffset = new Vector3(0, 3f, 0);
 
     [Header("Two-Layer Base Sprites")]
     [Tooltip("DOWN")]
