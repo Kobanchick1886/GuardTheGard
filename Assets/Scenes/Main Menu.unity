@@ -368,6 +368,7 @@ GameObject:
   - component: {fileID: 84351764}
   - component: {fileID: 84351766}
   - component: {fileID: 84351765}
+  - component: {fileID: 84351767}
   m_Layer: 5
   m_Name: BottomCap
   m_TagString: Untagged
@@ -429,6 +430,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 84351763}
   m_CullTransparentMesh: 1
+--- !u!114 &84351767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 84351763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 0
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 84351765}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 102241529}
+        m_TargetAssemblyTypeName: SnakeDropdown, Assembly-CSharp
+        m_MethodName: ToggleDropdown
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &93617730
 GameObject:
   m_ObjectHideFlags: 0
@@ -2587,10 +2644,10 @@ MonoBehaviour:
   highlightedEN: {fileID: 5070200241566830354, guid: 4998d88e00f981544ad15ed2ecc1aa5d, type: 3}
   pressedEN: {fileID: -674377169272470167, guid: ac9d490d58c5f6448a917445e7d0c7ed, type: 3}
   disabledEN: {fileID: 2350924717873823704, guid: b5649e7c6a96cf941a26c34120d9cde2, type: 3}
-  normalUA: {fileID: -8394893385958598168, guid: 46597539f65ed5e4bab5a7f76b5bf3ae, type: 3}
-  highlightedUA: {fileID: 3259670693943622467, guid: fc7773304a1abbe4f823c380ff58a76f, type: 3}
-  pressedUA: {fileID: -4131777611642354806, guid: 5e1c70242e2b27d4ba825201eeb9b687, type: 3}
-  disabledUA: {fileID: -8344127686491088053, guid: 9b07e5324a52b32408106b1c4d02d197, type: 3}
+  normalUA: {fileID: -3421541038116794562, guid: b87dc55a2209c6a41bceb2e6fd514515, type: 3}
+  highlightedUA: {fileID: -4074834828980588549, guid: 0e7993bd75dd3fe49ae337782f5ed2a9, type: 3}
+  pressedUA: {fileID: -468443902457225949, guid: f382eab86d9cdec43b8f888216f065b9, type: 3}
+  disabledUA: {fileID: 6268823099047508696, guid: 13c171b882dcf054983cabaadb0cc61a, type: 3}
 --- !u!1 &485437984
 GameObject:
   m_ObjectHideFlags: 0
@@ -5841,7 +5898,7 @@ RectTransform:
   m_Father: {fileID: 1428943022}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6946,7 +7003,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1550806059
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8721,9 +8778,9 @@ MonoBehaviour:
   highlightedEN: {fileID: 5070200241566830354, guid: 4998d88e00f981544ad15ed2ecc1aa5d, type: 3}
   pressedEN: {fileID: -674377169272470167, guid: ac9d490d58c5f6448a917445e7d0c7ed, type: 3}
   disabledEN: {fileID: 0}
-  normalUA: {fileID: -8394893385958598168, guid: 46597539f65ed5e4bab5a7f76b5bf3ae, type: 3}
-  highlightedUA: {fileID: 3259670693943622467, guid: fc7773304a1abbe4f823c380ff58a76f, type: 3}
-  pressedUA: {fileID: -4131777611642354806, guid: 5e1c70242e2b27d4ba825201eeb9b687, type: 3}
+  normalUA: {fileID: -3421541038116794562, guid: b87dc55a2209c6a41bceb2e6fd514515, type: 3}
+  highlightedUA: {fileID: -4074834828980588549, guid: 0e7993bd75dd3fe49ae337782f5ed2a9, type: 3}
+  pressedUA: {fileID: -468443902457225949, guid: f382eab86d9cdec43b8f888216f065b9, type: 3}
   disabledUA: {fileID: 0}
 --- !u!114 &1914745160
 MonoBehaviour:

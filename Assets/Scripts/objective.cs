@@ -348,6 +348,9 @@ public class objective : MonoBehaviour
 
         while (spawnedCount < targetCount)
         {
+            // Ждем и не выполняем тело цикла, пока включена пауза
+            yield return new WaitWhile(() => isPaused);
+
             var topTwoValues = missedStats.Where(x => x.Key != "TOTAL").OrderByDescending(x => x.Value).Select(x => x.Value).Take(2).ToList();
             var topTwoKeys = missedStats.Where(x => x.Key != "TOTAL").OrderByDescending(x => x.Value).Select(x => x.Key).Take(2).ToList();
             if (topTwoValues[0] - topTwoValues[1] >= 2 && currentWave >= 2)
@@ -376,12 +379,15 @@ public class objective : MonoBehaviour
                 y = UnityEngine.Random.Range(-bound_y / 2, bound_y / 2);
                 spawnPos = new Vector3(x, y, 0);
             }
+
             if (Vector3.Distance(spawnPos, transform.position) > safeDistance)
             {
                 enemyIndex = (spawnedCount / step) % enemies.Length;
                 Instantiate(enemies[enemyIndex], spawnPos, Quaternion.identity);
                 spawnedCount++;
-                yield return new WaitForSecondsRealtime(2.5f);
+
+                // ИСПОЛЬЗУЕМ WaitForSeconds (он реагирует на Time.timeScale = 0)
+                yield return new WaitForSeconds(2.5f);
             }
             else
             {
@@ -398,8 +404,21 @@ public class objective : MonoBehaviour
             enemiesToSpawn = (int)(8 * multiplier);
             enemiesRemainingInWave = enemiesToSpawn;
 
+            // Ждем завершения спавна
             yield return StartCoroutine(Spawner());
+
+            // Ждем, пока игрок не добьет всех врагов волны
             yield return new WaitUntil(() => enemiesRemainingInWave <= 0);
+
+            // --- НОВОЕ УСЛОВИЕ ПОБЕДЫ ---
+            // В корутине Spawner() переменная currentWave увеличивается в конце спавна.
+            // Значит, когда мы добили врагов и currentWave равна 5 - это была пятая волна.
+            if (currentWave >= 5 && !isGameWon && !canRestart)
+            {
+                TriggerVictory();
+                yield break; // Останавливаем корутину, чтобы не открывалось меню прокачки
+            }
+            // ----------------------------
 
             if (UI != null)
             {

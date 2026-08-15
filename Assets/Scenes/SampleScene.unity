@@ -5191,6 +5191,7 @@ GameObject:
   - component: {fileID: 122417696}
   - component: {fileID: 122417695}
   - component: {fileID: 122417694}
+  - component: {fileID: 122417697}
   m_Layer: 5
   m_Name: LostFrame
   m_TagString: Untagged
@@ -5256,6 +5257,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &122417697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 122417693}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4dbba873f8c6834f9a0cbaa50a60127, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedImage
+  englishTexture: {fileID: 2800000, guid: 72cd509b3f9b0db45b8f4c2d2a315e19, type: 3}
+  ukrainianTexture: {fileID: 2800000, guid: d470be4ce19cefd4ba0bceadc97ddff8, type: 3}
 --- !u!1 &128907086
 GameObject:
   m_ObjectHideFlags: 0
@@ -5314,6 +5329,7 @@ MonoBehaviour:
   leftFill: {fileID: 630788957}
   rightFill: {fileID: 1226841215}
   blurVolume: {fileID: 1426236564}
+  scissorsUI: {fileID: 1385422781}
   leftGrandma: {fileID: 1628129324}
   rightGrandma: {fileID: 333444832}
   sprayerLvl2:
@@ -8376,7 +8392,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1267309825
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8924,8 +8940,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -100, y: -94}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -150, y: -94}
+  m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!1 &1483648377
 GameObject:
@@ -9061,8 +9077,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -100, y: -94}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -150, y: -94}
+  m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!1 &1483713263
 GameObject:
@@ -9297,6 +9313,7 @@ GameObject:
   - component: {fileID: 1704351272}
   - component: {fileID: 1704351274}
   - component: {fileID: 1704351273}
+  - component: {fileID: 1704351275}
   m_Layer: 5
   m_Name: PauseMenu
   m_TagString: Untagged
@@ -9361,6 +9378,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1704351271}
   m_CullTransparentMesh: 1
+--- !u!114 &1704351275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704351271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4dbba873f8c6834f9a0cbaa50a60127, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedImage
+  englishTexture: {fileID: 2800000, guid: f71ccb2ccebefa84987bef6794afb9b0, type: 3}
+  ukrainianTexture: {fileID: 2800000, guid: 1b7291320976b8543a3c5d31fd7faaf9, type: 3}
 --- !u!1 &1720117220
 GameObject:
   m_ObjectHideFlags: 0
@@ -14231,8 +14262,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -100, y: -94}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -150, y: -92}
+  m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1721349960
 MonoBehaviour:
@@ -19393,6 +19424,7 @@ GameObject:
   - component: {fileID: 1936065208}
   - component: {fileID: 1936065207}
   - component: {fileID: 1936065206}
+  - component: {fileID: 1936065209}
   m_Layer: 5
   m_Name: WinFrame
   m_TagString: Untagged
@@ -19458,6 +19490,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1936065209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1936065205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4dbba873f8c6834f9a0cbaa50a60127, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedImage
+  englishTexture: {fileID: 2800000, guid: 171e1816576a88542b58e4ba519a7570, type: 3}
+  ukrainianTexture: {fileID: 2800000, guid: 49608b8a0fda62348947ca9ece9620ec, type: 3}
 --- !u!1 &1946878949
 GameObject:
   m_ObjectHideFlags: 0
