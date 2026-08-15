@@ -1,0 +1,507 @@
+fileFormatVersion: 2
+guid: 7c7c9abf3b48ef44291205b04d1b25e9
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -2059205875209346922
+    second: G-run-left-b (7)_0
+  - first:
+      213: 1313695969832979416
+    second: G-run-left-b (7)_1
+  - first:
+      213: 8679640700578605166
+    second: G-run-left-b (7)_2
+  - first:
+      213: 4463508772414540643
+    second: G-run-left-b (7)_3
+  - first:
+      213: -5708391442499946278
+    second: G-run-left-b (7)_4
+  - first:
+      213: 2434136093116512703
+    second: G-run-left-b (7)_5
+  - first:
+      213: -3285816766353026007
+    second: G-run-left-b (7)_6
+  - first:
+      213: -8212997943527724718
+    second: G-run-left-b (7)_7
+  - first:
+      213: 7922502190528316457
+    second: G-run-left-b (7)_8
+  - first:
+      213: 5970003895581556321
+    second: G-run-left-b (7)_9
+  - first:
+      213: 2855550692763169099
+    second: G-run-left-b (7)_10
+  - first:
+      213: 4793734187762208248
+    second: G-run-left-b (7)_11
+  - first:
+      213: 3854886409460147073
+    second: G-run-left-b (7)_12
+  - first:
+      213: 4996432098252191518
+    second: G-run-left-b (7)_13
+  - first:
+      213: 300462231056155789
+    second: G-run-left-b (7)_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: G-run-left-b (7)_0
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 122
+        width: 263
+        height: 212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 690efb8aa2b3c63e0800000000000000
+      internalID: -2059205875209346922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_1
+      rect:
+        serializedVersion: 2
+        x: 637
+        y: 86
+        width: 305
+        height: 191
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8dbc1c8368f2b3210800000000000000
+      internalID: 1313695969832979416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_2
+      rect:
+        serializedVersion: 2
+        x: 854
+        y: 270
+        width: 16
+        height: 56
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e68a2000b37447870800000000000000
+      internalID: 8679640700578605166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_3
+      rect:
+        serializedVersion: 2
+        x: 873
+        y: 210
+        width: 34
+        height: 98
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36bcb9f649191fd30800000000000000
+      internalID: 4463508772414540643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_4
+      rect:
+        serializedVersion: 2
+        x: 896
+        y: 212
+        width: 56
+        height: 60
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad839e63a38b7c0b0800000000000000
+      internalID: -5708391442499946278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_5
+      rect:
+        serializedVersion: 2
+        x: 541
+        y: 91
+        width: 31
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb9ba2d41e9c7c120800000000000000
+      internalID: 2434136093116512703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_6
+      rect:
+        serializedVersion: 2
+        x: 579
+        y: 108
+        width: 30
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 924518c5f0f6662d0800000000000000
+      internalID: -3285816766353026007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_7
+      rect:
+        serializedVersion: 2
+        x: 915
+        y: 65
+        width: 125
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 259240b72e1950e80800000000000000
+      internalID: -8212997943527724718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_8
+      rect:
+        serializedVersion: 2
+        x: 647
+        y: 45
+        width: 188
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 924c1be54c162fd60800000000000000
+      internalID: 7922502190528316457
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_9
+      rect:
+        serializedVersion: 2
+        x: 665
+        y: 30
+        width: 76
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16e36df99e6b9d250800000000000000
+      internalID: 5970003895581556321
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_10
+      rect:
+        serializedVersion: 2
+        x: 764
+        y: 16
+        width: 66
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b41f448c934f0a720800000000000000
+      internalID: 2855550692763169099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_11
+      rect:
+        serializedVersion: 2
+        x: 909
+        y: 13
+        width: 92
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8fd463178d3c68240800000000000000
+      internalID: 4793734187762208248
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_12
+      rect:
+        serializedVersion: 2
+        x: 931
+        y: 37
+        width: 120
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1836a5de3ce4f7530800000000000000
+      internalID: 3854886409460147073
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_13
+      rect:
+        serializedVersion: 2
+        x: 748
+        y: 14
+        width: 32
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e177ea86584e65540800000000000000
+      internalID: 4996432098252191518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: G-run-left-b (7)_14
+      rect:
+        serializedVersion: 2
+        x: 758
+        y: 0
+        width: 26
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d840686aec47b2400800000000000000
+      internalID: 300462231056155789
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      G-run-left-b (7)_0: -2059205875209346922
+      G-run-left-b (7)_1: 1313695969832979416
+      G-run-left-b (7)_10: 2855550692763169099
+      G-run-left-b (7)_11: 4793734187762208248
+      G-run-left-b (7)_12: 3854886409460147073
+      G-run-left-b (7)_13: 4996432098252191518
+      G-run-left-b (7)_14: 300462231056155789
+      G-run-left-b (7)_2: 8679640700578605166
+      G-run-left-b (7)_3: 4463508772414540643
+      G-run-left-b (7)_4: -5708391442499946278
+      G-run-left-b (7)_5: 2434136093116512703
+      G-run-left-b (7)_6: -3285816766353026007
+      G-run-left-b (7)_7: -8212997943527724718
+      G-run-left-b (7)_8: 7922502190528316457
+      G-run-left-b (7)_9: 5970003895581556321
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
