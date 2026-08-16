@@ -159,7 +159,6 @@ public class MowerItself : MonoBehaviour
 
         currentAnimStep = "";
 
-        // ÇÀ¯ÇÄ - 1
         float totalDockDistance = Vector3.Distance(dockStartPoint, targetBase);
 
         while (currentAnimStep != "BaseReached" && Vector3.Distance(transform.position, targetBase) > 0.02f)
