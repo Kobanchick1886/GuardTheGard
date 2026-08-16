@@ -19,6 +19,10 @@ public class EnemyGeneric : MonoBehaviour
     private bool isMoving = true;
     private BoxCollider2D[] root;
 
+    [Header("Audio Settings")]
+    public AudioClip digRootSound; // Звук викопування кореня
+    public AudioClip bushDestroySound; //звук помирання куща
+
     // Флаг для предотвращения множественных смертей
     private bool isDead = false;
 
@@ -270,6 +274,15 @@ public class EnemyGeneric : MonoBehaviour
     {
         if (isDead) return;
 
+        if (other.CompareTag("Objective") || other.CompareTag("Bush"))
+        {
+            if (bushDestroySound != null)
+            {
+                AudioSource.PlayClipAtPoint(bushDestroySound, other.transform.position);
+            }
+ 
+        }
+
         if (other.CompareTag("Player") && !isMoving)
         {
             foreach (BoxCollider2D box in root)
@@ -299,6 +312,11 @@ public class EnemyGeneric : MonoBehaviour
     //для анімації викопуванняя
     private IEnumerator PlayDigAndDestroy(Animator rootAnim, GameObject rootGO)
     {
+        if (digRootSound != null && rootGO != null)
+        {
+            AudioSource.PlayClipAtPoint(digRootSound, rootGO.transform.position);
+        }
+
         if (rootAnim != null)
         {
             rootAnim.Play("Root-dig", 0, 0f);

@@ -5,12 +5,20 @@ public class Bullet : MonoBehaviour
     private bool isFlying = false;
     private Transform targetTransform;
     private float flySpeed = 20f;
-    
+
+    [Header("Audio Settings")]
+    public AudioClip shootSound;
+
     // Update is called once per frame
     public void StartFlying(Transform enemy)
     {
         targetTransform = enemy;
         isFlying = true;
+
+        if (shootSound != null)
+        {
+            AudioSource.PlayClipAtPoint(shootSound, transform.position);
+        }
     }
 
     void Update()

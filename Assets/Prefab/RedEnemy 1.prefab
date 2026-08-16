@@ -89,7 +89,7 @@ SpriteRenderer:
   m_Size: {x: 3.56, y: 3.63}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!1 &2569855510071240246
 GameObject:
@@ -362,7 +362,7 @@ SpriteRenderer:
   m_Size: {x: 5.29, y: 6.09}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_SpriteSortPoint: 0
 --- !u!1 &7521308660850079017
 GameObject:
@@ -418,6 +418,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyGeneric
   moveSpeed: 3
   detectionRange: 5
+  digRootSound: {fileID: 0}
+  bushDestroySound: {fileID: 8300000, guid: 8cce4792a43547047b37e8ebb2d5972d, type: 3}
   Marker: 0
   legsTransform: {fileID: 1739049351094092604}
 --- !u!58 &5422077555326662234
