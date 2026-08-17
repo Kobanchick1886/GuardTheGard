@@ -478,7 +478,7 @@ public class objective : MonoBehaviour
             Destroy(collision.gameObject);
         }
     }
-
+    
     private void CheckImpactSide(float impactAngle)
     {
         if (impactAngle >= 45f && impactAngle < 135f) { missedStats["TOP"]++; }

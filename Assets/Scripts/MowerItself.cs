@@ -17,6 +17,12 @@ public class MowerItself : MonoBehaviour
     [Tooltip("Додаткова відстань, на яку косарка від'їде задом при паркуванні")]
     [SerializeField] private float extraDriveOutDistance = 1.0f;
 
+    [Header("Audio Settings")]
+    [SerializeField] private AudioSource mowerAudioSource;
+    [SerializeField] private AudioClip mowerEngineSound;
+    [SerializeField] private float minDistance = 2f;   
+    [SerializeField] private float maxDistance = 15f;      
+
     private Vector3 pointA;
     private Vector3 pointB;
     private float moveSpeed;
@@ -35,6 +41,36 @@ public class MowerItself : MonoBehaviour
         {
             rb.bodyType = RigidbodyType2D.Kinematic;
             rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        }
+
+        SetupAndPlayEngineAudio();
+    }
+
+    private void SetupAndPlayEngineAudio()
+    {
+        // Якщо AudioSource не призначений в інспекторі, шукаємо або додаємо його
+        if (mowerAudioSource == null)
+        {
+            mowerAudioSource = GetComponent<AudioSource>();
+            if (mowerAudioSource == null)
+            {
+                mowerAudioSource = gameObject.AddComponent<AudioSource>();
+            }
+        }
+
+        if (mowerEngineSound != null)
+        {
+            mowerAudioSource.clip = mowerEngineSound;
+            mowerAudioSource.loop = true; // Зациклюємо звук
+            mowerAudioSource.playOnAwake = true;
+
+            // Налаштування 3D-звуку для залежності від відстані
+            mowerAudioSource.spatialBlend = 1.0f; // 1.0 = 3D звук (реагує на відстань)
+            mowerAudioSource.rolloffMode = AudioRolloffMode.Logarithmic; // або Linear
+            mowerAudioSource.minDistance = minDistance; // Повна гучність у межах цієї відстані
+            mowerAudioSource.maxDistance = maxDistance; // Межа чутливості
+
+            mowerAudioSource.Play();
         }
     }
 

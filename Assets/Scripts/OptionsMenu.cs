@@ -1,9 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Audio;
 
 public class OptionsMenu : MonoBehaviour
 {
+    [Header("Audio Mixer Settings")]
+    public AudioMixer mainMixer;
+
     [Header("Sliders Reference")]
     public Slider musicSlider;
     public Slider soundsSlider;
@@ -31,16 +35,55 @@ public class OptionsMenu : MonoBehaviour
         currentDifficultyIndex = PlayerPrefs.GetInt("DifficultyIndex", 1);
         ApplyAndSaveDifficulty();
 
-        if (musicSlider != null) musicSlider.value = PlayerPrefs.GetFloat("MusicVolume", 1f);
-        if (soundsSlider != null) soundsSlider.value = PlayerPrefs.GetFloat("SoundsVolume", 1f);
+        float musicVal = PlayerPrefs.GetFloat("MusicVolume", 1f);
+        float soundsVal = PlayerPrefs.GetFloat("SoundsVolume", 1f);
 
-        if (musicSlider != null) musicSlider.onValueChanged.AddListener(SaveMusic);
-        if (soundsSlider != null) soundsSlider.onValueChanged.AddListener(SaveSounds);
+        if (musicSlider != null)
+        {
+            musicSlider.value = musicVal;
+            SetMusicVolume(musicVal);
+            musicSlider.onValueChanged.AddListener(SetMusicVolume);
+        }
+
+        if (soundsSlider != null)
+        {
+            soundsSlider.value = soundsVal;
+            SetSoundsVolume(soundsVal);
+            soundsSlider.onValueChanged.AddListener(SetSoundsVolume);
+        }
 
         if (prevDifficultyButton != null) prevDifficultyButton.onClick.AddListener(PrevDifficulty);
         if (nextDifficultyButton != null) nextDifficultyButton.onClick.AddListener(NextDifficulty);
-
         if (backButton != null) backButton.onClick.AddListener(CloseOptions);
+    }
+   private void SetMusicVolume(float value)
+    {
+        float clampedValue = Mathf.Clamp(value, 0.0001f, 1f);
+        float db = Mathf.Log10(clampedValue) * 20f;
+
+        if (mainMixer != null)
+        {
+            bool result = mainMixer.SetFloat("MusicVolume", db);
+            if (!result) Debug.LogError("Параметр 'MusicVolume' не знайдено в Exposed Parameters AudioMixer!");
+        }
+
+        PlayerPrefs.SetFloat("MusicVolume", value);
+        PlayerPrefs.Save();
+    }
+
+    private void SetSoundsVolume(float value)
+    {
+        float clampedValue = Mathf.Clamp(value, 0.0001f, 1f);
+        float db = Mathf.Log10(clampedValue) * 20f;
+
+        if (mainMixer != null)
+        {
+            bool result = mainMixer.SetFloat("SoundsVolume", db);
+            if (!result) Debug.LogError("Параметр 'SoundsVolume' не знайдено в Exposed Parameters AudioMixer!");
+        }
+
+        PlayerPrefs.SetFloat("SoundsVolume", value);
+        PlayerPrefs.Save();
     }
 
     // Подписываемся на смену языка для моментального обновления UI

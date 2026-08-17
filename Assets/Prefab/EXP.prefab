@@ -169,3 +169,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7d839b52d6ee9546956a0eaa91de143, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EXP
+  collectSound: {fileID: 8300000, guid: cf245f30ca547434e8c55eb604aaf039, type: 3}
+  soundVolume: 1

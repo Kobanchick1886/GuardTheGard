@@ -22,6 +22,7 @@ public class EnemyGeneric : MonoBehaviour
     [Header("Audio Settings")]
     public AudioClip digRootSound; // Звук викопування кореня
     public AudioClip bushDestroySound; //звук помирання куща
+    public AudioClip deathSound; //звук помирання квітки
 
     // Флаг для предотвращения множественных смертей
     private bool isDead = false;
@@ -81,6 +82,14 @@ public class EnemyGeneric : MonoBehaviour
                 Die();
             }
 
+        }
+    }
+
+    public void PlayDeathSound()
+    {
+        if (deathSound != null)
+        {
+            AudioSource.PlayClipAtPoint(deathSound, transform.position);
         }
     }
 
@@ -274,7 +283,7 @@ public class EnemyGeneric : MonoBehaviour
     {
         if (isDead) return;
 
-        if (other.CompareTag("Objective") || other.CompareTag("Bush"))
+        if (other.CompareTag("Objective"))
         {
             if (bushDestroySound != null)
             {

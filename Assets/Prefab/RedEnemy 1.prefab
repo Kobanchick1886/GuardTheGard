@@ -419,7 +419,8 @@ MonoBehaviour:
   moveSpeed: 3
   detectionRange: 5
   digRootSound: {fileID: 0}
-  bushDestroySound: {fileID: 8300000, guid: 8cce4792a43547047b37e8ebb2d5972d, type: 3}
+  bushDestroySound: {fileID: 8300000, guid: 6f8692f804b4ff34aa2d22e4bf9e54f1, type: 3}
+  deathSound: {fileID: 8300000, guid: b2df2b06bd0f4c14eb22c1fb1832a73b, type: 3}
   Marker: 0
   legsTransform: {fileID: 1739049351094092604}
 --- !u!58 &5422077555326662234

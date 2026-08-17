@@ -22,6 +22,11 @@ public class PowerUpManagement : MonoBehaviour
     public GameObject leftGrandma;
     public GameObject rightGrandma;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip openMenuSound;
+    public AudioClip selectPowerUpSound;
+
     [System.Serializable]
     public class PowerUpSprites
     {
@@ -247,6 +252,11 @@ public class PowerUpManagement : MonoBehaviour
         ResetHold();
         UpdateHoverState();
         UpdateCardTranslations();
+
+        if (audioSource != null && openMenuSound != null)
+        {
+            audioSource.PlayOneShot(openMenuSound);
+        }
     }
 
     private void UpdateHoverState()
@@ -276,6 +286,11 @@ public class PowerUpManagement : MonoBehaviour
 
     private void ExecuteSelection()
     {
+        if (audioSource != null && selectPowerUpSound != null)
+        {
+            audioSource.PlayOneShot(selectPowerUpSound);
+        }
+
         PowerUp selectedPowerUp = isLeftSelected ? leftPowerUp : rightPowerUp;
 
         if (selectedPowerUp != null && selectedPowerUp.Execute != null)
