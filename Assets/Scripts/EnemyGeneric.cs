@@ -20,6 +20,7 @@ public class EnemyGeneric : MonoBehaviour
     private BoxCollider2D[] root;
 
     [Header("Audio Settings")]
+    public UnityEngine.Audio.AudioMixerGroup sfxGroup;
     public AudioClip digRootSound; // Звук викопування кореня
     public AudioClip bushDestroySound; //звук помирання куща
     public AudioClip deathSound; //звук помирання квітки
@@ -89,8 +90,24 @@ public class EnemyGeneric : MonoBehaviour
     {
         if (deathSound != null)
         {
-            AudioSource.PlayClipAtPoint(deathSound, transform.position);
+            PlaySFX(deathSound, transform.position);
         }
+    }
+
+    private void PlaySFX(AudioClip clip, Vector3 position)
+    {
+        if (clip == null) return;
+
+        // Створюємо тимчасовий об'єкт під звук
+        GameObject tempGO = new GameObject("TempSFX");
+        tempGO.transform.position = position;
+
+        AudioSource aSource = tempGO.AddComponent<AudioSource>();
+        aSource.clip = clip;
+        aSource.outputAudioMixerGroup = sfxGroup; // ПРИВ'ЯЗУЄМО ДО МІКШЕРА!
+        aSource.Play();
+
+        Destroy(tempGO, clip.length); // Видаляємо після завершення звуку
     }
 
     public void Die()
@@ -287,7 +304,7 @@ public class EnemyGeneric : MonoBehaviour
         {
             if (bushDestroySound != null)
             {
-                AudioSource.PlayClipAtPoint(bushDestroySound, other.transform.position);
+                PlaySFX(bushDestroySound, other.transform.position);
             }
  
         }
@@ -323,7 +340,7 @@ public class EnemyGeneric : MonoBehaviour
     {
         if (digRootSound != null && rootGO != null)
         {
-            AudioSource.PlayClipAtPoint(digRootSound, rootGO.transform.position);
+            PlaySFX(digRootSound, rootGO.transform.position);
         }
 
         if (rootAnim != null)
@@ -384,3 +401,4 @@ public class EnemyGeneric : MonoBehaviour
         }
     }
 }
+

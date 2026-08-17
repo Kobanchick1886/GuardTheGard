@@ -170,3 +170,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
   shootSound: {fileID: 8300000, guid: 6a8a9db049e6ff841a627ac22ea1d996, type: 3}
+  sfxGroup: {fileID: -1124073404913431965, guid: 8fddd4a99bbc5ba4c9032909b6ef5980, type: 2}

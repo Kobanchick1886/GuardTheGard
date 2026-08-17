@@ -8,6 +8,7 @@ public class Bullet : MonoBehaviour
 
     [Header("Audio Settings")]
     public AudioClip shootSound;
+    public UnityEngine.Audio.AudioMixerGroup sfxGroup;
 
     // Update is called once per frame
     public void StartFlying(Transform enemy)
@@ -17,8 +18,23 @@ public class Bullet : MonoBehaviour
 
         if (shootSound != null)
         {
-            AudioSource.PlayClipAtPoint(shootSound, transform.position);
+            PlaySFX(shootSound, transform.position);
         }
+    }
+    private void PlaySFX(AudioClip clip, Vector3 position)
+    {
+        if (clip == null) return;
+
+        // Створюємо тимчасовий об'єкт під звук
+        GameObject tempGO = new GameObject("TempSFX");
+        tempGO.transform.position = position;
+
+        AudioSource aSource = tempGO.AddComponent<AudioSource>();
+        aSource.clip = clip;
+        aSource.outputAudioMixerGroup = sfxGroup; // ПРИВ'ЯЗУЄМО ДО МІКШЕРА!
+        aSource.Play();
+
+        Destroy(tempGO, clip.length); // Видаляємо після завершення звуку
     }
 
     void Update()

@@ -78,8 +78,7 @@ public class OptionsMenu : MonoBehaviour
 
         if (mainMixer != null)
         {
-            bool result = mainMixer.SetFloat("SoundsVolume", db);
-            if (!result) Debug.LogError("Параметр 'SoundsVolume' не знайдено в Exposed Parameters AudioMixer!");
+            mainMixer.SetFloat("SoundsVolume", db);
         }
 
         PlayerPrefs.SetFloat("SoundsVolume", value);

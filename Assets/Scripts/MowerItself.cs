@@ -74,6 +74,7 @@ public class MowerItself : MonoBehaviour
         }
     }
 
+
     public void OnAnimationStep(string stepName)
     {
         currentAnimStep = stepName;

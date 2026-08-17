@@ -210,7 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f00a3936ce5b6a47b8da1432cd9e1ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OptionsMenu
-  mainMixer: {fileID: 0}
+  mainMixer: {fileID: 24100000, guid: 8fddd4a99bbc5ba4c9032909b6ef5980, type: 2}
   musicSlider: {fileID: 1929100334}
   soundsSlider: {fileID: 297791672}
   prevDifficultyButton: {fileID: 559333780}
@@ -7815,7 +7815,7 @@ AudioSource:
   m_GameObject: {fileID: 1660186036}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 4801230886137989950, guid: 8fddd4a99bbc5ba4c9032909b6ef5980, type: 2}
+  OutputAudioMixerGroup: {fileID: -1124073404913431965, guid: 8fddd4a99bbc5ba4c9032909b6ef5980, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -8894,7 +8894,7 @@ AudioSource:
   m_GameObject: {fileID: 1912648689}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 2120518723042872277, guid: 8fddd4a99bbc5ba4c9032909b6ef5980, type: 2}
+  OutputAudioMixerGroup: {fileID: -5248813206383811669, guid: 8fddd4a99bbc5ba4c9032909b6ef5980, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 89146f8a4a200aa4db51476662787051, type: 3}
   m_PlayOnAwake: 1

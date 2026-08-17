@@ -298,6 +298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyGeneric
   moveSpeed: 3
   detectionRange: 5
+  sfxGroup: {fileID: -1124073404913431965, guid: 8fddd4a99bbc5ba4c9032909b6ef5980, type: 2}
   digRootSound: {fileID: 8300000, guid: e83c8583b8fbb0546be853752bc11ac3, type: 3}
   bushDestroySound: {fileID: 8300000, guid: 6f8692f804b4ff34aa2d22e4bf9e54f1, type: 3}
   deathSound: {fileID: 8300000, guid: b2df2b06bd0f4c14eb22c1fb1832a73b, type: 3}
