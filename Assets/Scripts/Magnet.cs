@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using TMPro;
 
 public class Magnet : MonoBehaviour
 {
@@ -25,6 +26,10 @@ public class Magnet : MonoBehaviour
     public float shotCooldown = 0.6f;
     private float shotCooldownTimer = 0f;
     private bool isMultiplayerMode = false;
+    public int ShotsFired { get; private set; } = 0;
+
+    [Tooltip("Optional direct reference to UI text for charges (if not assigned, uses Player.expText)")]
+    public TextMeshProUGUI chargesText;
 
     // ВАЖНО: Теперь мы отслеживаем не GameObject, а конкретные Collider2D.
     // Это спасает от бага, когда удаление/выключение дочернего коллайдера (корешка)
@@ -75,17 +80,15 @@ public class Magnet : MonoBehaviour
                 shotCooldownTimer -= Time.deltaTime;
                 if (shotCooldownTimer <= 0f)
                 {
-                    if (currentCharges > 0)
-                    {
-                        canFire = true;
-                        TryShootAtFirstAvailableEnemy();
-                    }
-                    else
-                    {
-                        canFire = false;
-                    }
+                    canFire = (currentCharges > 0);
                 }
             }
+
+            if (canFire && currentCharges > 0 && collidersInRange.Count > 0)
+            {
+                TryShootAtFirstAvailableEnemy();
+            }
+
             UpdateChargesUI();
         }
     }
@@ -132,7 +135,14 @@ public class Magnet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy"))
+        if (collision.CompareTag("EXP"))
+        {
+            if (collision.TryGetComponent<Exp>(out Exp orb))
+            {
+                orb.StartFlying(transform.parent);
+            }
+        }
+        else if (collision.CompareTag("Enemy"))
         {
             if (!collidersInRange.Contains(collision))
             {
@@ -215,6 +225,7 @@ public class Magnet : MonoBehaviour
         }
         else
         {
+            ShotsFired++;
             currentCharges--;
             canFire = false;
             shotCooldownTimer = shotCooldown;
@@ -250,8 +261,37 @@ public class Magnet : MonoBehaviour
     {
         if (cooldownFillImage != null && isMultiplayerMode)
         {
-            cooldownFillImage.fillAmount = maxCharges > 0 ? (float)currentCharges / maxCharges : 0f;
+            Player p = GetComponentInParent<Player>();
+            bool isPlayer2 = (p != null && p.playerIndex == 2);
+            if (!isPlayer2 || HasUniqueFillImage())
+            {
+                cooldownFillImage.fillAmount = maxCharges > 0 ? (float)currentCharges / maxCharges : 0f;
+            }
         }
+
+        if (chargesText != null && isMultiplayerMode)
+        {
+            chargesText.text = currentCharges.ToString();
+        }
+
+        Player player = GetComponentInParent<Player>();
+        if (player != null)
+        {
+            player.UpdateChargesText();
+        }
+    }
+
+    private bool HasUniqueFillImage()
+    {
+        Magnet[] allMagnets = Object.FindObjectsByType<Magnet>(FindObjectsSortMode.None);
+        foreach (var m in allMagnets)
+        {
+            if (m != this && m.cooldownFillImage == this.cooldownFillImage)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void UpgradeRange(float multiplier)
