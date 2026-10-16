@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 public class EnemyGeneric : MonoBehaviour
@@ -128,6 +128,12 @@ public class EnemyGeneric : MonoBehaviour
         {
             counter.CountEnemyDeath();
         }
+
+        if (MultiplayerExpManager.Instance != null)
+        {
+            MultiplayerExpManager.Instance.OnEnemyDied(transform.position);
+        }
+
         StartCoroutine(PlayDeathAndDestroy());
     }
 

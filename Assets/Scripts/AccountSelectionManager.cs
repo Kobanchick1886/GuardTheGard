@@ -7,6 +7,11 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 using System;
 
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
+
 public class AccountSelectionManager : MonoBehaviour
 {
     [Header("Панели")]
@@ -22,7 +27,7 @@ public class AccountSelectionManager : MonoBehaviour
     public Button closeDeletePopupButton;
 
     [Header("Мануал (Обучение)")]
-    public GameObject manualParentPanel; // Сюда закинешь сам объект Manual
+    public GameObject manualParentPanel;
     public GameObject manualPanelEN;
     public GameObject manualPanelUA;
     public Button openManualButton;
@@ -50,8 +55,32 @@ public class AccountSelectionManager : MonoBehaviour
     public Button backToPanelButton;
     public Button cancelButton;
 
-    private string selectedAccountName = "";
+    [Header("Сцены (перетащите сюда файлы сцен)")]
+#if UNITY_EDITOR
+    public SceneAsset singleplayerScene;
+    public SceneAsset multiplayerScene;
+#endif
+    [HideInInspector] public string singleplayerSceneName = "SampleScene";
+    [HideInInspector] public string multiplayerSceneName = "SampleSceneMultiplayer";
+
+    // Хранит от 0 до 2 выбранных игроков
+    private List<string> selectedAccounts = new List<string>();
     private string csvPath;
+
+    // Ссылки на текстовые поля строк для отрисовки меток [P1] и [P2]
+    private Dictionary<string, TextMeshProUGUI> spawnedRowTexts = new Dictionary<string, TextMeshProUGUI>();
+
+#if UNITY_EDITOR
+    // Автоматически сохраняет имена перетащенных сцен при изменении в Инспекторе
+    private void OnValidate()
+    {
+        if (singleplayerScene != null)
+            singleplayerSceneName = singleplayerScene.name;
+
+        if (multiplayerScene != null)
+            multiplayerSceneName = multiplayerScene.name;
+    }
+#endif
 
     void Start()
     {
@@ -62,7 +91,6 @@ public class AccountSelectionManager : MonoBehaviour
         if (optionsPanel != null) optionsPanel.SetActive(false);
         if (deleteConfirmationPanel != null) deleteConfirmationPanel.SetActive(false);
 
-        // Гасим весь мануал со старта
         if (manualParentPanel != null) manualParentPanel.SetActive(false);
         if (manualPanelEN != null) manualPanelEN.SetActive(false);
         if (manualPanelUA != null) manualPanelUA.SetActive(false);
@@ -93,6 +121,12 @@ public class AccountSelectionManager : MonoBehaviour
                     closeBtn.onClick.AddListener(CloseManual);
                 }
             }
+        }
+
+        if (playButton != null)
+        {
+            playButton.onClick.RemoveAllListeners();
+            playButton.onClick.AddListener(StartGame);
         }
 
         if (deleteButton != null)
@@ -140,7 +174,7 @@ public class AccountSelectionManager : MonoBehaviour
 
     public void OpenDeleteConfirmation()
     {
-        if (string.IsNullOrEmpty(selectedAccountName)) return;
+        if (selectedAccounts.Count != 1) return;
 
         if (deleteConfirmationPanel != null)
         {
@@ -159,19 +193,24 @@ public class AccountSelectionManager : MonoBehaviour
 
     private void UpdateDeleteConfirmationText()
     {
-        if (deleteConfirmationText == null) return;
+        if (deleteConfirmationText == null || selectedAccounts.Count == 0) return;
 
+        string targetAccount = selectedAccounts[0];
         string currentLang = PlayerPrefs.GetString("SavedLanguage", "English");
         string colorOrange = "#F26D50";
         string colorGreen = "#C0E15F";
 
         if (currentLang == "Українська")
         {
-            deleteConfirmationText.text = $"Ви впевнені, що хочете <color={colorOrange}>видалити</color> наступний акаунт: <color={colorGreen}>{selectedAccountName}</color>?\nВся інформація буде втрачена!";
+            deleteConfirmationText.text = string.Format(
+                "Ви впевнені, що хочете <color={0}>видалити</color> наступний акаунт: <color={1}>{2}</color>?\nВся інформація буде втрачена!",
+                colorOrange, colorGreen, targetAccount);
         }
         else
         {
-            deleteConfirmationText.text = $"Are you sure you want to <color={colorOrange}>delete</color> the following account: <color={colorGreen}>{selectedAccountName}</color>?\nAll the information will be lost!";
+            deleteConfirmationText.text = string.Format(
+                "Are you sure you want to <color={0}>delete</color> the following account: <color={1}>{2}</color>?\nAll the information will be lost!",
+                colorOrange, colorGreen, targetAccount);
         }
     }
 
@@ -179,10 +218,8 @@ public class AccountSelectionManager : MonoBehaviour
     {
         string currentLang = PlayerPrefs.GetString("SavedLanguage", "English");
 
-        // Включаем родителя
         if (manualParentPanel != null) manualParentPanel.SetActive(true);
 
-        // Включаем нужный язык, выключаем ненужный
         if (currentLang == "Українська")
         {
             if (manualPanelEN != null) manualPanelEN.SetActive(false);
@@ -210,9 +247,8 @@ public class AccountSelectionManager : MonoBehaviour
     public void OpenSelectionScreen()
     {
         if (accountSelectionPanel != null) accountSelectionPanel.SetActive(true);
-        playButton.interactable = false;
-        deleteButton.interactable = false;
-        selectedAccountName = "";
+        selectedAccounts.Clear();
+        UpdateActionButtons();
 
         if (searchInput != null) searchInput.text = "";
         LoadAccountsToUI();
@@ -257,12 +293,12 @@ public class AccountSelectionManager : MonoBehaviour
     {
         string newName = nameInput.text.Trim();
         string newSurname = surnameInput.text.Trim();
-        string fullName = $"{newName} {newSurname}".Trim();
+        string fullName = (newName + " " + newSurname).Trim();
 
         if (string.IsNullOrEmpty(fullName) || fullName.Contains(",")) return;
 
         string today = System.DateTime.Now.ToString("dd/MM/yyyy");
-        File.AppendAllText(csvPath, $"{fullName},{today},0\n");
+        File.AppendAllText(csvPath, fullName + "," + today + ",0\n");
 
         CloseCreatePopup();
 
@@ -273,6 +309,7 @@ public class AccountSelectionManager : MonoBehaviour
     private void LoadAccountsToUI(string searchQuery = "")
     {
         foreach (Transform child in contentParent) Destroy(child.gameObject);
+        spawnedRowTexts.Clear();
 
         string currentLang = PlayerPrefs.GetString("SavedLanguage", "English");
 
@@ -284,7 +321,11 @@ public class AccountSelectionManager : MonoBehaviour
             if (createBtn != null) createBtn.onClick.AddListener(OpenCreatePopup);
         }
 
-        if (!File.Exists(csvPath)) { File.WriteAllText(csvPath, "PlayerName,CreationDate,BestTime\n"); return; }
+        if (!File.Exists(csvPath))
+        {
+            File.WriteAllText(csvPath, "PlayerName,CreationDate,BestTime\n");
+            return;
+        }
 
         string[] lines = File.ReadAllLines(csvPath);
         for (int i = 1; i < lines.Length; i++)
@@ -311,23 +352,29 @@ public class AccountSelectionManager : MonoBehaviour
             TextMeshProUGUI timeText = row.transform.Find("TimeText")?.GetComponent<TextMeshProUGUI>();
             TextMeshProUGUI bestTimeText = row.transform.Find("BestTime")?.GetComponent<TextMeshProUGUI>();
 
-            if (nameText != null) nameText.text = name;
+            if (nameText != null)
+            {
+                spawnedRowTexts[name] = nameText;
+            }
 
             string formattedTime = bestTimeSeconds > 0f ? FormatTime(bestTimeSeconds) : "--:--";
 
             if (currentLang == "Українська")
             {
-                if (bestTimeText != null) bestTimeText.text = $"Кращий час: {formattedTime}";
-                if (timeText != null) timeText.text = $"Створено: {creationDate}";
+                if (bestTimeText != null) bestTimeText.text = "Кращий час: " + formattedTime;
+                if (timeText != null) timeText.text = "Створено: " + creationDate;
             }
             else
             {
-                if (bestTimeText != null) bestTimeText.text = $"Best time: {formattedTime}";
-                if (timeText != null) timeText.text = $"Created: {creationDate}";
+                if (bestTimeText != null) bestTimeText.text = "Best time: " + formattedTime;
+                if (timeText != null) timeText.text = "Created: " + creationDate;
             }
 
-            row.GetComponent<Button>().onClick.AddListener(() => OnAccountSelected(name));
+            string capturedName = name;
+            row.GetComponent<Button>().onClick.AddListener(() => OnAccountSelected(capturedName));
         }
+
+        RefreshSelectionLabels();
     }
 
     private string FormatTime(float timeInSeconds)
@@ -348,50 +395,102 @@ public class AccountSelectionManager : MonoBehaviour
 
     private void OnAccountSelected(string accountName)
     {
-        selectedAccountName = accountName;
-        playButton.interactable = true;
-        deleteButton.interactable = true;
+        if (selectedAccounts.Contains(accountName))
+        {
+            selectedAccounts.Remove(accountName);
+        }
+        else
+        {
+            if (selectedAccounts.Count < 2)
+            {
+                selectedAccounts.Add(accountName);
+            }
+            else
+            {
+                selectedAccounts[1] = accountName;
+            }
+        }
+
+        UpdateActionButtons();
+        RefreshSelectionLabels();
+    }
+
+    private void UpdateActionButtons()
+    {
+        playButton.interactable = (selectedAccounts.Count == 1 || selectedAccounts.Count == 2);
+        deleteButton.interactable = (selectedAccounts.Count == 1);
+    }
+
+    private void RefreshSelectionLabels()
+    {
+        foreach (var kvp in spawnedRowTexts)
+        {
+            string accName = kvp.Key;
+            TextMeshProUGUI label = kvp.Value;
+            if (label == null) continue;
+
+            int index = selectedAccounts.IndexOf(accName);
+            if (index == 0)
+                label.text = "<color=#C0E15F>[P1]</color> " + accName;
+            else if (index == 1)
+                label.text = "<color=#50C8F2>[P2]</color> " + accName;
+            else
+                label.text = accName;
+        }
     }
 
     public void ConfirmAndExecuteDeletion()
     {
-        if (string.IsNullOrEmpty(selectedAccountName)) return;
+        if (selectedAccounts.Count != 1) return;
+        string accountToDelete = selectedAccounts[0];
 
         // 1. Удаляем из Accounts.csv
-        List<string> lines = File.ReadAllLines(csvPath).ToList();
-        lines = lines.Where(line => !line.StartsWith(selectedAccountName + ",")).ToList();
-        File.WriteAllLines(csvPath, lines);
+        if (File.Exists(csvPath))
+        {
+            List<string> lines = File.ReadAllLines(csvPath).ToList();
+            lines = lines.Where(line => !line.StartsWith(accountToDelete + ",")).ToList();
+            File.WriteAllLines(csvPath, lines);
+        }
 
-        // 2. Удаляем из DefeatAnalytics.csv
+        // 2. Удаляем из DefeatAnalytics.csv (одиночная)
         string analyticsPath = Path.Combine(Application.persistentDataPath, "DefeatAnalytics.csv");
         if (File.Exists(analyticsPath))
         {
             List<string> analyticsLines = File.ReadAllLines(analyticsPath).ToList();
-
-            // Оставляем нулевую строку (заголовки) и те строки, где имя игрока (3-я колонка, индекс 2) не совпадает с удаляемым
             analyticsLines = analyticsLines.Where((line, index) =>
             {
                 if (index == 0) return true;
-
                 string[] parts = line.Split(',');
-                if (parts.Length > 2)
-                {
-                    return parts[2] != selectedAccountName;
-                }
+                if (parts.Length > 2) return parts[2] != accountToDelete;
                 return true;
             }).ToList();
 
             File.WriteAllLines(analyticsPath, analyticsLines);
         }
 
-        // 3. Удаляем счетчик сессий из памяти
-        PlayerPrefs.DeleteKey("SessionCount_" + selectedAccountName);
+        // 3. Удаляем из DefeatAnalyticsMultiplayer.csv (сплит-скрин)
+        string multiAnalyticsPath = Path.Combine(Application.persistentDataPath, "DefeatAnalyticsMultiplayer.csv");
+        if (File.Exists(multiAnalyticsPath))
+        {
+            List<string> multiLines = File.ReadAllLines(multiAnalyticsPath).ToList();
+            multiLines = multiLines.Where((line, index) =>
+            {
+                if (index == 0) return true;
+                string[] parts = line.Split(',');
+                if (parts.Length > 3) return parts[2] != accountToDelete && parts[3] != accountToDelete;
+                return true;
+            }).ToList();
+
+            File.WriteAllLines(multiAnalyticsPath, multiLines);
+        }
+
+        // 4. Удаляем счетчик сессий из памяти
+        PlayerPrefs.DeleteKey("SessionCount_" + accountToDelete);
         PlayerPrefs.Save();
 
-        // 4. Обновляем интерфейс
-        selectedAccountName = "";
-        playButton.interactable = false;
-        deleteButton.interactable = false;
+        // 5. Обновляем интерфейс
+        selectedAccounts.Clear();
+        UpdateActionButtons();
 
         CloseDeleteConfirmation();
 
@@ -401,12 +500,38 @@ public class AccountSelectionManager : MonoBehaviour
 
     public void StartGame()
     {
-        if (!string.IsNullOrEmpty(selectedAccountName))
+        if (selectedAccounts.Count == 1)
         {
-            PlayerPrefs.SetString("CurrentPlayerName", selectedAccountName);
+            PlayerPrefs.SetInt("IsMultiplayer", 0);
+            PlayerPrefs.SetString("CurrentPlayerName", selectedAccounts[0]);
             PlayerPrefs.Save();
-            Debug.Log($"Граємо за {selectedAccountName}!");
-            SceneManager.LoadScene("SampleScene");
+
+            Debug.Log("Граємо в соло за " + selectedAccounts[0] + "!");
+            LoadTargetScene(singleplayerSceneName, true);
         }
+        else if (selectedAccounts.Count == 2)
+        {
+            PlayerPrefs.SetInt("IsMultiplayer", 1);
+            PlayerPrefs.SetString("Player1Name", selectedAccounts[0]);
+            PlayerPrefs.SetString("Player2Name", selectedAccounts[1]);
+            PlayerPrefs.Save();
+
+            Debug.Log("Граємо в спліт-скрін: P1 = " + selectedAccounts[0] + ", P2 = " + selectedAccounts[1] + "!");
+            LoadTargetScene(multiplayerSceneName, false);
+        }
+    }
+
+    private void LoadTargetScene(string fallbackSceneName, bool isSingleplayer)
+    {
+#if UNITY_EDITOR
+        SceneAsset targetAsset = isSingleplayer ? singleplayerScene : multiplayerScene;
+        if (targetAsset != null)
+        {
+            string scenePath = AssetDatabase.GetAssetPath(targetAsset);
+            EditorSceneManager.LoadSceneInPlayMode(scenePath, new LoadSceneParameters(LoadSceneMode.Single));
+            return;
+        }
+#endif
+        SceneManager.LoadScene(fallbackSceneName);
     }
 }

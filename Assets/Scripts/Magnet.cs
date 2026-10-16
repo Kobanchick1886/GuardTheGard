@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
@@ -19,30 +19,74 @@ public class Magnet : MonoBehaviour
     private float currentCooldown = 0f;
     private bool canFire = true;
 
+    [Header("Multiplayer Charges Settings")]
+    public int maxCharges = 5;
+    public int currentCharges = 5;
+    public float shotCooldown = 0.6f;
+    private float shotCooldownTimer = 0f;
+    private bool isMultiplayerMode = false;
+
     // ВАЖНО: Теперь мы отслеживаем не GameObject, а конкретные Collider2D.
     // Это спасает от бага, когда удаление/выключение дочернего коллайдера (корешка)
     // заставляло Пшикалку "забыть" про всего врага.
     private List<Collider2D> collidersInRange = new List<Collider2D>();
 
+    private void Start()
+    {
+        isMultiplayerMode = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "SampleSceneMultiplayer";
+        if (isMultiplayerMode)
+        {
+            currentCharges = maxCharges;
+            canFire = true;
+            UpdateChargesUI();
+        }
+    }
+
     private void Update()
     {
-        if (!canFire)
+        if (!isMultiplayerMode)
         {
-            currentCooldown -= Time.deltaTime;
-
-            if (cooldownFillImage != null)
+            // === РЕЖИМ ОДИНОЧНОЙ ИГРЫ (SampleScene) - БЕЗ ИЗМЕНЕНИЙ ===
+            if (!canFire)
             {
-                cooldownFillImage.fillAmount = 1f - (currentCooldown / cooldownTime);
-            }
+                currentCooldown -= Time.deltaTime;
 
-            if (currentCooldown <= 0f)
+                if (cooldownFillImage != null)
+                {
+                    cooldownFillImage.fillAmount = 1f - (currentCooldown / cooldownTime);
+                }
+
+                if (currentCooldown <= 0f)
+                {
+                    canFire = true;
+                    currentCooldown = 0f;
+
+                    // Если кулдаун спал - пробуем выстрелить сразу
+                    TryShootAtFirstAvailableEnemy();
+                }
+            }
+        }
+        else
+        {
+            // === РЕЖИМ МУЛЬТИПЛЕЕРА (SampleSceneMultiplayer) ===
+            // Заряды НЕ восстанавливаются сами по времени!
+            if (shotCooldownTimer > 0f)
             {
-                canFire = true;
-                currentCooldown = 0f;
-
-                // Если кулдаун спал - пробуем выстрелить сразу
-                TryShootAtFirstAvailableEnemy();
+                shotCooldownTimer -= Time.deltaTime;
+                if (shotCooldownTimer <= 0f)
+                {
+                    if (currentCharges > 0)
+                    {
+                        canFire = true;
+                        TryShootAtFirstAvailableEnemy();
+                    }
+                    else
+                    {
+                        canFire = false;
+                    }
+                }
             }
+            UpdateChargesUI();
         }
     }
 
@@ -163,9 +207,51 @@ public class Magnet : MonoBehaviour
             Destroy(holder);
         }
 
-        canFire = false;
-        currentCooldown = cooldownTime;
-        if (cooldownFillImage != null) cooldownFillImage.fillAmount = 1f;
+        if (!isMultiplayerMode)
+        {
+            canFire = false;
+            currentCooldown = cooldownTime;
+            if (cooldownFillImage != null) cooldownFillImage.fillAmount = 1f;
+        }
+        else
+        {
+            currentCharges--;
+            canFire = false;
+            shotCooldownTimer = shotCooldown;
+            UpdateChargesUI();
+            Debug.Log($"<color=cyan>[Multiplayer Spray] {transform.parent.name} совершил выстрел! Зарядов осталось: {currentCharges}/{maxCharges}</color>");
+        }
+    }
+
+    public bool CanAddCharges()
+    {
+        return isMultiplayerMode && currentCharges < maxCharges;
+    }
+
+    public int GetMissingCharges()
+    {
+        return isMultiplayerMode ? (maxCharges - currentCharges) : 0;
+    }
+
+    public void AddCharges(int amount)
+    {
+        if (!isMultiplayerMode || amount <= 0) return;
+        currentCharges = Mathf.Clamp(currentCharges + amount, 0, maxCharges);
+        if (currentCharges > 0 && shotCooldownTimer <= 0f)
+        {
+            canFire = true;
+            TryShootAtFirstAvailableEnemy();
+        }
+        UpdateChargesUI();
+        Debug.Log($"<color=green>[Multiplayer Spray] {transform.parent.name} пополнил пшикалку! Зарядов: {currentCharges}/{maxCharges}</color>");
+    }
+
+    public void UpdateChargesUI()
+    {
+        if (cooldownFillImage != null && isMultiplayerMode)
+        {
+            cooldownFillImage.fillAmount = maxCharges > 0 ? (float)currentCharges / maxCharges : 0f;
+        }
     }
 
     public void UpgradeRange(float multiplier)

@@ -6894,6 +6894,10 @@ MonoBehaviour:
   backToMenuButton: {fileID: 1150688766}
   backToPanelButton: {fileID: 544055241}
   cancelButton: {fileID: 2013485602}
+  singleplayerScene: {fileID: 102900000, guid: 8c9cfa26abfee488c85f1582747f6a02, type: 3}
+  multiplayerScene: {fileID: 102900000, guid: e7c2dd0160ff6094fae3c2e8cad16235, type: 3}
+  singleplayerSceneName: SampleScene
+  multiplayerSceneName: SampleSceneMultiplayer
 --- !u!114 &1537580512
 MonoBehaviour:
   m_ObjectHideFlags: 0
