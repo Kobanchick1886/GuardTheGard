@@ -11,10 +11,10 @@ public class MowerItself : MonoBehaviour
     [SerializeField] private float slowDownDistance = 2.0f;
 
     [Header("Drive Out & Spawn Settings")]
-    [Tooltip("Відстань від бази, з якої починає рух")]
+    [Tooltip("Ві  ,    ")]
     [SerializeField] private float initialSpawnOffset = 0.8f;
 
-    [Tooltip("Додаткова відстань, на яку косарка від'їде задом при паркуванні")]
+    [Tooltip(" ,    '   ")]
     [SerializeField] private float extraDriveOutDistance = 1.0f;
 
     [Header("Audio Settings")]
@@ -48,7 +48,7 @@ public class MowerItself : MonoBehaviour
 
     private void SetupAndPlayEngineAudio()
     {
-        // Якщо AudioSource не призначений в інспекторі, шукаємо або додаємо його
+        //  AudioSource    ,    
         if (mowerAudioSource == null)
         {
             mowerAudioSource = GetComponent<AudioSource>();
@@ -61,14 +61,14 @@ public class MowerItself : MonoBehaviour
         if (mowerEngineSound != null)
         {
             mowerAudioSource.clip = mowerEngineSound;
-            mowerAudioSource.loop = true; // Зациклюємо звук
+            mowerAudioSource.loop = true; //  
             mowerAudioSource.playOnAwake = true;
 
-            // Налаштування 3D-звуку для залежності від відстані
-            mowerAudioSource.spatialBlend = 1.0f; // 1.0 = 3D звук (реагує на відстань)
-            mowerAudioSource.rolloffMode = AudioRolloffMode.Logarithmic; // або Linear
-            mowerAudioSource.minDistance = minDistance; // Повна гучність у межах цієї відстані
-            mowerAudioSource.maxDistance = maxDistance; // Межа чутливості
+            //  3D-    
+            mowerAudioSource.spatialBlend = 1.0f; // 1.0 = 3D  (  )
+            mowerAudioSource.rolloffMode = AudioRolloffMode.Logarithmic; //  Linear
+            mowerAudioSource.minDistance = minDistance; //      
+            mowerAudioSource.maxDistance = maxDistance; //  
 
             mowerAudioSource.Play();
         }
@@ -82,7 +82,7 @@ public class MowerItself : MonoBehaviour
 
     public void StartPatrol(Vector3 start, Vector3 end, float speed)
     {
-        //start = початкова база, end = друга база
+        //start =  , end =  
         pointA = start;
         pointB = end;
         moveSpeed = speed;
@@ -98,7 +98,7 @@ public class MowerItself : MonoBehaviour
     {
         while (isPatrolling)
         {
-            // від а до в
+            //    
             Vector3 dirAtoB = (pointB - pointA).normalized;
             PlayMovementAnimation(dirAtoB, isDocking: false);
 
@@ -108,12 +108,12 @@ public class MowerItself : MonoBehaviour
                 yield return null;
             }
 
-            // паркування в
+            //  
             PlayMovementAnimation(dirAtoB, isDocking: true);
             yield return PlayDockingSequence(pointB);
 
 
-            // від в до а
+            //    
             Vector3 dirBtoA = (pointA - pointB).normalized;
             PlayMovementAnimation(dirBtoA, isDocking: false);
 
@@ -123,7 +123,7 @@ public class MowerItself : MonoBehaviour
                 yield return null;
             }
 
-            // паркування а
+            //  
             PlayMovementAnimation(dirBtoA, isDocking: true);
             yield return PlayDockingSequence(pointA);
         }
@@ -140,7 +140,7 @@ public class MowerItself : MonoBehaviour
 
         string animToPlay = "";
 
-        // ВЕРТИКАЛЬНИЙ РУХ
+        //  
         if (angle > 67.5f && angle < 112.5f) // UP
         {
             animToPlay = isDocking ? "LM-docking-up" : "LM-drive-up";
@@ -150,7 +150,7 @@ public class MowerItself : MonoBehaviour
             animToPlay = isDocking ? "LM-docking-down" : "LM-drive-down";
         }
 
-        // ГОРИЗОНТАЛЬНИЙ РУХ
+        //  
         else if (angle >= 157.5f || angle <= -157.5f) // LEFT
         {
             animToPlay = isDocking ? "LM-docking-left" : "LM-drive-left";
@@ -161,7 +161,7 @@ public class MowerItself : MonoBehaviour
             spriteRenderer.flipX = true;
         }
 
-        // ДІАГОНАЛЬНИЙ РУХ
+        // ДІ 
         else if (angle >= 22.5f && angle <= 67.5f) // UP-RIGHT
         {
             animToPlay = isDocking ? "LM-docking-up-right" : "LM-drive-up-right";
@@ -213,7 +213,7 @@ public class MowerItself : MonoBehaviour
         }
         transform.position = targetBase;
 
-        // ПАУЗА - 2
+        //  - 2
         float waitTimer = 0f;
         while (currentAnimStep != "DriveOutStart" && waitTimer < 0.6f)
         {
@@ -221,7 +221,7 @@ public class MowerItself : MonoBehaviour
             yield return null;
         }
 
-        // ВИЇЗД ЗАДОМ -3
+        // ИЇ  -3
         float reverseSpeed = moveSpeed * 2f;
 
         while (Vector3.Distance(transform.position, driveOutPoint) > 0.05f)
@@ -230,9 +230,9 @@ public class MowerItself : MonoBehaviour
             yield return null;
         }
 
-        transform.position = driveOutPoint; // Фіксуємо позицію у новій точці
+        transform.position = driveOutPoint; // Фі    
 
-        // ПАУЗА/РОЗВОРІТ - 4
+        // /РІ - 4
         waitTimer = 0f;
         while (currentAnimStep != "DockingFinished" && waitTimer < 0.5f)
         {
@@ -248,6 +248,10 @@ public class MowerItself : MonoBehaviour
             smashedEnemies++;
             var objScript = FindFirstObjectByType<objective>();
             if (objScript != null) objScript.CountEnemyDeath();
+            if (MultiplayerExpManager.Instance != null)
+            {
+                MultiplayerExpManager.Instance.OnEnemyDied(collision.transform.position);
+            }
             Destroy(collision.gameObject);
         }
     }

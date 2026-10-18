@@ -10,7 +10,23 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class MultiplayerExpManager : MonoBehaviour
 {
-    public static MultiplayerExpManager Instance { get; private set; }
+    private static MultiplayerExpManager _instance;
+    public static MultiplayerExpManager Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<MultiplayerExpManager>();
+                if (_instance == null && SceneManager.GetActiveScene().name == "SampleSceneMultiplayer")
+                {
+                    EnsureManagerExists();
+                }
+            }
+            return _instance;
+        }
+        private set => _instance = value;
+    }
 
     [Header("EXP Prefab")]
     [SerializeField] private GameObject expPrefab;
@@ -24,57 +40,126 @@ public class MultiplayerExpManager : MonoBehaviour
     private float boundX = 14f;
     private float boundY = 10f;
     private bool isMultiplayerScene = false;
+    private Coroutine replenishmentCoroutine;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void AutoRegisterSceneListener()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    private static void AutoInitializeForMultiplayer()
+    private static void AutoCheckActiveScene()
     {
         if (SceneManager.GetActiveScene().name == "SampleSceneMultiplayer")
         {
-            if (FindFirstObjectByType<MultiplayerExpManager>() == null)
+            EnsureManagerExists();
+        }
+    }
+
+    private static void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "SampleSceneMultiplayer")
+        {
+            EnsureManagerExists();
+        }
+    }
+
+    public static MultiplayerExpManager EnsureManagerExists()
+    {
+        if (_instance == null)
+        {
+            _instance = FindFirstObjectByType<MultiplayerExpManager>();
+        }
+
+        if (_instance == null)
+        {
+            GameObject managerGO = new GameObject("MultiplayerExpManager");
+            _instance = managerGO.AddComponent<MultiplayerExpManager>();
+            Debug.Log("<color=green>[MultiplayerExpManager] Successfully auto-created for SampleSceneMultiplayer.</color>");
+        }
+        else
+        {
+            _instance.isMultiplayerScene = SceneManager.GetActiveScene().name == "SampleSceneMultiplayer";
+            if (_instance.isMultiplayerScene && _instance.replenishmentCoroutine == null)
             {
-                GameObject managerGO = new GameObject("MultiplayerExpManager");
-                managerGO.AddComponent<MultiplayerExpManager>();
-                Debug.Log("<color=green>[MultiplayerExpManager] Auto-initialized for SampleSceneMultiplayer.</color>");
+                _instance.InitMultiplayer();
             }
         }
+
+        return _instance;
     }
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
             return;
         }
-        Instance = this;
+        _instance = this;
 
         isMultiplayerScene = SceneManager.GetActiveScene().name == "SampleSceneMultiplayer";
+        LoadExpPrefabIfNeeded();
     }
 
     private void Start()
     {
+        isMultiplayerScene = SceneManager.GetActiveScene().name == "SampleSceneMultiplayer";
         if (!isMultiplayerScene) return;
 
+        InitMultiplayer();
+    }
+
+    public void InitMultiplayer()
+    {
+        isMultiplayerScene = true;
         LoadExpPrefabIfNeeded();
         CalculateMapBounds();
         ScatterInitialExp();
-        StartCoroutine(PeriodicExpReplenishment());
+
+        if (replenishmentCoroutine != null)
+        {
+            StopCoroutine(replenishmentCoroutine);
+        }
+        replenishmentCoroutine = StartCoroutine(PeriodicExpReplenishment());
     }
 
     private void OnDestroy()
     {
-        if (Instance == this)
+        if (_instance == this)
         {
-            Instance = null;
+            _instance = null;
         }
     }
 
-    private void LoadExpPrefabIfNeeded()
+    public void LoadExpPrefabIfNeeded()
     {
         if (expPrefab == null)
         {
             expPrefab = Resources.Load<GameObject>("EXP");
         }
+
+        if (expPrefab == null)
+        {
+            var existingInScene = FindFirstObjectByType<Exp>(FindObjectsInactive.Include);
+            if (existingInScene != null)
+            {
+                expPrefab = existingInScene.gameObject;
+            }
+        }
+
+#if UNITY_EDITOR
+        if (expPrefab == null)
+        {
+            expPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Resources/EXP.prefab");
+            if (expPrefab == null)
+            {
+                expPrefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefab/EXP.prefab");
+            }
+        }
+#endif
     }
 
     private void CalculateMapBounds()
@@ -94,18 +179,22 @@ public class MultiplayerExpManager : MonoBehaviour
 
     private void ScatterInitialExp()
     {
+        LoadExpPrefabIfNeeded();
         if (expPrefab == null)
         {
             Debug.LogWarning("[MultiplayerExpManager] EXP prefab not found in Resources or Inspector!");
             return;
         }
 
-        for (int i = 0; i < initialExpCount; i++)
+        GameObject[] existing = GameObject.FindGameObjectsWithTag("EXP");
+        int countToSpawn = Mathf.Max(0, initialExpCount - (existing != null ? existing.Length : 0));
+
+        for (int i = 0; i < countToSpawn; i++)
         {
             SpawnExpAtRandomPosition();
         }
 
-        Debug.Log($"<color=yellow>[MultiplayerExpManager] Scattered {initialExpCount} EXP orbs across the map.</color>");
+        Debug.Log($"<color=yellow>[MultiplayerExpManager] Scattered {countToSpawn} EXP orbs across the map.</color>");
     }
 
     private IEnumerator PeriodicExpReplenishment()
@@ -116,6 +205,7 @@ public class MultiplayerExpManager : MonoBehaviour
         {
             yield return wait;
 
+            LoadExpPrefabIfNeeded();
             if (expPrefab == null) continue;
 
             // Считаем сколько сейчас EXP на карте
@@ -140,12 +230,19 @@ public class MultiplayerExpManager : MonoBehaviour
         LoadExpPrefabIfNeeded();
         if (expPrefab != null)
         {
-            Instantiate(expPrefab, enemyPosition, Quaternion.identity);
+            Vector3 spawnPos = new Vector3(enemyPosition.x, enemyPosition.y, 0f);
+            Instantiate(expPrefab, spawnPos, Quaternion.identity);
+            Debug.Log($"<color=yellow>[MultiplayerExpManager] Enemy dropped EXP at {spawnPos}</color>");
+        }
+        else
+        {
+            Debug.LogWarning("[MultiplayerExpManager] Cannot drop EXP: expPrefab is null!");
         }
     }
 
     private void SpawnExpAtRandomPosition()
     {
+        LoadExpPrefabIfNeeded();
         if (expPrefab == null) return;
 
         Vector3 spawnPos = Vector3.zero;

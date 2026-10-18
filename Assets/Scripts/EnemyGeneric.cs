@@ -302,6 +302,36 @@ public class EnemyGeneric : MonoBehaviour
         legsTransform.localRotation = Quaternion.identity;
     }
 
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (isDead) return;
+
+        if (other.CompareTag("Player") && !isMoving)
+        {
+            foreach (BoxCollider2D box in root)
+            {
+                if (box != null && box.enabled)
+                {
+                    if (box.bounds.Intersects(other.bounds))
+                    {
+                        box.enabled = false;
+
+                        Animator rootAnimator = box.GetComponent<Animator>();
+
+                        if (rootAnimator != null)
+                        {
+                            StartCoroutine(PlayDigAndDestroy(rootAnimator, box.gameObject));
+                        }
+                        else
+                        {
+                            Destroy(box.gameObject);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (isDead) return;
