@@ -21,13 +21,31 @@ public class ArduinoSensorInput : MonoBehaviour
     [Tooltip("Port to listen on (must match bridge's UDP send port)")]
     [SerializeField] private int listenPort = 5005;
 
+    public void SetListenPort(int port)
+    {
+        if (listenPort != port)
+        {
+            listenPort = port;
+            if (_running)
+            {
+                StopUdpListener();
+                StartUdpListener();
+            }
+        }
+    }
+
     [Header("Sensor Calibration")]
     [Tooltip("Center value of the sensor (raw). Typically 500.")]
     [SerializeField] private int sensorCenter = 500;
 
     [Tooltip("Dead zone in raw sensor units. Values within center ± deadZone are treated as zero.")]
-    [SerializeField] private int deadZone = 15;
+    [SerializeField] private int deadZone = 10;
 
+    [Tooltip("Tilt delta from center to reach 100% full speed. Lower = more sensitive. Default is 50.")]
+    [SerializeField] private float maxTiltDelta = 50f;
+
+    [Tooltip("Sensitivity multiplier for sensor tilt.")]
+    [SerializeField] private float sensitivityMultiplier = 1.0f;
 
     [Header("Debug")]
     [SerializeField] private bool showDebugLog = false;
@@ -87,14 +105,9 @@ public class ArduinoSensorInput : MonoBehaviour
             return;
         }
 
-        // Read raw values (volatile, no lock needed for single int reads)
+        // Read raw values
         int ax = _rawAx;
         int ay = _rawAy;
-
-        // Convert raw sensor to -1..+1 movement vector
-        // ax: forward(W) when < center, backward(S) when > center
-        // ay: left(A) when < center, right(D) when > center
-        float range = 1023f - sensorCenter; // max distance from center
 
         float moveY = 0f; // up/down in game (W/S -> Y axis)
         float moveX = 0f; // left/right in game (A/D -> X axis)
@@ -102,17 +115,23 @@ public class ArduinoSensorInput : MonoBehaviour
         int dx = ax - sensorCenter;
         int dy = ay - sensorCenter;
 
-        // Apply dead zone
+        float effectiveMaxDelta = Mathf.Max(maxTiltDelta, deadZone + 1f);
+
+        // Apply dead zone and responsive tilt curve:
+        // ax < center => tilt forward => W => positive Y
         if (Mathf.Abs(dx) > deadZone)
         {
-            // ax < center => tilt forward => W => positive Y
-            moveY = -Mathf.Clamp((float)dx / range, -1f, 1f);
+            float sign = dx < 0 ? 1f : -1f;
+            float norm = (Mathf.Abs(dx) - deadZone) / (effectiveMaxDelta - deadZone);
+            moveY = sign * Mathf.Clamp01(norm * sensitivityMultiplier);
         }
 
+        // ay > center => tilt right => D => positive X
         if (Mathf.Abs(dy) > deadZone)
         {
-            // ay > center => tilt right => D => positive X
-            moveX = Mathf.Clamp((float)dy / range, -1f, 1f);
+            float sign = dy > 0 ? 1f : -1f;
+            float norm = (Mathf.Abs(dy) - deadZone) / (effectiveMaxDelta - deadZone);
+            moveX = sign * Mathf.Clamp01(norm * sensitivityMultiplier);
         }
 
         _sensorMoveInput = new Vector2(moveX, moveY);
@@ -148,25 +167,28 @@ public class ArduinoSensorInput : MonoBehaviour
 
         try
         {
-            _udp = new UdpClient(listenPort);
-            _udp.Client.ReceiveTimeout = 500; // ms, so thread can check _running
+            _udp = new UdpClient();
+            _udp.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            _udp.Client.Bind(new IPEndPoint(IPAddress.Loopback, listenPort));
+            _udp.Client.ReceiveTimeout = 250; // ms, responsive shutdown
         }
         catch (SocketException ex)
         {
-            Debug.LogWarning($"[ArduinoSensor] Could not bind UDP port {listenPort}: {ex.Message}. " +
-                             "Another instance may be running. Sensor input disabled.");
+            Debug.LogWarning($"[ArduinoSensor] Could not bind UDP port {listenPort} on 127.0.0.1: {ex.Message}. " +
+                             "Sensor input disabled.");
             _running = false;
+            if (_udp != null) { try { _udp.Close(); } catch { } _udp = null; }
             return;
         }
 
         _receiveThread = new Thread(ReceiveLoop)
         {
             IsBackground = true,
-            Name = "ArduinoSensorUDP"
+            Name = "ArduinoSensorUDP_" + listenPort
         };
         _receiveThread.Start();
 
-        Debug.Log($"[ArduinoSensor] Listening for sensor data on UDP port {listenPort}");
+        Debug.Log($"[ArduinoSensor] Listening for sensor data on 127.0.0.1:{listenPort}");
     }
 
     private void StopUdpListener()
@@ -181,20 +203,22 @@ public class ArduinoSensorInput : MonoBehaviour
 
         if (_receiveThread != null && _receiveThread.IsAlive)
         {
-            _receiveThread.Join(1000);
+            _receiveThread.Join(150);
             _receiveThread = null;
         }
     }
 
     private void ReceiveLoop()
     {
-        IPEndPoint remoteEP = new IPEndPoint(IPAddress.Any, 0);
+        IPEndPoint remoteEP = new IPEndPoint(IPAddress.Loopback, 0);
 
         while (_running)
         {
             try
             {
+                if (_udp == null) break;
                 byte[] data = _udp.Receive(ref remoteEP);
+                if (data == null || data.Length == 0) continue;
                 string msg = Encoding.UTF8.GetString(data);
 
                 // Expected format: "ax,ay" e.g. "512,498"
@@ -211,16 +235,15 @@ public class ArduinoSensorInput : MonoBehaviour
             }
             catch (SocketException)
             {
-                // Timeout or close — expected, just loop
+                // Timeout or close — normal
             }
             catch (ObjectDisposedException)
             {
                 break;
             }
-            catch (Exception ex)
+            catch
             {
-                if (_running)
-                    Debug.LogWarning($"[ArduinoSensor] UDP error: {ex.Message}");
+                // Never throw or call Unity API from background thread
             }
         }
     }

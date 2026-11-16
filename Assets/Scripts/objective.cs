@@ -110,12 +110,12 @@ public class objective : MonoBehaviour
             gameTimer += Time.deltaTime;
         }
 
-        if (Keyboard.current.escapeKey.wasPressedThisFrame && !canRestart && !isGameWon)
+        if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame && !canRestart && !isGameWon)
         {
             TogglePause();
         }
 
-        if (Keyboard.current.rKey.wasPressedThisFrame && canRestart)
+        if (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame && canRestart)
         {
             RestartGame();
         }

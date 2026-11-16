@@ -190,21 +190,21 @@ public class PowerUpManagement : MonoBehaviour
     {
         if (!isMenuActive) return;
 
-        if (Keyboard.current.aKey.wasPressedThisFrame && !isLeftSelected)
+        if (Keyboard.current != null && Keyboard.current.aKey.wasPressedThisFrame && !isLeftSelected)
         {
             isLeftSelected = true;
             ResetHold();
             UpdateHoverState();
         }
-        if (Keyboard.current.dKey.wasPressedThisFrame && isLeftSelected)
+        if (Keyboard.current != null && Keyboard.current.dKey.wasPressedThisFrame && isLeftSelected)
         {
             isLeftSelected = false;
             ResetHold();
             UpdateHoverState();
         }
 
-        bool isHolding = (isLeftSelected && Keyboard.current.aKey.isPressed) ||
-                         (!isLeftSelected && Keyboard.current.dKey.isPressed);
+        bool isHolding = Keyboard.current != null && ((isLeftSelected && Keyboard.current.aKey.isPressed) ||
+                         (!isLeftSelected && Keyboard.current.dKey.isPressed));
 
         if (isHolding)
         {

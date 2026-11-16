@@ -43,7 +43,7 @@ public class Movement : MonoBehaviour
         {
             if (isMultiplayer)
             {
-                resolvedMode = gameObject.name.Contains("2") ? ControlMode.Arrows_Only : ControlMode.WASD_Only;
+                resolvedMode = (gameObject.name.Contains("2") || gameObject.name.Contains("Wolf")) ? ControlMode.Arrows_Only : ControlMode.WASD_Only;
             }
             else
             {
@@ -62,36 +62,89 @@ public class Movement : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern short GetAsyncKeyState(int vKey);
+
+    private static bool IsWinKeyDown(int vKey)
+    {
+        return (GetAsyncKeyState(vKey) & 0x8000) != 0;
+    }
+#else
+    private static bool IsWinKeyDown(int vKey) => false;
+#endif
+
+    private const int VK_LEFT  = 0x25;
+    private const int VK_UP    = 0x26;
+    private const int VK_RIGHT = 0x27;
+    private const int VK_DOWN  = 0x28;
+    private const int VK_W     = 0x57;
+    private const int VK_A     = 0x41;
+    private const int VK_S     = 0x53;
+    private const int VK_D     = 0x44;
+
+    void Start()
+    {
+        // Player 1 (and Singleplayer) listens on port 5005. Player 2 (Arrows_Only / Wolf) listens on port 5006.
+        int targetPort = (resolvedMode == ControlMode.Arrows_Only) ? 5006 : 5005;
+        var sensor = GetComponent<ArduinoSensorInput>();
+        if (sensor == null)
+        {
+            sensor = gameObject.AddComponent<ArduinoSensorInput>();
+        }
+        sensor.SetListenPort(targetPort);
+    }
+
     void Update()
     {
-        if (resolvedMode == ControlMode.WASD_Only)
+        float x = 0f;
+        float y = 0f;
+        bool hasDirectInput = false;
+
+        // Check WASD keys (used in WASD_Only and in Auto/Singleplayer)
+        if (resolvedMode == ControlMode.WASD_Only || resolvedMode == ControlMode.Auto)
         {
-            float x = 0f;
-            float y = 0f;
-            if (Keyboard.current != null)
-            {
-                if (Keyboard.current.wKey.isPressed) y += 1f;
-                if (Keyboard.current.sKey.isPressed) y -= 1f;
-                if (Keyboard.current.aKey.isPressed) x -= 1f;
-                if (Keyboard.current.dKey.isPressed) x += 1f;
-            }
+            bool w = (Keyboard.current != null && Keyboard.current.wKey.isPressed) || IsWinKeyDown(VK_W);
+            bool s = (Keyboard.current != null && Keyboard.current.sKey.isPressed) || IsWinKeyDown(VK_S);
+            bool a = (Keyboard.current != null && Keyboard.current.aKey.isPressed) || IsWinKeyDown(VK_A);
+            bool d = (Keyboard.current != null && Keyboard.current.dKey.isPressed) || IsWinKeyDown(VK_D);
+
+            if (w) y += 1f;
+            if (s) y -= 1f;
+            if (a) x -= 1f;
+            if (d) x += 1f;
+
+            if (w || s || a || d)
+                hasDirectInput = true;
+        }
+
+        // Check Arrow keys (used in Arrows_Only, and in Auto/Singleplayer if WASD is not currently pressed)
+        if (resolvedMode == ControlMode.Arrows_Only || (resolvedMode == ControlMode.Auto && !hasDirectInput))
+        {
+            bool up = (Keyboard.current != null && Keyboard.current.upArrowKey.isPressed) || IsWinKeyDown(VK_UP);
+            bool down = (Keyboard.current != null && Keyboard.current.downArrowKey.isPressed) || IsWinKeyDown(VK_DOWN);
+            bool left = (Keyboard.current != null && Keyboard.current.leftArrowKey.isPressed) || IsWinKeyDown(VK_LEFT);
+            bool right = (Keyboard.current != null && Keyboard.current.rightArrowKey.isPressed) || IsWinKeyDown(VK_RIGHT);
+
+            if (up) y += 1f;
+            if (down) y -= 1f;
+            if (left) x -= 1f;
+            if (right) x += 1f;
+
+            if (up || down || left || right)
+                hasDirectInput = true;
+        }
+
+        if (hasDirectInput)
+        {
             Vector2 raw = new Vector2(x, y);
             moveInput = raw.sqrMagnitude > 1f ? raw.normalized : raw;
         }
-        else if (resolvedMode == ControlMode.Arrows_Only)
+        else if (resolvedMode != ControlMode.Auto)
         {
-            float x = 0f;
-            float y = 0f;
-            if (Keyboard.current != null)
-            {
-                if (Keyboard.current.upArrowKey.isPressed) y += 1f;
-                if (Keyboard.current.downArrowKey.isPressed) y -= 1f;
-                if (Keyboard.current.leftArrowKey.isPressed) x -= 1f;
-                if (Keyboard.current.rightArrowKey.isPressed) x += 1f;
-            }
-            Vector2 raw = new Vector2(x, y);
-            moveInput = raw.sqrMagnitude > 1f ? raw.normalized : raw;
+            moveInput = Vector2.zero;
         }
+        // In Auto mode, if no keyboard/simulated key is held, moveInput remains whatever OnMove() provided (gamepad stick, etc.)
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -113,20 +166,25 @@ public class Movement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Use keyboard/gamepad input if available, otherwise fall back to sensor
-        Vector2 effectiveInput = moveInput.sqrMagnitude > 0.001f ? moveInput : sensorInput;
+        // Whichever input source is stronger (keyboard 1.0 or sensor analog) wins
+        Vector2 effectiveInput = moveInput.sqrMagnitude >= sensorInput.sqrMagnitude ? moveInput : sensorInput;
 
-        animator.SetFloat("MoveX", effectiveInput.x);
-        animator.SetFloat("MoveY", effectiveInput.y);
-        animator.SetFloat("Speed", effectiveInput.magnitude);
-
-        if (effectiveInput.x != 0 || effectiveInput.y != 0)
+        if (animator != null)
         {
-            animator.SetFloat("LookX", effectiveInput.x);
-            animator.SetFloat("LookY", effectiveInput.y);
+            animator.SetFloat("MoveX", effectiveInput.x);
+            animator.SetFloat("MoveY", effectiveInput.y);
+            animator.SetFloat("Speed", effectiveInput.magnitude);
+
+            if (effectiveInput.x != 0 || effectiveInput.y != 0)
+            {
+                animator.SetFloat("LookX", effectiveInput.x);
+                animator.SetFloat("LookY", effectiveInput.y);
+            }
         }
 
-        rb.AddForce(effectiveInput * moveSpeed); 
-
+        if (rb != null)
+        {
+            rb.AddForce(effectiveInput * moveSpeed);
+        }
     }
 }

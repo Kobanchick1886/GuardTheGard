@@ -123,17 +123,34 @@ public class AccountSelectionManager : MonoBehaviour
             }
         }
 
+        // Отключаем навигацию с клавиатуры/сенсоров в меню, чтобы постоянный наклон
+        // датчиков не перехватывал фокус с кнопки Play и списка аккаунтов
+        if (UnityEngine.EventSystems.EventSystem.current != null)
+        {
+            UnityEngine.EventSystems.EventSystem.current.sendNavigationEvents = false;
+        }
+
         if (playButton != null)
         {
+            var nav = playButton.navigation;
+            nav.mode = Navigation.Mode.None;
+            playButton.navigation = nav;
+
             playButton.onClick.RemoveAllListeners();
             playButton.onClick.AddListener(StartGame);
         }
 
         if (deleteButton != null)
         {
+            var nav = deleteButton.navigation;
+            nav.mode = Navigation.Mode.None;
+            deleteButton.navigation = nav;
+
             deleteButton.onClick.RemoveAllListeners();
             deleteButton.onClick.AddListener(OpenDeleteConfirmation);
         }
+
+        UpdateActionButtons();
 
         if (confirmDeleteButton != null) confirmDeleteButton.onClick.AddListener(ConfirmAndExecuteDeletion);
         if (cancelDeleteButton != null) cancelDeleteButton.onClick.AddListener(CloseDeleteConfirmation);
@@ -318,7 +335,13 @@ public class AccountSelectionManager : MonoBehaviour
             GameObject createRow = Instantiate(createAccountRowPrefab, contentParent);
             Button createBtn = createRow.GetComponent<Button>();
             if (createBtn == null) createBtn = createRow.GetComponentInChildren<Button>();
-            if (createBtn != null) createBtn.onClick.AddListener(OpenCreatePopup);
+            if (createBtn != null)
+            {
+                var cNav = createBtn.navigation;
+                cNav.mode = Navigation.Mode.None;
+                createBtn.navigation = cNav;
+                createBtn.onClick.AddListener(OpenCreatePopup);
+            }
         }
 
         if (!File.Exists(csvPath))
@@ -371,7 +394,14 @@ public class AccountSelectionManager : MonoBehaviour
             }
 
             string capturedName = name;
-            row.GetComponent<Button>().onClick.AddListener(() => OnAccountSelected(capturedName));
+            Button rowBtn = row.GetComponent<Button>();
+            if (rowBtn != null)
+            {
+                var rNav = rowBtn.navigation;
+                rNav.mode = Navigation.Mode.None;
+                rowBtn.navigation = rNav;
+                rowBtn.onClick.AddListener(() => OnAccountSelected(capturedName));
+            }
         }
 
         RefreshSelectionLabels();
@@ -417,8 +447,10 @@ public class AccountSelectionManager : MonoBehaviour
 
     private void UpdateActionButtons()
     {
-        playButton.interactable = (selectedAccounts.Count == 1 || selectedAccounts.Count == 2);
-        deleteButton.interactable = (selectedAccounts.Count == 1);
+        if (playButton != null)
+            playButton.interactable = (selectedAccounts.Count == 1 || selectedAccounts.Count == 2);
+        if (deleteButton != null)
+            deleteButton.interactable = (selectedAccounts.Count == 1);
     }
 
     private void RefreshSelectionLabels()
@@ -500,6 +532,8 @@ public class AccountSelectionManager : MonoBehaviour
 
     public void StartGame()
     {
+        Debug.Log($"[AccountSelectionManager] StartGame clicked! selectedAccounts.Count = {selectedAccounts.Count}");
+
         if (selectedAccounts.Count == 1)
         {
             PlayerPrefs.SetInt("IsMultiplayer", 0);
@@ -519,6 +553,10 @@ public class AccountSelectionManager : MonoBehaviour
             Debug.Log("Граємо в спліт-скрін: P1 = " + selectedAccounts[0] + ", P2 = " + selectedAccounts[1] + "!");
             LoadTargetScene(multiplayerSceneName, false);
         }
+        else
+        {
+            Debug.LogWarning($"[AccountSelectionManager] StartGame called, but invalid selectedAccounts count: {selectedAccounts.Count}");
+        }
     }
 
     private void LoadTargetScene(string fallbackSceneName, bool isSingleplayer)
@@ -532,6 +570,8 @@ public class AccountSelectionManager : MonoBehaviour
             return;
         }
 #endif
-        SceneManager.LoadScene(fallbackSceneName);
+        string sceneName = !string.IsNullOrEmpty(fallbackSceneName) ? fallbackSceneName : (isSingleplayer ? "SampleScene" : "SampleSceneMultiplayer");
+        Debug.Log($"[AccountSelectionManager] Loading scene: {sceneName}");
+        SceneManager.LoadScene(sceneName);
     }
 }

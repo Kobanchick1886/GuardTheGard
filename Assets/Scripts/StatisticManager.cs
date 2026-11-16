@@ -18,8 +18,15 @@ public class StatisticsManager : MonoBehaviour
         {
             if (File.Exists(sourceExePath))
             {
-                File.Copy(sourceExePath, targetExePath);
-                UnityEngine.Debug.Log("Экзешка успешно скопирована в AppData!");
+                try
+                {
+                    File.Copy(sourceExePath, targetExePath);
+                    UnityEngine.Debug.Log("Экзешка успешно скопирована в AppData!");
+                }
+                catch (System.Exception ex)
+                {
+                    UnityEngine.Debug.LogWarning("Ошибка копирования exe: " + ex.Message);
+                }
             }
             else
             {
@@ -27,15 +34,26 @@ public class StatisticsManager : MonoBehaviour
             }
         }
 
-        // 2. Копируем папку _internal (со всеми python314.dll и библиотеками)
+        // 2. Копируем папку _internal (со всеми python314.dll и библиотеками) асинхронно,
+        // чтобы не вешать главный поток и загрузку игры на ноутбуках и слабых ПК!
         string sourceFolderPath = Path.Combine(Application.streamingAssetsPath, internalFolderName);
         string targetFolderPath = Path.Combine(Application.persistentDataPath, internalFolderName);
 
         if (Directory.Exists(sourceFolderPath) && !Directory.Exists(targetFolderPath))
         {
-            UnityEngine.Debug.Log("Начинаем копирование папки _internal в AppData...");
-            CopyDirectory(sourceFolderPath, targetFolderPath);
-            UnityEngine.Debug.Log("<color=green>Папка _internal успешно скопирована в AppData!</color>");
+            UnityEngine.Debug.Log("Начинаем фоновое копирование папки _internal в AppData...");
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                try
+                {
+                    CopyDirectory(sourceFolderPath, targetFolderPath);
+                    UnityEngine.Debug.Log("<color=green>Папка _internal успешно скопирована в AppData в фоне!</color>");
+                }
+                catch (System.Exception ex)
+                {
+                    UnityEngine.Debug.LogWarning("Ошибка фонового копирования: " + ex.Message);
+                }
+            });
         }
     }
 
